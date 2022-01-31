@@ -5,18 +5,18 @@
 >### **1.먼저 작업 폴더를 만들어 주세요**
 >> Image
 
->###**2.git clone https://github.com/GDSC-Daejin/GDSC-WEB-BackEnd.git**
+>### **2.git clone https://github.com/GDSC-Daejin/GDSC-WEB-BackEnd.git**
 >
 >###또는 GIT CLIENT를 통해서 clone 해주세요
 >> Image
 
-> ###**3. 작업 영역, branch를 만들어 주세요**
+> ### **3. 작업 영역, branch를 만들어 주세요**
 >> Image
 
->###**4. commit 메세지는 규칙에 맞춰주세요**
+>### **4. commit 메세지는 규칙에 맞춰주세요**
 > 
 >###
-> Jason Notion에 작성한 내용입니다. 
+> Jason Notion에 작성된 내용입니다. 
 > 
 > ###Git Flow (Branch) : 
 >- develop : 요걸 기본으로 갈 생각입니다.
@@ -38,16 +38,16 @@
 >> Image
 
  
->###**5. 자신의 Branch push 후 develop Branch 합치길(Merge) 원하면 pull Request를 작성해주세요**
+>### **5. 자신의 Branch push 후 develop Branch 합치길(Merge) 원하면 pull Request를 작성해주세요**
 >######  
 >> Image
 
->###**6. develop branch 가 merge 되면 git pull 을 해주세요 안하면 차후 merge 때 coflict 가 일어 날 수 있어요** 
+>### **6. develop branch 가 merge 되면 git pull 을 해주세요 안하면 차후 merge 때 coflict 가 일어 날 수 있어요** 
 > 
 >###
 >> Image
 
-#**apllication-properties**
+# **apllication-properties**
 ```properties
 ## apllication-properties
 ### apllication-properties 입니다. github에는 배포를 하기위해서 올라가 있지 
