@@ -12,6 +12,8 @@ public class BasicController {
         return "hi hi";
 =======
 >>>>>>> Stashed changes
+        return "hi hi!  ";
+
     }
 
 }
