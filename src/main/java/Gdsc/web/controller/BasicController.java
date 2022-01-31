@@ -8,12 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class BasicController {
     @GetMapping("/")
     public String test() {
-<<<<<<< Updated upstream
-        return "hi hi";
-=======
->>>>>>> Stashed changes
         return "hi hi!  ";
-
     }
 
 }
