@@ -9,6 +9,7 @@ public class BasicController {
     @GetMapping("/")
     public String test() {
         return "hi hi";
+>>>>>>> Stashed changes
     }
 
 }
