@@ -12,7 +12,7 @@ import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
+import springfox.documentation.service.Contact;
 
 import java.util.Arrays;
 
@@ -35,7 +35,16 @@ public class SwaggerConfig {
         return new ApiInfoBuilder()
                 .title(API_NAME)
                 .version(API_VERSION)
+                .termsOfServiceUrl("https://gdsc-dju.com/")
+                .termsOfServiceUrl("https://gdsc-dju.web.app/")
                 .description(API_DESCRIPTION)
+                .contact(
+                        new Contact(
+                                "Contact Us",
+                                "https://github.com/GDSC-Daejin/GDSC-WEB-BackEnd",
+                                "gudcks305@gmail.com"
+                        )
+                )
                 .build();
     }
 
