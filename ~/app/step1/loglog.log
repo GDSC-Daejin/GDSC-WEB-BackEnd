@@ -85,3 +85,6 @@
 2022-02-03 13:18:12.501  INFO 17096 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
 2022-02-03 13:18:12.503  INFO 17096 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
 2022-02-03 13:18:12.601  INFO 17096 --- [restartedMain] Gdsc.web.GdscWebApplication              : Started GdscWebApplication in 6.439 seconds (JVM running for 7.448)
+2022-02-03 13:34:30.342  INFO 17096 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2022-02-03 13:34:30.447  INFO 17096 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2022-02-03 13:34:30.530  INFO 17096 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
