@@ -2,6 +2,7 @@ package Gdsc.web.config.auth;
 
 import Gdsc.web.domain.Member;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 @Data
 public class PrincipalDetails implements UserDetails {
-
+    @Autowired
     private Member member;
 
     public PrincipalDetails(Member member) {
