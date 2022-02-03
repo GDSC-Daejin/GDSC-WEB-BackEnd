@@ -30,8 +30,8 @@ public class OnboardingMemberApiController {
 
     @ApiOperation(value = "닉네임 리스트", notes ="닉네임을 리스트 형식으로 반환 받기")
     @GetMapping("/api/member/onBoarding/nickname")
-    public List<OnboardingMemberMapping> getNickNameList() {
-        return onboardingService.닉네임리스트();
+    public ResponseDto<List<OnboardingMemberMapping>> getNickNameList() {
+        return new ResponseDto<>(HttpStatus.OK, onboardingService.닉네임리스트() , "닉네임 리스트");
     }
 
 }
