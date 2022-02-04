@@ -14,7 +14,7 @@ public class SupportApiController {
     private final SupportService supportService;
     @GetMapping("/api/support/limit")
     public ResponseDto<SupportDto> list() {
-        return new ResponseDto<>(HttpStatus.OK, supportService.지원제한(), "업데이트 성공");
+        return new ResponseDto<>(HttpStatus.OK, supportService.지원제한(), "지원제한 정보");
     }
     @PutMapping("/api/support/limit/update")
     public ResponseDto<Integer> update(@RequestBody SupportDto supportDto){
