@@ -48,7 +48,8 @@ dependencies {
     //swagger
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
     implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
-
+    //slack bot
+    implementation 'com.github.maricn:logback-slack-appender:1.4.0'
 
 }
 
