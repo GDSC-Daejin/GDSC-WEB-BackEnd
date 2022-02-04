@@ -5,3 +5,5 @@
 /.idea/
 /src/main/resources/application.properties
 /src/main/resources/application-oauth.properties
+src/main/resources/logback-spring.xml
+~/app/step1/loglog.log
