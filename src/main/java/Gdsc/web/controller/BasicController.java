@@ -11,9 +11,4 @@ public class BasicController {
     public String test() {
         return "hi hi";
     }
-    @GetMapping("/g")
-    public String tes1t() {
-        log.error("test");
-        return "hi";
-    }
 }
