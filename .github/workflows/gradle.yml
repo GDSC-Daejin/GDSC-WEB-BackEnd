@@ -31,7 +31,7 @@ jobs:
       shell: bash
 
     - name: Build with Gradle
-      run: ./gradlew  build
+      run: ./gradlew  clean build
       shell: bash
       
       #work flow 시간
