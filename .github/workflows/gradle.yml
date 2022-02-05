@@ -47,7 +47,7 @@ jobs:
      
      # S3 Bucket으로 copy
     - name : Run ls -la
-      run : Run ls -la
+      run : ls -la
     - name: Deliver to AWS S3
       env:
           AWS_ACCESS_KEY_ID: ${{'{{' }} secrets.AWS_ACCESS_KEY_ID }}
