@@ -51,25 +51,32 @@ jobs:
       run: cp ./build/libs/*.jar ./deploy/
 
     # 압축파일 형태로 전달
-    - name: Generate deployment package
-      run: |
-          mkdir -p deploy
-          cp build/libs/*.jar deploy/application.jar
-          cp Procfile deploy/Procfile
-          cp -r .ebextensions deploy/.ebextensions
-          cp -r .platform deploy/.platform
-          cd deploy && zip -r deploy.zip .
-
+    - name: Make zip file
+      run: zip -r -qq -j ./GDSE-WEB-BackEnd-build.zip ./deploy
      
-
+         # S3 Bucket으로 copy
+    - name : Run ls -la
+      run : ls -la
+    - name: Deliver to AWS S3
+      env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{  secrets.AWS_SECRET_ACCESS_KEY }}
+      run: |
+          aws s3 cp \
+          --region ap-northeast-2 \
+            ./GDSE-WEB-BackEnd-build.zip s3://$S3_BUCKET_NAME/
+            
+      # Deploy
+    - name: Deploy
+      env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: |
+          aws deploy create-deployment \
+          --application-name GDSC-WEB-BACKEND \
+          --deployment-group-name GDSC-WEB-BACKEND-group \
+          --file-exists-behavior OVERWRITE \
+          --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=GDSE-WEB-BackEnd-build.zip \
+          --region ap-northeast-2
           
-    - name: Deploy to EB
-      uses: einaregilsson/beanstalk-deploy@v14
-      with:
-          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application_name: GDSC-WEB-BACKEND
-          environment_name: GDSC-WEB-BACKEND-group
-          version_label: github-action-${{steps.current-time.outputs.formattedTime}}
-          region: ap-northeast-2
-          deployment_package: deploy/deploy.zip
+ 
