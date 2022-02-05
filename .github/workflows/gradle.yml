@@ -53,4 +53,4 @@ jobs:
       run: |
           aws s3 cp \
           --region ap-northeast-2 \
-          --acl private \ ./deploy/GDSE-WEB-BackEnd-build.zip s3://GDSE-WEB-BackEnd-build/
+          --acl private \ ./GDSE-WEB-BackEnd-build s3://GDSE-WEB-BackEnd-build/
