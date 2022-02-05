@@ -52,7 +52,9 @@ jobs:
     # appspec.yml Copy
     - name: Copy appspec
       run: cp appspec.yml ./deploy/
-      
+
+    - name: Copy shell
+      run: cp ./scripts/* ./deploy/
     # 압축파일 형태로 전달
     - name: Make zip file
       run: zip -r -qq -j ./GDSE-WEB-BackEnd-build.zip ./deploy
