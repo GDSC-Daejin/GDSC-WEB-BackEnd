@@ -42,6 +42,6 @@ class BasicControllerTest {
     void basicPageVoidTest() {
         String result = basicController.test();
         System.out.println(result);
-        assertThat(basicController.test()).isEqualTo("hi hi");
+        assertThat(basicController.test()).isEqualTo("hi hi!!");
     }
 }
