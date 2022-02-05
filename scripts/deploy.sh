@@ -5,7 +5,8 @@ PROJECT_NAME=GDSC-WEB-BackEnd
 
 
 
-CURRENT_PID=$(pgrep -fl GDSC-WEB | grep jar | awk '{print $1}')
+CURRENT_PID=$(pgrep -f GDSC-WEB.*.jar)
+
 
 echo "현재 구동중인 어플리케이션 pid: $CURRENT_PID"
 
