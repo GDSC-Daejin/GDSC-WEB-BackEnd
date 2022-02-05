@@ -53,4 +53,4 @@ jobs:
         aws s3 cp \
         --region ap-northeast-2 \
         --acl private \ 
-	./GDSE-WEB-BackEnd-build.zip s3://GDSE-WEB-BackEnd-build/
+./GDSE-WEB-BackEnd-build.zip s3://GDSE-WEB-BackEnd-build/
