@@ -59,4 +59,15 @@ jobs:
           aws s3 cp \
           --region ap-northeast-2 \
             ./GDSE-WEB-BackEnd-build.zip s3://$S3_BUCKET_NAME/GDSE-WEB-BackEnd-build/
-     
+      # Deploy
+    - name: Deploy
+      env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: |
+          aws deploy create-deployment \
+          --application-name GDSC-WEB-BACKEND \
+          --deployment-group-name GDSC-WEB-BACKEND-group \
+          --file-exists-behavior OVERWRITE \
+          --s3-location bucket=GDSE-WEB-BackEnd-build,bundleType=zip,key=GDSE-WEB-BackEnd-build.zip \
+          --region ap-northeast-2
