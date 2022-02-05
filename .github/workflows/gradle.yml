@@ -52,7 +52,7 @@ jobs:
 
     # 압축파일 형태로 전달
     - name: Make zip file
-      run: zip -r -qq -j ./GDSE-WEB-BackEnd-build.zip ./deploy
+      run: zip -r -qq -j ./$GITHUB_SHA.zip ./deploy
      
          # S3 Bucket으로 copy
     - name : Run ls -la
@@ -64,7 +64,7 @@ jobs:
       run: |
           aws s3 cp \
           --region ap-northeast-2 \
-            ./GDSE-WEB-BackEnd-build.zip s3://$S3_BUCKET_NAME/
+            ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/
             
       # Deploy
     - name: Deploy
@@ -76,7 +76,7 @@ jobs:
           --application-name GDSC-WEB-BACKEND \
           --deployment-group-name GDSC-WEB-BACKEND-group \
           --file-exists-behavior OVERWRITE \
-          --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=GDSE-WEB-BackEnd-build.zip \
+          --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$GITHUB_SHA.zip \
           --region ap-northeast-2
           
  
