@@ -69,5 +69,5 @@ jobs:
           --application-name GDSC-WEB-BACKEND \
           --deployment-group-name GDSC-WEB-BACKEND-group \
           --file-exists-behavior OVERWRITE \
-          --s3-location bucket=GDSE-WEB-BackEnd-build,bundleType=zip,key=GDSE-WEB-BackEnd-build.zip \
+          --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=GDSE-WEB-BackEnd-build.zip \
           --region ap-northeast-2
