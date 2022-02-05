@@ -39,7 +39,7 @@ jobs:
 
     # 압축파일 형태로 전달
     - name: Make zip file
-      run: zip -r -qq -j ./GDSE-WEB-BackEnd-build.zip .
+      run: zip -r  ./GDSE-WEB-BackEnd-build.zip
 
      
      # S3 Bucket으로 copy
