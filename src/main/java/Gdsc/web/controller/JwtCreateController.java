@@ -38,8 +38,7 @@ public class JwtCreateController {
 		
 		Member memberEntity =
 				memberRepository.findByUsername(googleUser.getProvider()+"_"+googleUser.getProviderId());
-		log.info("Oauth login : " + googleUser.getEmail());
-		log.info("Oauth login : " + googleUser.getName());
+
 		if(memberEntity == null) {
 			Member memberRequest = Member.builder()
 					.username(googleUser.getProvider()+"_"+googleUser.getProviderId())
@@ -53,7 +52,8 @@ public class JwtCreateController {
 			memberEntity = memberRepository.save(memberRequest);
 			log.info("Oauth Join : " + googleUser.getEmail());
 		}
-		
+		log.info("Oauth login : " + googleUser.getEmail());
+		log.info("Oauth login : " + googleUser.getName());
 		String jwtToken = JWT.create()
 				.withSubject(memberEntity.getUsername())
 				.withExpiresAt(new Date(System.currentTimeMillis()+JwtProperties.EXPIRATION_TIME))

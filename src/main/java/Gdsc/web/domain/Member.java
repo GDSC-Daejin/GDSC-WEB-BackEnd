@@ -78,6 +78,7 @@ public class Member {
     @Column
     @ApiModelProperty(example = "google")
     private String provider;
+
     @Column
     @ApiModelProperty(example = "geg6656gew65e")
     private String providerId;
