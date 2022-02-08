@@ -8,5 +8,6 @@ public class GdscWebApplication {
     public static void main(String[] args) {
         SpringApplication.run(GdscWebApplication.class, args);
     }
+    system.out.println("test");
 
 }
