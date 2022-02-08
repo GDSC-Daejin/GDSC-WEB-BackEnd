@@ -8,15 +8,23 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
+
 @Data
 public class PrincipalDetails implements UserDetails {
     @Autowired
     private Member member;
-
+    private Map<String, Object> attributes;
     public PrincipalDetails(Member member) {
         this.member = member;
     }
-
+    public PrincipalDetails(Member member, Map<String, Object> attributes) {
+        this.member = member;
+        this.attributes = attributes;
+    }
+    public Member getUser() {
+        return member;
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
