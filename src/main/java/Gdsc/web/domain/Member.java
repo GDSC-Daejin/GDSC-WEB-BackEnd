@@ -1,8 +1,10 @@
 package Gdsc.web.domain;
 
-import Gdsc.web.config.oauth.model.ProviderType;
+
 import Gdsc.web.model.PositionType;
 import Gdsc.web.model.RoleType;
+import Gdsc.web.oauth.entity.ProviderType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -13,7 +15,10 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -22,11 +27,16 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 public class Member {
 
+    @JsonIgnore
     @Id
-    @GeneratedValue
-    @JsonProperty("id")
-    @ApiModelProperty(example = "1 ---Insert 시  Auto Increament로 넣지말아요")
-    private int id;
+    @Column(name = "USER_SEQ")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long userSeq;
+
+    @Column(name = "USER_ID", length = 64, unique = true)
+    @NotNull
+    @Size(max = 64)
+    private String userId;
 
     @Column(nullable = false)
     @ApiModelProperty(example = "gudcks305")
@@ -38,19 +48,22 @@ public class Member {
     @Column
     String email;
 
+    @Column(name = "EMAIL_VERIFIED_YN", length = 1)
+    @NotNull
+    @Size(min = 1, max = 1)
+    private String emailVerifiedYn;
     @Column
     @ApiModelProperty(example = "나는 위대한 사람")
     private String introduce;
 
-    @Column
-    @ApiModelProperty(example = "이미지 URL 넣을것")
-    private String memberImg;
+    @Column(name = "PROFILE_IMAGE_URL", length = 512)
+    @NotNull
+    @Size(max = 512)
+    private String profileImageUrl;
 
     @Column(length = 30)
     @ApiModelProperty(example = "홍길동")
     String name;
-
-
 
     @Column(length = 30)
     @ApiModelProperty(example = "010-9132-1234")
@@ -68,9 +81,7 @@ public class Member {
     @ApiModelProperty(example = "Backend")
     private PositionType positionType; //백엔든지 프론트인지
 
-    @CreationTimestamp
-    @ApiModelProperty(example = "2022-01-06 14:57:42.777000 ---Insert 시 자동 삽입 넣지말아요")
-    private Timestamp uploadDate;
+
 
     @ColumnDefault("0")
     @ApiModelProperty(example = "0 ---Insert 회원가입시 기본 0 넣지말아요")
@@ -80,11 +91,37 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private ProviderType providerType;
 
-    public Member update(String name, String memberImg , String email) {
-        this.name = name;
-        this.memberImg = memberImg;
-        this.email = email;
-        return this;
+    @Column(name = "MODIFIED_AT")
+    @NotNull
+    private LocalDateTime modifiedAt;
+
+    @CreationTimestamp
+    @ApiModelProperty(example = "2022-01-06 14:57:42.777000 ---Insert 시 자동 삽입 넣지말아요")
+    private LocalDateTime uploadDate;
+
+    public Member(
+            @NotNull @Size(max = 64) String userId,
+            @NotNull @Size(max = 100) String username,
+            @NotNull @Size(max = 512) String email,
+            @NotNull @Size(max = 1) String emailVerifiedYn,
+            @NotNull @Size(max = 512) String profileImageUrl,
+            @NotNull ProviderType providerType,
+            @NotNull RoleType role,
+            @NotNull LocalDateTime modifiedAt,
+            @NotNull LocalDateTime uploadDate
+
+    ) {
+        this.userId = userId;
+        this.username = username;
+        this.password = "NO_PASS";
+        this.email = email != null ? email : "NO_EMAIL";
+        this.emailVerifiedYn = emailVerifiedYn;
+        this.profileImageUrl = profileImageUrl != null ? profileImageUrl : "";
+        this.providerType = providerType;
+        this.role = role;
+        this.uploadDate = uploadDate;
+        this.modifiedAt = modifiedAt;
     }
+
 
 }

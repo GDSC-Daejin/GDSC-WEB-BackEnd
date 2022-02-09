@@ -51,7 +51,7 @@ public class MemberService {
                     return new IllegalArgumentException("없는 사용자");
                 });
         member.setWarning(requestMember.getWarning());
-        member.setMemberImg(requestMember.getMemberImg());
+        member.setProfileImageUrl(requestMember.getProfileImageUrl());
         member.setIntroduce(requestMember.getIntroduce());
         member.setPhoneNumber(requestMember.getPhoneNumber());
         member.setName(requestMember.getName());
@@ -65,5 +65,9 @@ public class MemberService {
         onboardingMember.setInterest(member.getOnboardingMember().getInterest());
         onboardingMember.setMajor(member.getOnboardingMember().getMajor());
         onboardingMember.setNickname(member.getOnboardingMember().getNickname());
+    }
+
+    public Member getMember(String userId) {
+        return memberRepository.findByUserId(userId);
     }
 }

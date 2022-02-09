@@ -1,15 +1,18 @@
 package Gdsc.web.controller.api;
 
+import Gdsc.web.controller.dto.ApiResponse;
 import Gdsc.web.controller.dto.ResponseDto;
 import Gdsc.web.domain.Member;
 import Gdsc.web.domain.OnboardingMember;
 import Gdsc.web.model.RoleType;
 import Gdsc.web.repository.MemberRepository;
 import Gdsc.web.service.MemberService;
+
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -49,5 +52,13 @@ public class MemberApiController {
     public ResponseDto<Integer> updateCore(@RequestBody Member member) {
         memberService.관리자멤버정보수정(member);
         return new ResponseDto<Integer>(HttpStatus.OK, 1, "update 성공");
+    }
+    @GetMapping
+    public ApiResponse getUser() {
+        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Member member =memberService.getMember(principal.getUsername());
+
+        return ApiResponse.success("user", member);
     }
 }
