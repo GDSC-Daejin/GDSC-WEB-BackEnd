@@ -1,7 +1,5 @@
 package Gdsc.web.config;
 
-import Gdsc.web.config.properties.AppProperties;
-import Gdsc.web.config.properties.CorsProperties;
 import Gdsc.web.model.RoleType;
 import Gdsc.web.oauth.exception.RestAuthenticationEntryPoint;
 import Gdsc.web.oauth.filter.TokenAuthenticationFilter;
@@ -23,20 +21,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
-import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsUtils;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
+import Gdsc.web.config.properties.*;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    private final CorsFilter corsFilter;
 
-    private final CorsProperties corsProperties;
     private final AppProperties appProperties;
     private final AuthTokenProvider tokenProvider;
     private final CustomUserDetailsService userDetailsService;
@@ -68,16 +62,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(new RestAuthenticationEntryPoint())
                 .accessDeniedHandler(tokenAccessDeniedHandler)
                 .and()
+                .addFilter(corsFilter)
                 .authorizeRequests()
-                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .antMatchers("/api/**").hasAnyAuthority(RoleType.MEMBER.getCode())
-                .antMatchers("/api/**/admin/**").hasAnyAuthority(RoleType.LEAD.getCode())
-                .anyRequest().authenticated()
+                //.antMatchers("/api/**").hasAnyAuthority(RoleType.MEMBER.getCode())
+                //.antMatchers("/api/**/admin/**").hasAnyAuthority(RoleType.LEAD.getCode())
+                .anyRequest().permitAll()
                 .and()
                 .oauth2Login()
                 .authorizationEndpoint()
                 .baseUri("/oauth2/authorization")
-                .authorizationRequestRepository((AuthorizationRequestRepository<OAuth2AuthorizationRequest>) oAuth2AuthorizationRequestBasedOnCookieRepository())
+                .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
                 .and()
                 .redirectionEndpoint()
                 .baseUri("/*/oauth2/code/*")
@@ -146,21 +140,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new OAuth2AuthenticationFailureHandler(oAuth2AuthorizationRequestBasedOnCookieRepository());
     }
 
-    /*
-     * Cors 설정
-     * */
-    @Bean
-    public UrlBasedCorsConfigurationSource corsConfigurationSource() {
-        UrlBasedCorsConfigurationSource corsConfigSource = new UrlBasedCorsConfigurationSource();
 
-        CorsConfiguration corsConfig = new CorsConfiguration();
-        corsConfig.setAllowedHeaders(Arrays.asList(corsProperties.getAllowedHeaders().split(",")));
-        corsConfig.setAllowedMethods(Arrays.asList(corsProperties.getAllowedMethods().split(",")));
-        corsConfig.setAllowedOrigins(Arrays.asList(corsProperties.getAllowedOrigins().split(",")));
-        corsConfig.setAllowCredentials(true);
-        corsConfig.setMaxAge(corsConfig.getMaxAge());
-
-        corsConfigSource.registerCorsConfiguration("/**", corsConfig);
-        return corsConfigSource;
-    }
 }
