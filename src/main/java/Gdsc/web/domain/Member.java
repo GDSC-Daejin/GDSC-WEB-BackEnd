@@ -1,5 +1,6 @@
 package Gdsc.web.domain;
 
+import Gdsc.web.config.oauth.model.ProviderType;
 import Gdsc.web.model.PositionType;
 import Gdsc.web.model.RoleType;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -33,6 +34,9 @@ public class Member {
     @ApiModelProperty(example = "$10$8lDyClwH.ET3BA44inQLKuRNISg4paTPwgD2V5pw/RMmtTGJvhPvy")
     @Column(nullable = false)
     String password;
+    @ApiModelProperty(example = "gudcksegeg@gmail.com")
+    @Column
+    String email;
 
     @Column
     @ApiModelProperty(example = "나는 위대한 사람")
@@ -45,6 +49,8 @@ public class Member {
     @Column(length = 30)
     @ApiModelProperty(example = "홍길동")
     String name;
+
+
 
     @Column(length = 30 , nullable = false)
     @ApiModelProperty(example = "010-9132-1234")
@@ -69,6 +75,10 @@ public class Member {
     @ColumnDefault("0")
     @ApiModelProperty(example = "0 ---Insert 회원가입시 기본 0 넣지말아요")
     private int warning;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private ProviderType providerType;
 
     public Member update(String name, String memberImg) {
         this.name = name;
