@@ -52,13 +52,13 @@ public class Member {
 
 
 
-    @Column(length = 30 , nullable = false)
+    @Column(length = 30)
     @ApiModelProperty(example = "010-9132-1234")
     String phoneNumber;
     @Enumerated(EnumType.STRING)
 
     @OneToOne
-    @JoinColumn(name = "email" )
+    @JoinColumn(name = "emailOnBoarding" )
     private OnboardingMember onboardingMember;
     @Enumerated(EnumType.STRING)
     @ApiModelProperty(example = "MEMBER ---Insert 시기본값 MEMBER 로 회원가입 넣지말아요")
@@ -80,10 +80,10 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private ProviderType providerType;
 
-    public Member update(String name, String memberImg) {
+    public Member update(String name, String memberImg , String email) {
         this.name = name;
         this.memberImg = memberImg;
-
+        this.email = email;
         return this;
     }
 
