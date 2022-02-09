@@ -34,6 +34,10 @@ public class Member {
     @Column(nullable = false)
     String password;
 
+    @Column(nullable = false)
+    @ApiModelProperty(example = "gi@gmail.com")
+    private String email;
+
     @Column
     @ApiModelProperty(example = "나는 위대한 사람")
     private String introduce;
@@ -70,11 +74,24 @@ public class Member {
     @ApiModelProperty(example = "0 ---Insert 회원가입시 기본 0 넣지말아요")
     private int warning;
 
+    // OAuth를 위해 구성한 추가 필드 2개
+    @Column
+    @ApiModelProperty(example = "google")
+    private String provider;
+
+    @Column
+    @ApiModelProperty(example = "geg6656gew65e")
+    private String providerId;
+
+
     public Member update(String name, String memberImg) {
         this.name = name;
         this.memberImg = memberImg;
 
         return this;
+    }
+    public String getEmail() {
+        return this.email;
     }
 
 }
