@@ -15,5 +15,4 @@ public interface OnboardingMemberRepository extends JpaRepository<OnboardingMemb
     boolean existsByEmail(String email);
     boolean existsByNickname(String nickname);
 
-
 }

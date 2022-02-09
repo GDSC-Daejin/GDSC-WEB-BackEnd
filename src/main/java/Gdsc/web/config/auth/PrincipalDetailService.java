@@ -20,7 +20,11 @@ public class PrincipalDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Member memberEntity = memberRepository.findByUsername(username);
+        Member memberEntity = memberRepository.findByUsername(username)
+                .orElseThrow(()->{
+                    log.error("User not found in the database {}", username);
+                    return  new IllegalArgumentException("없는 사용자 입니다.");
+                });
         //System.out.println("memberEntitiy : " + memberEntity);
 
 

@@ -9,6 +9,5 @@ import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Integer> {
     //Optional<Member> findByEmail(String email);
-    Member findByUsername(String username);
-    Optional<Member> findByProviderAndProviderId(String provider, String providerId);
+    Optional<Member> findByUsername(String username);
 }
