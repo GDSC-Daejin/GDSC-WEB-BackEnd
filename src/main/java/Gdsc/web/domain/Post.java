@@ -26,15 +26,18 @@ public class Post {
     private Long id;
 
     @Column
+    @ApiModelProperty(example = "/ec2-south/~~~/")
+    String imagePath;
+    @Column
     @ApiModelProperty(example = "제목")
     String title;
     @Lob
     @ApiModelProperty(example = "내용")
     String content;
 
-    @ManyToOne
-    @JoinColumn(name = "USER_ID")
-    private Member member;
+    @ApiModelProperty(example = "10101105445")
+    @Column(name = "USER_ID")
+    private String userId;
 
     @ColumnDefault("0")
     @ApiModelProperty(example = "0")
@@ -44,9 +47,16 @@ public class Post {
     @ApiModelProperty(example = "0")
     private int unlikeNumber;
 
+
+    /// 해쉬태그 구현 필요
+
+    @Column
+    @ApiModelProperty(example = "0")
+    private boolean tmpStore;
     @Column(name = "MODIFIED_AT")
     @NotNull
     private LocalDateTime modifiedAt;
+
 
     @CreationTimestamp
     @ApiModelProperty(example = "2022-01-06 14:57:42.777000")

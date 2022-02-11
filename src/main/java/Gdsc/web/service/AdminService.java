@@ -23,7 +23,7 @@ public class AdminService {
     public void 맴버권한수정(final Member member){
         // Validations
         validate(member);
-        
+
         final Member original = repository.findByUserId(member.getUserId());
         original.setRole(member.getRole());
 
