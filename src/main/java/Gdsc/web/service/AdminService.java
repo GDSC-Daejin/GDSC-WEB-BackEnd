@@ -1,6 +1,7 @@
 package Gdsc.web.service;
 
 import Gdsc.web.domain.Member;
+import Gdsc.web.model.RoleType;
 import Gdsc.web.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,8 +28,17 @@ public class AdminService {
 
         original.ifPresent(mem ->{
             mem.setRole(member.getRole());
-            repository.save(mem);
         });
+    }
+
+    @Transactional(readOnly = true)
+    public List<Member> 멤버목록(){
+        return repository.findMember();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Member> 게스트목록(){
+        return repository.findGUEST();
     }
 
     // 유효성 검사
