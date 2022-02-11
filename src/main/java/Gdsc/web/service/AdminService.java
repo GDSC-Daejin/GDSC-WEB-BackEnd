@@ -23,12 +23,8 @@ public class AdminService {
         // Validations
         validate(member);
 
-        final Optional<Member> original = repository.findByUsername(member.getUsername());
-
-        original.ifPresent(mem ->{
-            mem.setRole(member.getRole());
-            repository.save(mem);
-        });
+        final Member original = repository.findByUserId(member.getUserId());
+        original.setRole(member.getRole());
     }
 
     // 유효성 검사
