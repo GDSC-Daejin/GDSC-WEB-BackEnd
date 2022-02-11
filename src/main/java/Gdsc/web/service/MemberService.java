@@ -1,11 +1,9 @@
 package Gdsc.web.service;
 
 import Gdsc.web.domain.Member;
-import Gdsc.web.domain.OnboardingMember;
+import Gdsc.web.domain.MemberNicknameMapping;
 import Gdsc.web.model.RoleType;
-import Gdsc.web.repository.OnboardingMemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import Gdsc.web.repository.MemberRepository;
@@ -19,7 +17,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    private final OnboardingMemberRepository onboardingMemberRepository;
+
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Transactional
@@ -43,31 +41,12 @@ public class MemberService {
                     throw new IllegalStateException("이미 존재하는 닉네임 입니다");
                 });
     }
-
-    @Transactional
-    public void 관리자멤버정보수정(Member requestMember){
-        Member member = memberRepository.findByUsername(requestMember.getUsername())
-                .orElseThrow(()->{
-                    return new IllegalArgumentException("없는 사용자");
-                });
-        member.setWarning(requestMember.getWarning());
-        member.setProfileImageUrl(requestMember.getProfileImageUrl());
-        member.setIntroduce(requestMember.getIntroduce());
-        member.setPhoneNumber(requestMember.getPhoneNumber());
-        member.setName(requestMember.getName());
-        member.setPositionType(requestMember.getPositionType());
-        member.setRole(requestMember.getRole());
-
-        OnboardingMember onboardingMember = onboardingMemberRepository.findByEmail(requestMember.getUsername())
-                .orElseThrow(()->{
-                    return new IllegalStateException("없는 사용자 입니다");
-                });
-        onboardingMember.setInterest(member.getOnboardingMember().getInterest());
-        onboardingMember.setMajor(member.getOnboardingMember().getMajor());
-        onboardingMember.setNickname(member.getOnboardingMember().getNickname());
+    public List<MemberNicknameMapping> 닉네임리스트() {
+        return memberRepository.findAllBy();
     }
 
-    public Member getMember(String userId) {
+
+    public Member getUserId(String userId) {
         return memberRepository.findByUserId(userId);
     }
 }

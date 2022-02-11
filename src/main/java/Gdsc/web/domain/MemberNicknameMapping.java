@@ -1,5 +1,5 @@
 package Gdsc.web.domain;
 
-public interface OnboardingMemberMapping {
+public interface MemberNicknameMapping {
     String getNickname();
 }

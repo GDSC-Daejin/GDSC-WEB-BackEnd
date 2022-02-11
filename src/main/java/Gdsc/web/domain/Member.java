@@ -19,6 +19,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -39,7 +40,7 @@ public class Member {
     private String userId;
 
     @Column(nullable = false)
-    @ApiModelProperty(example = "gudcks305")
+    @ApiModelProperty(example = "유형찬")
     String username;
     @ApiModelProperty(example = "$10$8lDyClwH.ET3BA44inQLKuRNISg4paTPwgD2V5pw/RMmtTGJvhPvy")
     @Column(nullable = false)
@@ -52,6 +53,8 @@ public class Member {
     @NotNull
     @Size(min = 1, max = 1)
     private String emailVerifiedYn;
+
+
     @Column
     @ApiModelProperty(example = "나는 위대한 사람")
     private String introduce;
@@ -62,17 +65,25 @@ public class Member {
     private String profileImageUrl;
 
     @Column(length = 30)
-    @ApiModelProperty(example = "홍길동")
-    String name;
+    @ApiModelProperty(example = "Rocoli")
+    String nickName;
 
     @Column(length = 30)
     @ApiModelProperty(example = "010-9132-1234")
     String phoneNumber;
-    @Enumerated(EnumType.STRING)
 
-    @OneToOne
-    @JoinColumn(name = "emailOnBoarding" )
-    private OnboardingMember onboardingMember;
+    @Column
+    @ApiModelProperty(example = "산업경영공학과")
+    String major;
+
+    @Column(name = "GIT_EMAIL" , length = 30)
+    @ApiModelProperty(example = "gudcks0305")
+    String gitEmail;
+
+    @Column(length = 30)
+    @ApiModelProperty(example = "20177878")
+    String StudentID;
+
     @Enumerated(EnumType.STRING)
     @ApiModelProperty(example = "MEMBER ---Insert 시기본값 MEMBER 로 회원가입 넣지말아요")
     private RoleType role; // 멤버 리드
@@ -82,14 +93,24 @@ public class Member {
     private PositionType positionType; //백엔든지 프론트인지
 
 
-
-    @ColumnDefault("0")
-    @ApiModelProperty(example = "0 ---Insert 회원가입시 기본 0 넣지말아요")
-    private int warning;
+    @Column
+    @OneToMany
+    @JoinColumn(name = "USER_ID")
+    private List<WarnDescription> warn;
 
     @Column
     @Enumerated(EnumType.STRING)
     private ProviderType providerType;
+
+    @Column
+    @OneToMany
+    @JoinColumn(name = "USER_ID")
+    private List<Post> post;
+
+    @Column
+    @OneToMany
+    @JoinColumn(name = "Id")
+    private List<Post> scrapPost;
 
     @Column(name = "MODIFIED_AT")
     @NotNull
