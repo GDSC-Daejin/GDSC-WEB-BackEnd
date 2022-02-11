@@ -1,6 +1,7 @@
 package Gdsc.web.service;
 
 import Gdsc.web.domain.Member;
+import Gdsc.web.model.RoleType;
 import Gdsc.web.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,9 +23,20 @@ public class AdminService {
     public void 맴버권한수정(final Member member){
         // Validations
         validate(member);
-
+        
         final Member original = repository.findByUserId(member.getUserId());
         original.setRole(member.getRole());
+
+    }
+
+    @Transactional(readOnly = true)
+    public List<Member> 멤버목록(){
+        return repository.findMember();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Member> 게스트목록(){
+        return repository.findGUEST();
     }
 
     // 유효성 검사
