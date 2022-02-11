@@ -1,8 +1,8 @@
 package Gdsc.web.repository;
 
 import Gdsc.web.domain.Member;
-import Gdsc.web.domain.OnboardingMember;
 
+import Gdsc.web.domain.MemberNicknameMapping;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -18,4 +18,9 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
 
     @Query("select m from Member m where m.role = 'GUEST'")
     List<Member> findGUEST();
+
+    List<MemberNicknameMapping> findAllBy();
+    Member findByUserId(String id);
+    Member findByEmail(String email);
+
 }
