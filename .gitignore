@@ -7,3 +7,4 @@
 /src/test/resources/application.properties
 /src/main/resources/application-oauth.properties
 ~/app/step1/loglog.log
+src/test/resources/application.properties
