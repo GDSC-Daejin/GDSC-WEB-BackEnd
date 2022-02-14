@@ -41,9 +41,7 @@ public class MemberService {
                     throw new IllegalStateException("이미 존재하는 닉네임 입니다");
                 });
     }
-    public List<MemberNicknameMapping> 닉네임리스트() {
-        return memberRepository.findAllBy();
-    }
+
 
 
     public Member getUserId(String userId) {
