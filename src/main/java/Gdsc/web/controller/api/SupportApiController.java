@@ -1,8 +1,7 @@
 package Gdsc.web.controller.api;
 
-import Gdsc.web.controller.dto.ResponseDto;
-import Gdsc.web.controller.dto.SupportDto;
-import Gdsc.web.domain.Member;
+import Gdsc.web.dto.ResponseDto;
+import Gdsc.web.dto.SupportDto;
 import Gdsc.web.service.SupportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

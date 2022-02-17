@@ -1,11 +1,11 @@
 package Gdsc.web.controller.auth;
 
 import Gdsc.web.config.properties.AppProperties;
-import Gdsc.web.controller.dto.ApiResponse;
-import Gdsc.web.controller.dto.ResponseDto;
-import Gdsc.web.controller.dto.auth.AuthReqModel;
-import Gdsc.web.controller.dto.user.UserRefreshToken;
-import Gdsc.web.domain.Member;
+import Gdsc.web.dto.ApiResponse;
+import Gdsc.web.dto.ResponseDto;
+import Gdsc.web.dto.auth.AuthReqModel;
+import Gdsc.web.entity.UserRefreshToken;
+import Gdsc.web.entity.Member;
 import Gdsc.web.model.RoleType;
 import Gdsc.web.oauth.entity.UserPrincipal;
 import Gdsc.web.oauth.token.AuthToken;
@@ -16,7 +16,6 @@ import Gdsc.web.utils.CookieUtil;
 import Gdsc.web.utils.HeaderUtil;
 import io.jsonwebtoken.Claims;
 
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
