@@ -1,7 +1,6 @@
 package Gdsc.web.service;
 
-import Gdsc.web.domain.Member;
-import Gdsc.web.domain.MemberNicknameMapping;
+import Gdsc.web.entity.Member;
 import Gdsc.web.model.RoleType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

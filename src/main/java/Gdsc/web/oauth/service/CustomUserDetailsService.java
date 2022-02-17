@@ -1,6 +1,6 @@
 package Gdsc.web.oauth.service;
 
-import Gdsc.web.domain.Member;
+import Gdsc.web.entity.Member;
 import Gdsc.web.oauth.entity.UserPrincipal;
 import Gdsc.web.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;

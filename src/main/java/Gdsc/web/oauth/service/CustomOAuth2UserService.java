@@ -1,6 +1,6 @@
 package Gdsc.web.oauth.service;
 
-import Gdsc.web.domain.Member;
+import Gdsc.web.entity.Member;
 import Gdsc.web.model.RoleType;
 import Gdsc.web.oauth.entity.ProviderType;
 import Gdsc.web.oauth.entity.UserPrincipal;
