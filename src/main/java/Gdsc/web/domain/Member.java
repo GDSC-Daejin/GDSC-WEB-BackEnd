@@ -95,21 +95,21 @@ public class Member {
 
     @Column
     @OneToMany
-    @JoinColumn(name = "USER_ID")
+    @JoinColumn(name = "WARN_ID")
     private List<WarnDescription> warn;
 
     @Column
     @Enumerated(EnumType.STRING)
     private ProviderType providerType;
 
-    @Column
+/*    @Column
     @OneToMany
-    @JoinColumn(name = "USER_ID")
-    private List<Post> post;
+    @JoinColumn(name = "MY_POST_ID")
+    private List<Post> post;*/
 
     @Column
-    @OneToMany
-    @JoinColumn(name = "Id")
+    @ManyToMany
+    @JoinColumn(name = "SCRAP_POST_ID")
     private List<Post> scrapPost;
 
     @Column(name = "MODIFIED_AT")

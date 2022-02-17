@@ -27,13 +27,14 @@ public class WarnDescription {
     @Lob
     @ApiModelProperty(example = "내용")
     String content;
+
     @ApiModelProperty(example = "누가")
-    @Column(name = "Username", length = 64 , nullable = false)
-    String username;
+    @ManyToOne
+    private Member fromUser;
 
     @ApiModelProperty(example = "누구한테")
-    @Column(length = 64 , nullable = false)
-    String nickName;
+    @ManyToOne
+    private Member toUser;
 
     @CreationTimestamp
     @ApiModelProperty(example = "2022-01-06 14:57:42.777000")

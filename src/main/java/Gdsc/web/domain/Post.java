@@ -36,18 +36,9 @@ public class Post {
     String content;
 
     @ApiModelProperty(example = "10101105445")
-    @Column(name = "USER_ID")
-    private String userId;
-
-    @ColumnDefault("0")
-    @ApiModelProperty(example = "0")
-    private int likeNumber;
-
-    @ColumnDefault("0")
-    @ApiModelProperty(example = "0")
-    private int unlikeNumber;
-
-
+    @ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name="userId") //컬럼명
+    private Member member;
     /// 해쉬태그 구현 필요
 
     @Column
