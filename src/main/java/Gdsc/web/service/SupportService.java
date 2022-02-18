@@ -1,10 +1,9 @@
 package Gdsc.web.service;
 
-import Gdsc.web.controller.dto.SupportDto;
+import Gdsc.web.dto.SupportDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class SupportService {

@@ -1,16 +1,13 @@
 package Gdsc.web.service;
 
-import Gdsc.web.domain.Member;
-import Gdsc.web.model.RoleType;
+import Gdsc.web.entity.Member;
 import Gdsc.web.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j // 디버그를 위한 로그 설정
 @Service
@@ -24,11 +21,9 @@ public class AdminService {
         // Validations
         validate(member);
 
-        final Optional<Member> original = repository.findByUsername(member.getUsername());
+        final Member original = repository.findByUserId(member.getUserId());
+        original.setRole(member.getRole());
 
-        original.ifPresent(mem ->{
-            mem.setRole(member.getRole());
-        });
     }
 
     @Transactional(readOnly = true)

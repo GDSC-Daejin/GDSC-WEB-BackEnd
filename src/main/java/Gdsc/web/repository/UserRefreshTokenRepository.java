@@ -1,6 +1,6 @@
 package Gdsc.web.repository;
 
-import Gdsc.web.controller.dto.user.UserRefreshToken;
+import Gdsc.web.entity.UserRefreshToken;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

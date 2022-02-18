@@ -1,8 +1,7 @@
 package Gdsc.web.repository;
 
-import Gdsc.web.domain.Member;
+import Gdsc.web.entity.Member;
 
-import Gdsc.web.domain.MemberNicknameMapping;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

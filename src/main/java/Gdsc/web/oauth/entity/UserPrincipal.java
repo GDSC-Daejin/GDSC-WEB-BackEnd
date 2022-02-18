@@ -1,6 +1,6 @@
 package Gdsc.web.oauth.entity;
 
-import Gdsc.web.domain.Member;
+import Gdsc.web.entity.Member;
 import Gdsc.web.model.RoleType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,20 +1,24 @@
 package Gdsc.web.controller.auth;
 
 import Gdsc.web.config.properties.AppProperties;
-import Gdsc.web.controller.dto.ApiResponse;
-import Gdsc.web.controller.dto.auth.AuthReqModel;
-import Gdsc.web.controller.dto.user.UserRefreshToken;
+import Gdsc.web.dto.ApiResponse;
+import Gdsc.web.dto.ResponseDto;
+import Gdsc.web.dto.auth.AuthReqModel;
+import Gdsc.web.entity.UserRefreshToken;
+import Gdsc.web.entity.Member;
 import Gdsc.web.model.RoleType;
 import Gdsc.web.oauth.entity.UserPrincipal;
 import Gdsc.web.oauth.token.AuthToken;
 import Gdsc.web.oauth.token.AuthTokenProvider;
 import Gdsc.web.repository.UserRefreshTokenRepository;
+import Gdsc.web.service.MemberService;
 import Gdsc.web.utils.CookieUtil;
 import Gdsc.web.utils.HeaderUtil;
 import io.jsonwebtoken.Claims;
 
-import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("")
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -35,11 +39,17 @@ public class AuthController {
     private final AuthTokenProvider tokenProvider;
     private final AuthenticationManager authenticationManager;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
-
+    private  final MemberService memberService;
     private final static long THREE_DAYS_MSEC = 259200000;
     private final static String REFRESH_TOKEN = "refresh_token";
-
-    @PostMapping("/login")
+    @ApiOperation(value = "회원가입", notes = "회원가입 할때 쓰는 놈")
+    @PostMapping("/auth/join")
+    public ResponseDto<Integer> join(@RequestBody Member member) {
+        memberService.회원가입(member);
+        // 수정필요
+        return new ResponseDto<Integer>(HttpStatus.OK, 1, "성공");
+    }
+    @PostMapping("/auth/login")
     public ApiResponse login(
             HttpServletRequest request,
             HttpServletResponse response,
@@ -51,7 +61,7 @@ public class AuthController {
                         authReqModel.getPassword()
                 )
         );
-
+        System.out.println("hohohrohpop");
         String userId = authReqModel.getId();
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
