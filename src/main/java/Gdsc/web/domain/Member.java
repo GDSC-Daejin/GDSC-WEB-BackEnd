@@ -54,7 +54,6 @@ public class Member {
     @Size(min = 1, max = 1)
     private String emailVerifiedYn;
 
-
     @Column
     @ApiModelProperty(example = "나는 위대한 사람")
     private String introduce;
@@ -92,7 +91,6 @@ public class Member {
     @ApiModelProperty(example = "Backend")
     private PositionType positionType; //백엔든지 프론트인지
 
-
     @Column
     @OneToMany
     @JoinColumn(name = "USER_ID")
@@ -100,7 +98,7 @@ public class Member {
 
     @Column
     @Enumerated(EnumType.STRING)
-    private ProviderType providerType;
+    private ProviderType providerType; // 어떤 소셜로그인인지 파악
 
     @Column
     @OneToMany
@@ -143,6 +141,4 @@ public class Member {
         this.uploadDate = uploadDate;
         this.modifiedAt = modifiedAt;
     }
-
-
 }

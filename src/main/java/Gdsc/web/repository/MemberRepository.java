@@ -19,7 +19,6 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
     @Query("select m from Member m where m.role = 'GUEST'")
     List<Member> findGUEST();
 
-    List<MemberNicknameMapping> findAllBy();
     Member findByUserId(String id);
     Member findByEmail(String email);
 
