@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -18,9 +19,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Post {
     @Id
-    @Column(name = "Id")
+    @Column(name = "POST_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long postId;
 
     @Column
     @ApiModelProperty(example = "/ec2-south/~~~/")
@@ -32,11 +33,10 @@ public class Post {
     @ApiModelProperty(example = "내용")
     String content;
 
-    @ApiModelProperty(example = "10101105445")
-    @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="userId") //컬럼명
-    private Member member;
-    /// 해쉬태그 구현 필요
+
+    @ManyToOne(optional = false , cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "USER_ID" , nullable = false, unique = true)
+    private MemberInfo memberInfo;
 
     @Column
     @ApiModelProperty(example = "0")
@@ -45,9 +45,14 @@ public class Post {
     @NotNull
     private LocalDateTime modifiedAt;
 
+    @OneToMany
+    @JoinColumn(name = "POST_HASH_TAG_ID")
+    private List<PostHashTag> postHashTagList;
 
     @CreationTimestamp
     @ApiModelProperty(example = "2022-01-06 14:57:42.777000")
     private LocalDateTime uploadDate;
+
+
 
 }

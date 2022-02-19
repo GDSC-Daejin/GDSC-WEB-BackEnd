@@ -1,5 +1,6 @@
 package Gdsc.web.entity;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -7,21 +8,19 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Data
-@Builder
 @Entity
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Member_Scrap_post {
+@Builder
+public class Category {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "Category_ID")
+    private int categoryId;
 
-    @ManyToOne
-    @JoinColumn(name="userId")
-    private Member member;
+    @Column(name = "Category_Name" , length = 30 , nullable = false)
+    private String categoryName;
 
-    @ManyToOne
-    @JoinColumn(name="postId")
-    private Post post;
 }
