@@ -1,4 +1,4 @@
-package Gdsc.web.entity;
+package Gdsc.web.dto.mapping;
 
 public interface MemberNicknameMapping {
     String getNickname();

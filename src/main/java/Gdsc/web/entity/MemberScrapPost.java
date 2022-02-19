@@ -15,36 +15,20 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class WarnDescription {
+public class MemberScrapPost {
     @Id
-    @Column(name = "Id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    @ApiModelProperty(example = "제목")
-    String title;
-    @Lob
-    @ApiModelProperty(example = "내용")
-    String content;
-
-    @ApiModelProperty(example = "누가")
     @ManyToOne
-    private Member fromUser;
+    @JoinColumn(name="USER_ID")
+    private MemberInfo memberInfo;
 
-    @ApiModelProperty(example = "누구한테")
     @ManyToOne
-    @JoinColumn(name = "TO_USER")
-    private Member toUser;
+    @JoinColumn(name="POST_ID")
+    private Post post;
 
     @CreationTimestamp
     @ApiModelProperty(example = "2022-01-06 14:57:42.777000")
     private LocalDateTime uploadDate;
-
-
-
-
-
-
-
 }
