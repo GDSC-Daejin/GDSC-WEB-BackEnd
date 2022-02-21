@@ -1,0 +1,87 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
+
+name: Java CI with Gradle
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+env:
+  S3_BUCKET_NAME: gdsc-web-backend-bucket
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v1.4.3
+      with:
+        java-version: 1.8
+        
+    - name: Grant execute permission for gradlew
+      run: chmod +x ./gradlew
+      shell: bash
+
+    - name: Build with Gradle
+      run: ./gradlew  clean build
+      shell: bash
+      
+      #work flow 시간
+    - name: Get current time
+      uses: 1466587594/get-current-time@v2
+      id: current-time
+      with:
+          format: YYYY-MM-DDTHH-mm-ss
+          utcOffset: "+09:00"
+
+  # 전송할 파일을 담을 디렉토리 생성
+    - name: Make Directory for deliver
+      run: mkdir deploy
+
+      # Jar 파일 Copy
+    - name: Copy Jar
+      run: cp ./build/libs/*.jar ./deploy/
+    # appspec.yml Copy
+    - name: Copy appspec
+      run: cp appspec.yml ./deploy/
+
+    - name: Copy shell
+      run: cp ./scripts/* ./deploy/
+    # 압축파일 형태로 전달
+    - name: Make zip file
+      run: zip -r -qq -j ./GDSE-WEB-BackEnd-build.zip ./deploy
+     
+         # S3 Bucket으로 copy
+    - name : Run ls -la
+      run : ls -la
+    - name: Deliver to AWS S3
+      env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{  secrets.AWS_SECRET_ACCESS_KEY }}
+      run: |
+          aws s3 cp \
+          --region ap-northeast-2 \
+            ./GDSE-WEB-BackEnd-build.zip s3://$S3_BUCKET_NAME/
+            
+      # Deploy
+    - name: Deploy
+      env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: |
+          aws deploy create-deployment \
+          --application-name GDSC-WEB-BACKEND \
+          --deployment-group-name GDSC-WEB-BACKEND-group \
+          --file-exists-behavior OVERWRITE \
+          --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=GDSE-WEB-BackEnd-build.zip \
+          --region ap-northeast-2
+          
+ 
