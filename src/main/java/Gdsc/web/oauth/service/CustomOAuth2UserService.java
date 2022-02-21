@@ -8,12 +8,11 @@ import Gdsc.web.oauth.entity.UserPrincipal;
 import Gdsc.web.oauth.exception.OAuthProviderMissMatchException;
 import Gdsc.web.oauth.info.OAuth2UserInfo;
 import Gdsc.web.oauth.info.OAuth2UserInfoFactory;
-import Gdsc.web.repository.MemberInfoRepository;
-import Gdsc.web.repository.MemberRepository;
+import Gdsc.web.repository.memberinfo.JpaMemberInfoRepository;
+import Gdsc.web.repository.member.JpaMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -26,8 +25,8 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
-    private final MemberRepository userRepository;
-    private final MemberInfoRepository memberInfoRepository;
+    private final JpaMemberRepository userRepository;
+    private final JpaMemberInfoRepository memberInfoRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {

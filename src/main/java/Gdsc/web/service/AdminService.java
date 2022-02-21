@@ -1,7 +1,7 @@
 package Gdsc.web.service;
 
 import Gdsc.web.entity.Member;
-import Gdsc.web.repository.MemberRepository;
+import Gdsc.web.repository.member.JpaMemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminService {
 
-    private final MemberRepository repository;
+    private final JpaMemberRepository repository;
 
     @Transactional
     public void 맴버권한수정(final Member member){

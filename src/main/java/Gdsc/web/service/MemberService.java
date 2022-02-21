@@ -3,11 +3,11 @@ package Gdsc.web.service;
 import Gdsc.web.entity.Member;
 import Gdsc.web.entity.MemberInfo;
 import Gdsc.web.model.RoleType;
-import Gdsc.web.repository.MemberInfoRepository;
+import Gdsc.web.repository.memberinfo.JpaMemberInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import Gdsc.web.repository.MemberRepository;
+import Gdsc.web.repository.member.JpaMemberRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -16,8 +16,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberService {
 
-    private final MemberRepository memberRepository;
-    private final MemberInfoRepository memberInfoRepository;
+    private final JpaMemberRepository memberRepository;
+    private final JpaMemberInfoRepository memberInfoRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Transactional
