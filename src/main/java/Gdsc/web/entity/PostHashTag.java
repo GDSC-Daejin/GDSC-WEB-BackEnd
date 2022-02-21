@@ -24,7 +24,9 @@ public class PostHashTag {
     @Column(name = "tag" , nullable = false)
     private String tag;
 
-    @Column(name = "POST_ID")
-    private Long postId;
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    private Post post;
+
 
 }

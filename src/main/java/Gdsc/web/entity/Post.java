@@ -23,7 +23,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;
 
-    @Column
+    @Column // 썸네일
     @ApiModelProperty(example = "/ec2-south/~~~/")
     String imagePath;
     @Column
@@ -34,13 +34,19 @@ public class Post {
     String content;
 
 
-    @ManyToOne(optional = false , cascade = CascadeType.REMOVE)
+    @ManyToOne(optional = false , cascade = CascadeType.ALL)
     @JoinColumn(name = "USER_ID" , nullable = false, unique = true)
     private MemberInfo memberInfo;
 
+    //임시 저장 여부
     @Column
     @ApiModelProperty(example = "0")
     private boolean tmpStore;
+
+    @JoinColumn
+    @OneToMany(mappedBy = "post")
+    private List<PostHashTag> postHashTags;
+
     @Column(name = "MODIFIED_AT")
     @NotNull
     private LocalDateTime modifiedAt;

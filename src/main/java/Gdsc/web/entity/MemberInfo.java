@@ -1,5 +1,6 @@
 package Gdsc.web.entity;
 
+import Gdsc.web.model.PositionType;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -48,11 +49,17 @@ public class MemberInfo {
     @ApiModelProperty(example = "20177878")
     private String StudentID;
 
-    @JoinColumn(name = "Position_Type")
-    @OneToOne
-    private Category PositionType;
+    @Column(name = "POSITION_TYPE")
+    private Gdsc.web.model.PositionType PositionType;
 
     @Column(name = "HashTag")
     private String hashTag;
+
+    /// not table 속성
+    @OneToMany(mappedBy = "memberInfo")
+    private List<MemberScrapPost> memberScrapPostList;
+
+    @OneToMany(mappedBy = "memberInfo")
+    private List<Post> mypost;
 
 }
