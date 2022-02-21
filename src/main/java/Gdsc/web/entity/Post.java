@@ -44,7 +44,7 @@ public class Post {
     private boolean tmpStore;
 
     @JoinColumn
-    @OneToMany(mappedBy = "post")
+    @OneToMany
     private List<PostHashTag> postHashTags;
 
     @Column(name = "MODIFIED_AT")
