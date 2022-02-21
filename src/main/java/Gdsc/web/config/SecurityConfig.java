@@ -64,6 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilter(corsFilter)
                 .authorizeRequests()
+                .antMatchers("/api/support/limit").permitAll()
                 .antMatchers("/api/**").hasAnyAuthority(RoleType.MEMBER.getCode())
                 .antMatchers("/api/admin/**").hasAnyAuthority(RoleType.LEAD.getCode())
                 .anyRequest().permitAll()
