@@ -51,8 +51,8 @@ public class Post {
     @NotNull
     private LocalDateTime modifiedAt;
 
-    @OneToMany
-    @JoinColumn(name = "POST_HASH_TAG_ID")
+    @OneToMany(mappedBy = "post")
+    @JoinColumn
     private List<PostHashTag> postHashTagList;
 
     @CreationTimestamp
