@@ -43,14 +43,13 @@ public class AuthController {
     private final static long THREE_DAYS_MSEC = 259200000;
     private final static String REFRESH_TOKEN = "refresh_token";
     @ApiOperation(value = "회원가입", notes = "회원가입 할때 쓰는 놈")
-    @PostMapping("/test/auth/join")
+    @PostMapping("/auth/join")
     public ResponseDto<Integer> join(@RequestBody Member member) {
-
         memberService.회원가입(member);
         // 수정필요
         return new ResponseDto<Integer>(HttpStatus.OK, 1, "성공");
     }
-    @PostMapping("/test/auth/login")
+    @PostMapping("/auth/login")
     public ApiResponse login(
             HttpServletRequest request,
             HttpServletResponse response,
@@ -62,7 +61,7 @@ public class AuthController {
                         authReqModel.getPassword()
                 )
         );
-
+        System.out.println("hohohrohpop");
         String userId = authReqModel.getId();
         SecurityContextHolder.getContext().setAuthentication(authentication);
 

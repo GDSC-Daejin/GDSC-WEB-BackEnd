@@ -1,15 +1,16 @@
 package Gdsc.web.oauth.service;
 
 import Gdsc.web.entity.Member;
-import Gdsc.web.entity.MemberInfo;
 import Gdsc.web.model.RoleType;
 import Gdsc.web.oauth.entity.ProviderType;
 import Gdsc.web.oauth.entity.UserPrincipal;
 import Gdsc.web.oauth.exception.OAuthProviderMissMatchException;
 import Gdsc.web.oauth.info.OAuth2UserInfo;
 import Gdsc.web.oauth.info.OAuth2UserInfoFactory;
+
 import Gdsc.web.repository.memberinfo.JpaMemberInfoRepository;
 import Gdsc.web.repository.member.JpaMemberRepository;
+import Gdsc.web.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
@@ -25,8 +26,10 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
+
     private final JpaMemberRepository userRepository;
     private final JpaMemberInfoRepository memberInfoRepository;
+    private final MemberRepository userRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -65,8 +68,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private Member createUser(OAuth2UserInfo userInfo, ProviderType providerType) {
         LocalDateTime now = LocalDateTime.now();
-        MemberInfo memberInfo = new MemberInfo();
-        memberInfo.setUserID(userInfo.getId());
         Member user = new Member(
                 userInfo.getId(),
                 userInfo.getName(),
@@ -76,10 +77,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 providerType,
                 RoleType.GUEST,
                 now,
-                now,
-                memberInfo
+                now
         );
-        memberInfoRepository.save(memberInfo);
+
         return userRepository.saveAndFlush(user);
     }
 
