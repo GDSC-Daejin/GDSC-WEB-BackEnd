@@ -34,6 +34,7 @@ public class WarnDescription {
 
     @ApiModelProperty(example = "누구한테")
     @ManyToOne
+    @JoinColumn(name = "TO_USER")
     private Member toUser;
 
     @CreationTimestamp

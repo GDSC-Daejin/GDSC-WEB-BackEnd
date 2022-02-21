@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -18,11 +19,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Post {
     @Id
-    @Column(name = "Id")
+    @Column(name = "POST_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long postId;
 
-    @Column
+    @Column // 썸네일
     @ApiModelProperty(example = "/ec2-south/~~~/")
     String imagePath;
     @Column
@@ -32,15 +33,20 @@ public class Post {
     @ApiModelProperty(example = "내용")
     String content;
 
-    @ApiModelProperty(example = "10101105445")
-    @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="userId") //컬럼명
-    private Member member;
-    /// 해쉬태그 구현 필요
 
+    @ManyToOne(optional = false , cascade = CascadeType.ALL)
+    @JoinColumn(name = "USER_ID" , nullable = false, unique = true)
+    private MemberInfo memberInfo;
+
+    //임시 저장 여부
     @Column
     @ApiModelProperty(example = "0")
     private boolean tmpStore;
+
+    @JoinColumn
+    @OneToMany
+    private List<PostHashTag> postHashTags;
+
     @Column(name = "MODIFIED_AT")
     @NotNull
     private LocalDateTime modifiedAt;
@@ -49,5 +55,7 @@ public class Post {
     @CreationTimestamp
     @ApiModelProperty(example = "2022-01-06 14:57:42.777000")
     private LocalDateTime uploadDate;
+
+
 
 }

@@ -25,12 +25,8 @@ import java.util.List;
 @AllArgsConstructor
 public class Member {
 
-    @JsonIgnore
-    @Id
-    @Column(name = "USER_SEQ")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userSeq;
 
+    @Id
     @Column(name = "USER_ID", length = 64, unique = true)
     @NotNull
     @Size(max = 64)
@@ -43,7 +39,7 @@ public class Member {
     @Column(nullable = false)
     String password;
     @ApiModelProperty(example = "gudcksegeg@gmail.com")
-    @Column
+    @Column(nullable = false)
     String email;
 
     @Column(name = "EMAIL_VERIFIED_YN", length = 1)
@@ -51,61 +47,28 @@ public class Member {
     @Size(min = 1, max = 1)
     private String emailVerifiedYn;
 
-    @Column
-    @ApiModelProperty(example = "나는 위대한 사람")
-    private String introduce;
+
+
 
     @Column(name = "PROFILE_IMAGE_URL", length = 512)
     @NotNull
     @Size(max = 512)
     private String profileImageUrl;
 
-    @Column(length = 30)
-    @ApiModelProperty(example = "Rocoli")
-    String nickName;
 
-    @Column(length = 30)
-    @ApiModelProperty(example = "010-9132-1234")
-    String phoneNumber;
-
-    @Column
-    @ApiModelProperty(example = "산업경영공학과")
-    String major;
-
-    @Column(name = "GIT_EMAIL" , length = 30)
-    @ApiModelProperty(example = "gudcks0305")
-    String gitEmail;
-
-    @Column(length = 30)
-    @ApiModelProperty(example = "20177878")
-    String StudentID;
 
     @Enumerated(EnumType.STRING)
-    @ApiModelProperty(example = "MEMBER ---Insert 시기본값 MEMBER 로 회원가입 넣지말아요")
+    @ApiModelProperty(example = "MEMBER ---Insert 시기본값 GUEST 로 회원가입 넣지말아요")
     private RoleType role; // 멤버 리드
 
-    @Enumerated(EnumType.STRING)
-    @ApiModelProperty(example = "Backend")
-    private PositionType positionType; //백엔든지 프론트인지
-
-    @Column
-    @OneToMany
-    @JoinColumn(name = "WARN_ID")
-    private List<WarnDescription> warn;
 
     @Column
     @Enumerated(EnumType.STRING)
     private ProviderType providerType; // 어떤 소셜로그인인지 파악
 
-/*    @Column
-    @OneToMany
-    @JoinColumn(name = "MY_POST_ID")
-    private List<Post> post;*/
-
-    @Column
-    @ManyToMany
-    @JoinColumn(name = "SCRAP_POST_ID")
-    private List<Post> scrapPost;
+    @JoinColumn(name = "MEMBER_INFO_ID")
+    @OneToOne
+    private MemberInfo memberInfo;
 
     @Column(name = "MODIFIED_AT")
     @NotNull
@@ -114,6 +77,7 @@ public class Member {
     @CreationTimestamp
     @ApiModelProperty(example = "2022-01-06 14:57:42.777000 ---Insert 시 자동 삽입 넣지말아요")
     private LocalDateTime uploadDate;
+
 
     public Member(
             @NotNull @Size(max = 64) String userId,
@@ -124,7 +88,8 @@ public class Member {
             @NotNull ProviderType providerType,
             @NotNull RoleType role,
             @NotNull LocalDateTime modifiedAt,
-            @NotNull LocalDateTime uploadDate
+            @NotNull LocalDateTime uploadDate,
+            @NotNull MemberInfo memberInfo
 
     ) {
         this.userId = userId;
@@ -137,5 +102,7 @@ public class Member {
         this.role = role;
         this.uploadDate = uploadDate;
         this.modifiedAt = modifiedAt;
+        this.memberInfo = memberInfo;
+
     }
 }

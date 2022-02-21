@@ -15,17 +15,17 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class Likes {
-
+    // JPA 사용법 알아오기!
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @Column(name = "LIKE_ID")
+    private int likeId;
 
     @ManyToOne
-    @JoinColumn(name="userId")
+    @JoinColumn(name = "USER_ID")
     private Member member;
-
     @ManyToOne
-    @JoinColumn(name="postId")
+    @JoinColumn(name = "POST_ID")
     private Post post;
 
     //@ManyToMany

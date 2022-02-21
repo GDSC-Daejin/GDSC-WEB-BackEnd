@@ -14,18 +14,19 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class HashTag {
+public class PostHashTag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @Column(name = "POST_HASH_TAG_ID")
+    private int post_HashTag_ID;
 
-    private String name;
+    @Column(name = "tag" , nullable = false)
+    private String tag;
 
     @ManyToOne
-    @JoinColumn(name="PostId")
+    @JoinColumn(name = "POST_ID")
     private Post post;
 
-    @CreationTimestamp
-    private LocalDateTime createDate;
+
 }
