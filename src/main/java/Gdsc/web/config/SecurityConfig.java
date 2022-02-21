@@ -66,6 +66,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/**").hasAnyAuthority(RoleType.MEMBER.getCode())
                 .antMatchers("/api/admin/**").hasAnyAuthority(RoleType.LEAD.getCode())
+                .antMatchers("/api/support/**").permitAll()
+                .antMatchers("/api/support/limit/update").hasAnyAuthority(RoleType.LEAD.getCode())
                 .anyRequest().permitAll()
                 .and()
                 .oauth2Login()
