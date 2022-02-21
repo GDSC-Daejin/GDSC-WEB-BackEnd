@@ -51,9 +51,6 @@ public class Post {
     @NotNull
     private LocalDateTime modifiedAt;
 
-    @OneToMany(mappedBy = "post")
-    @JoinColumn
-    private List<PostHashTag> postHashTagList;
 
     @CreationTimestamp
     @ApiModelProperty(example = "2022-01-06 14:57:42.777000")
