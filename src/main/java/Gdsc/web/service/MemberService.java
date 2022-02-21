@@ -1,14 +1,13 @@
 package Gdsc.web.service;
 
-import Gdsc.web.domain.Member;
-import Gdsc.web.domain.OnboardingMember;
+import Gdsc.web.entity.Member;
+import Gdsc.web.entity.MemberInfo;
 import Gdsc.web.model.RoleType;
-import Gdsc.web.repository.OnboardingMemberRepository;
+import Gdsc.web.repository.memberinfo.JpaMemberInfoRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import Gdsc.web.repository.MemberRepository;
+import Gdsc.web.repository.member.JpaMemberRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -17,16 +16,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberService {
 
-    private final MemberRepository memberRepository;
-
-    private final OnboardingMemberRepository onboardingMemberRepository;
+    private final JpaMemberRepository memberRepository;
+    private final JpaMemberInfoRepository memberInfoRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Transactional
     public void 회원가입(Member member) {
         member.setPassword(bCryptPasswordEncoder.encode(member.getPassword()));
         member.setRole(RoleType.MEMBER);
+        MemberInfo memberInfo = new MemberInfo();
+        member.setMemberInfo(memberInfo);
+        memberInfo.setUserID(member.getUserId());
         validateDuplicateUsername(member);
+        memberInfoRepository.save(memberInfo);
         memberRepository.save(member);
 
 
@@ -44,26 +46,9 @@ public class MemberService {
                 });
     }
 
-    @Transactional
-    public void 관리자멤버정보수정(Member requestMember){
-        Member member = memberRepository.findByUsername(requestMember.getUsername())
-                .orElseThrow(()->{
-                    return new IllegalArgumentException("없는 사용자");
-                });
-        member.setWarning(requestMember.getWarning());
-        member.setMemberImg(requestMember.getMemberImg());
-        member.setIntroduce(requestMember.getIntroduce());
-        member.setPhoneNumber(requestMember.getPhoneNumber());
-        member.setName(requestMember.getName());
-        member.setPositionType(requestMember.getPositionType());
-        member.setRole(requestMember.getRole());
 
-        OnboardingMember onboardingMember = onboardingMemberRepository.findByEmail(requestMember.getUsername())
-                .orElseThrow(()->{
-                    return new IllegalStateException("없는 사용자 입니다");
-                });
-        onboardingMember.setInterest(member.getOnboardingMember().getInterest());
-        onboardingMember.setMajor(member.getOnboardingMember().getMajor());
-        onboardingMember.setNickname(member.getOnboardingMember().getNickname());
+
+    public Member getUserId(String userId) {
+        return memberRepository.findByUserId(userId);
     }
 }

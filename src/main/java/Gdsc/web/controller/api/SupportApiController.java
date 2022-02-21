@@ -1,8 +1,7 @@
 package Gdsc.web.controller.api;
 
-import Gdsc.web.controller.dto.ResponseDto;
-import Gdsc.web.controller.dto.SupportDto;
-import Gdsc.web.domain.Member;
+import Gdsc.web.dto.ResponseDto;
+import Gdsc.web.dto.SupportDto;
 import Gdsc.web.service.SupportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,9 +12,8 @@ import org.springframework.web.bind.annotation.*;
 public class SupportApiController {
     private final SupportService supportService;
     @GetMapping("/api/support/limit")
-    public SupportDto list() {
-
-        return supportService.지원제한();
+    public ResponseDto<SupportDto> list() {
+        return new ResponseDto<>(HttpStatus.OK, supportService.지원제한(), "지원제한 정보");
     }
     @PutMapping("/api/support/limit/update")
     public ResponseDto<Integer> update(@RequestBody SupportDto supportDto){
