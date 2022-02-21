@@ -2,7 +2,7 @@ package Gdsc.web.controller.api;
 
 import Gdsc.web.dto.ResponseDto;
 import Gdsc.web.entity.Member;
-import Gdsc.web.repository.MemberRepository;
+import Gdsc.web.repository.member.JpaMemberRepository;
 import Gdsc.web.service.MemberService;
 
 import io.swagger.annotations.ApiOperation;
@@ -20,7 +20,7 @@ public class MemberApiController {
 
 
     private final MemberService memberService;
-    private final MemberRepository memberRepository;
+    private final JpaMemberRepository memberRepository;
 
 
 

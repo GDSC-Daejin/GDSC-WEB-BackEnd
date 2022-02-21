@@ -2,7 +2,7 @@ package Gdsc.web.oauth.service;
 
 import Gdsc.web.entity.Member;
 import Gdsc.web.oauth.entity.UserPrincipal;
-import Gdsc.web.repository.MemberRepository;
+import Gdsc.web.repository.member.JpaMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final MemberRepository userRepository;
+    private final JpaMemberRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
