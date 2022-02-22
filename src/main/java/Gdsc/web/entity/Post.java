@@ -43,7 +43,12 @@ public class Post {
     @ApiModelProperty(example = "0")
     private boolean tmpStore;
 
+    @ApiModelProperty(example = "누구한테")
+    @OneToOne
     @JoinColumn
+    private Category category;
+
+    @JoinColumn(name = "POST_ID")
     @OneToMany
     private List<PostHashTag> postHashTags;
 
