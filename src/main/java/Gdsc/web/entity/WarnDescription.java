@@ -37,6 +37,11 @@ public class WarnDescription {
     @JoinColumn(name = "TO_USER")
     private Member toUser;
 
+    @ApiModelProperty(example = "누구한테")
+    @OneToOne
+    @JoinColumn
+    private Category category;
+
     @CreationTimestamp
     @ApiModelProperty(example = "2022-01-06 14:57:42.777000")
     private LocalDateTime uploadDate;
