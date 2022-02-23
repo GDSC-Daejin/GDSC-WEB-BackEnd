@@ -11,6 +11,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -72,6 +74,7 @@ public class Member {
     private MemberInfo memberInfo;
 
     @Column(name = "MODIFIED_AT")
+    @LastModifiedDate
     @NotNull
     private LocalDateTime modifiedAt;
 

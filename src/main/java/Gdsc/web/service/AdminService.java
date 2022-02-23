@@ -1,7 +1,9 @@
 package Gdsc.web.service;
 
 import Gdsc.web.entity.Member;
+import Gdsc.web.entity.WarnDescription;
 import Gdsc.web.repository.member.JpaMemberRepository;
+import Gdsc.web.repository.warnDescription.JpaWarnDescription;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,7 +17,7 @@ import java.util.List;
 public class AdminService {
 
     private final JpaMemberRepository repository;
-
+    private final JpaWarnDescription jpaWarnDescription;
     @Transactional
     public void 맴버권한수정(final Member member){
         // Validations
@@ -36,6 +38,13 @@ public class AdminService {
         return repository.findGUEST();
     }
 
+    @Transactional
+    public void 경고주기(String fromUser, WarnDescription warnDescription) {
+        Member admin = repository.findByUserId(fromUser);
+        warnDescription.setFromUser(admin);
+
+        jpaWarnDescription.save(warnDescription);
+    }
     // 유효성 검사
     private void validate(final Member member){
         if(member == null){
