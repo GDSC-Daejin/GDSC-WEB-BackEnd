@@ -69,7 +69,6 @@ public class MemberInfo {
 
     @Column(name = "MODIFIED_AT")
     @LastModifiedDate
-    @NotNull
     private LocalDateTime modifiedAt;
 
     @CreationTimestamp
