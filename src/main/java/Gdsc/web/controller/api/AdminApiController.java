@@ -1,6 +1,7 @@
 package Gdsc.web.controller.api;
 
 import Gdsc.web.dto.ApiResponse;
+import Gdsc.web.dto.WarningDto;
 import Gdsc.web.entity.Member;
 import Gdsc.web.entity.WarnDescription;
 import Gdsc.web.service.AdminService;
@@ -8,9 +9,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -39,11 +43,12 @@ public class AdminApiController {
         return ApiResponse.success("data", adminService.게스트목록());
     }
 
-    /*@ApiOperation(value = "관리자 경고 주기" , notes = "관리자들이 멤버에게 경고를 줍니다.")
+    @ApiOperation(value = "관리자 경고 주기" , notes = "관리자들이 멤버에게 경고를 줍니다. 로그인이 되어 있어야 합니다. ")
     @PostMapping("/v1/warning")
-    public ApiResponse giveWarning(@RequestBody WarnDescription warnDescription) {
-        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        adminService.경고주기(principal.getUsername() , warnDescription);
+    public ApiResponse giveWarning(@RequestBody WarningDto warningDto , @AuthenticationPrincipal User principal) {
+
+        adminService.경고주기(principal.getUsername() , warningDto);
+
         return ApiResponse.success("message", "Success");
-    }*/
+    }
 }
