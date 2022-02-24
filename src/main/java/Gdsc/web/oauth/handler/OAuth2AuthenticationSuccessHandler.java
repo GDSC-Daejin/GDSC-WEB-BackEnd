@@ -73,8 +73,16 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
         Collection<? extends GrantedAuthority> authorities = ((OidcUser) authentication.getPrincipal()).getAuthorities();
 
-        RoleType roleType = hasAuthority(authorities, RoleType.LEAD.getCode()) ? RoleType.LEAD : RoleType.MEMBER;
-
+        RoleType roleType; //= hasAuthority(authorities, RoleType.LEAD.getCode()) ? RoleType.LEAD : RoleType.MEMBER;
+        if(hasAuthority(authorities,RoleType.LEAD.getCode())){
+            roleType = RoleType.LEAD;
+        }else if(hasAuthority(authorities,RoleType.CORE.getCode())){
+            roleType = RoleType.CORE;
+        }else if(hasAuthority(authorities,RoleType.MEMBER.getCode())){
+            roleType = RoleType.MEMBER;
+        }else {
+            roleType = RoleType.GUEST;
+        }
         Date now = new Date();
         AuthToken accessToken = tokenProvider.createAuthToken(
                 userInfo.getId(),

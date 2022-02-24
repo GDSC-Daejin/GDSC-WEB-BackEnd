@@ -1,12 +1,17 @@
 package Gdsc.web.entity;
 
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -23,4 +28,12 @@ public class Category {
     @Column(name = "Category_Name" , length = 30 , nullable = false)
     private String categoryName;
 
+    @Column(name = "MODIFIED_AT")
+    @LastModifiedDate
+    @NotNull
+    private LocalDateTime modifiedAt;
+
+    @CreationTimestamp
+    @ApiModelProperty(example = "2022-01-06 14:57:42.777000 ---Insert 시 자동 삽입 넣지말아요")
+    private LocalDateTime uploadDate;
 }

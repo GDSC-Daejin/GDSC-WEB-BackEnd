@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<configuration>
+<!--<configuration>
     <springProperty name="SLACK_WEBHOOK_URI" source="logging.slack.webhook-uri"/>
     <appender name="SLACK" class="com.github.maricn.logback.SlackAppender">
         <webhookUri>${SLACK_WEBHOOK_URI}</webhookUri>
@@ -11,7 +11,7 @@
         <colorCoding>true</colorCoding>
     </appender>
 
-    <!-- Consol appender 설정 -->
+    &lt;!&ndash; Consol appender 설정 &ndash;&gt;
     <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <Pattern>%d %-5level %logger{35} - %msg%n</Pattern>
@@ -28,5 +28,5 @@
     <root level="INFO">
         <appender-ref ref="Console" />
         <appender-ref ref="ASYNC_SLACK"/>
-    </root>
+    </root>-->
 </configuration>
