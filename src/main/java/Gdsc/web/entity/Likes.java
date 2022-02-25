@@ -41,6 +41,4 @@ public class Likes {
     //1:N 어노테이션 두 개를 이용해서 합해서, 중간 테이블을 만들어서 사용함
 
 
-    @CreationTimestamp
-    private LocalDateTime createDate;
 }
