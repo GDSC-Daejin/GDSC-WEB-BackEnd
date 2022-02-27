@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -17,6 +19,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Post {
     @Id
     @Column(name = "POST_ID")
@@ -43,17 +46,22 @@ public class Post {
     @ApiModelProperty(example = "0")
     private boolean tmpStore;
 
+    @ApiModelProperty(example = "누구한테")
+    @OneToOne
     @JoinColumn
+    private Category category;
+
+    @JoinColumn(name = "POST_ID")
     @OneToMany
     private List<PostHashTag> postHashTags;
 
     @Column(name = "MODIFIED_AT")
-    @NotNull
+    @LastModifiedDate
+
     private LocalDateTime modifiedAt;
 
-
     @CreationTimestamp
-    @ApiModelProperty(example = "2022-01-06 14:57:42.777000")
+    @ApiModelProperty(example = "2022-01-06 14:57:42.777000 ---Insert 시 자동 삽입 넣지말아요")
     private LocalDateTime uploadDate;
 
 

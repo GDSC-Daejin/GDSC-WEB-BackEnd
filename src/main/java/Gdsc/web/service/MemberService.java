@@ -17,7 +17,7 @@ import java.util.List;
 public class MemberService {
 
     private final JpaMemberRepository memberRepository;
-    private final JpaMemberInfoRepository memberInfoRepository;
+    private final JpaMemberInfoRepository jpaMemberInfoRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Transactional
@@ -28,7 +28,7 @@ public class MemberService {
         member.setMemberInfo(memberInfo);
         memberInfo.setUserID(member.getUserId());
         validateDuplicateUsername(member);
-        memberInfoRepository.save(memberInfo);
+        jpaMemberInfoRepository.save(memberInfo);
         memberRepository.save(member);
 
 
@@ -42,7 +42,7 @@ public class MemberService {
     private void validateDuplicateUsername(Member member) {
         memberRepository.findByUsername(member.getUsername())
                 .ifPresent(m-> {
-                    throw new IllegalStateException("이미 존재하는 닉네임 입니다");
+                    throw new IllegalStateException("이미 존재하는 사용자 명 입니다");
                 });
     }
 
@@ -50,5 +50,19 @@ public class MemberService {
 
     public Member getUserId(String userId) {
         return memberRepository.findByUserId(userId);
+    }
+
+    public void 정보업데이트(String userId , MemberInfo requestMemberInfo){
+        MemberInfo memberInfo = jpaMemberInfoRepository.findByUserID(userId)
+                .orElseThrow(()-> new IllegalArgumentException("없는 사용자 입니다. 정보 노출 우려..."));
+
+
+        memberInfo.setIntroduce(requestMemberInfo.getIntroduce());
+        memberInfo.setGitEmail(requestMemberInfo.getGitEmail());
+        memberInfo.setMajor(requestMemberInfo.getMajor());
+        memberInfo.setHashTag(requestMemberInfo.getHashTag());
+        memberInfo.setNickName(requestMemberInfo.getNickName());
+        memberInfo.setPhoneNumber(requestMemberInfo.getPhoneNumber());
+        memberInfo.setPositionType(requestMemberInfo.getPositionType());
     }
 }

@@ -33,6 +33,7 @@ public class UserRefreshToken {
     @Size(max = 256)
     private String refreshToken;
 
+
     public UserRefreshToken(
             @NotNull @Size(max = 64) String userId,
             @NotNull @Size(max = 256) String refreshToken

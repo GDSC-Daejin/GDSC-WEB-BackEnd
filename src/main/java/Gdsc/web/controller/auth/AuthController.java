@@ -69,7 +69,7 @@ public class AuthController {
         Date now = new Date();
         AuthToken accessToken = tokenProvider.createAuthToken(
                 userId,
-                ((UserPrincipal) authentication.getPrincipal()).getRoleType().name(),
+                ((UserPrincipal) authentication.getPrincipal()).getRoleType().getCode(),
                 new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
         );
 
