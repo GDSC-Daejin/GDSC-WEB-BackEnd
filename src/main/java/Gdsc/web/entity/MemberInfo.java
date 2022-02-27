@@ -55,6 +55,7 @@ public class MemberInfo {
     @ApiModelProperty(example = "20177878")
     private String StudentID;
 
+    @ApiModelProperty(example = "Backend")
     @Column(name = "POSITION_TYPE")
     private Gdsc.web.model.PositionType PositionType;
 
@@ -68,6 +69,8 @@ public class MemberInfo {
     @OneToMany(mappedBy = "memberInfo")
     private List<Post> mypost;
 
+    @ApiModelProperty(example = "1998-07-09 00:00:00.000000")
+    private LocalDateTime birthday;
 
     @Column(name = "MODIFIED_AT")
     @LastModifiedDate
