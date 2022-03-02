@@ -54,9 +54,9 @@ public class MemberService {
 
     public void 정보업데이트(String userId , MemberInfo requestMemberInfo){
         MemberInfo memberInfo = jpaMemberInfoRepository.findByUserID(userId)
-                .orElseThrow(()-> new IllegalArgumentException("없는 사용자 입니다. 정보 노출 우려..."));
-
-
+                .orElseThrow(()-> new IllegalArgumentException("없는 사용자 입니다. "));
+        memberInfo.setGeneration(requestMemberInfo.getGeneration());
+        memberInfo.setBirthday(requestMemberInfo.getBirthday());
         memberInfo.setIntroduce(requestMemberInfo.getIntroduce());
         memberInfo.setGitEmail(requestMemberInfo.getGitEmail());
         memberInfo.setMajor(requestMemberInfo.getMajor());

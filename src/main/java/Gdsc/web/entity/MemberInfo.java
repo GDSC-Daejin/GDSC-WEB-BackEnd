@@ -31,6 +31,8 @@ public class MemberInfo {
     @Column(name = "USER_ID")
     private String userID;
 
+    @Column(name = "GDSC_GENERATION")
+    private int generation;
     @Column
     @ApiModelProperty(example = "나는 위대한 사람")
     private String introduce;
