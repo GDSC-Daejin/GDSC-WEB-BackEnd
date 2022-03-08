@@ -40,10 +40,8 @@ public class MemberService {
     }
     //중복 유저네임 확인 로직
     private void validateDuplicateUsername(Member member) {
-        memberRepository.findByUsername(member.getUsername())
-                .ifPresent(m-> {
-                    throw new IllegalStateException("이미 존재하는 사용자 명 입니다");
-                });
+        Member find = memberRepository.findByUserId(member.getUserId());
+        if(find != null) throw new IllegalStateException("이미 존재하는 아이디 입니다.");
     }
 
 

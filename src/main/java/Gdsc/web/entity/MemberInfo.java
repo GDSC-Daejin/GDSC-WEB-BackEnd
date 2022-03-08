@@ -32,7 +32,7 @@ public class MemberInfo {
     private String userID;
 
     @Column(name = "GDSC_GENERATION")
-    private int generation;
+    private Integer generation;
     @Column
     @ApiModelProperty(example = "나는 위대한 사람")
     private String introduce;
