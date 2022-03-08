@@ -66,7 +66,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private Member createUser(OAuth2UserInfo userInfo, ProviderType providerType) {
         LocalDateTime now = LocalDateTime.now();
         MemberInfo memberInfo = new MemberInfo();
-        memberInfo.setUserID(userInfo.getId());
         Member user = new Member(
                 userInfo.getId(),
                 userInfo.getName(),
@@ -79,8 +78,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 now,
                 memberInfo
         );
+        memberInfo.setMember(user);
         // 멤버 info 도 같이 만들기
-        memberInfoRepository.save(memberInfo);
         return userRepository.saveAndFlush(user);
     }
 
