@@ -3,6 +3,7 @@ package Gdsc.web.service;
 import Gdsc.web.dto.WarningDto;
 import Gdsc.web.entity.Member;
 import Gdsc.web.entity.WarnDescription;
+import Gdsc.web.model.RoleType;
 import Gdsc.web.repository.member.JpaMemberRepository;
 import Gdsc.web.repository.warnDescription.JpaWarnDescription;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j // 디버그를 위한 로그 설정
@@ -31,12 +33,18 @@ public class AdminService {
 
     @Transactional(readOnly = true)
     public List<Member> 멤버목록(){
-        return repository.findMember();
+        List<RoleType> roleTypes = new ArrayList<>();
+        roleTypes.add(RoleType.CORE);
+        roleTypes.add(RoleType.LEAD);
+        roleTypes.add(RoleType.MEMBER);
+        return repository.findMembersByRoleInAndMemberInfo_PhoneNumberIsNotNull(roleTypes);
     }
 
     @Transactional(readOnly = true)
     public List<Member> 게스트목록(){
-        return repository.findGUEST();
+        List<RoleType> roleTypes = new ArrayList<>();
+        roleTypes.add(RoleType.GUEST);
+        return repository.findMembersByRoleInAndMemberInfo_PhoneNumberIsNotNull(roleTypes);
     }
 
     @Transactional
