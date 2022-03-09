@@ -26,15 +26,30 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;
 
-    @Column // 썸네일
+    @Column
     @ApiModelProperty(example = "/ec2-south/~~~/")
-    String imagePath;
+    String imagePath; // 썸네일
     @Column
     @ApiModelProperty(example = "제목")
-    String title;
+    String title; // 제목
     @Lob
     @ApiModelProperty(example = "내용")
-    String content;
+    String content; // 내용
+
+    private String writer; // 글쓴이
+
+    @Builder //생성자
+    public Post(String title, String content, String writer){
+        this.title = title;
+        this.content = content;
+        this.writer = writer;
+    }
+
+
+    public void update(Long postId, String title, String content){
+        this.title = title;
+        this.content = content;
+    }
 
 
     @ManyToOne(optional = false , cascade = CascadeType.ALL)
@@ -63,7 +78,6 @@ public class Post {
     @CreationTimestamp
     @ApiModelProperty(example = "2022-01-06 14:57:42.777000 ---Insert 시 자동 삽입 넣지말아요")
     private LocalDateTime uploadDate;
-
 
 
 }
