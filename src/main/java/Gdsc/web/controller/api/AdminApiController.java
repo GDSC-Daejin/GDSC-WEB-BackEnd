@@ -25,20 +25,20 @@ public class AdminApiController {
     private AdminService adminService;
 
     @ApiOperation(value = "권한변경", notes = "권한 등급을 변경함.")
-    @PutMapping
+    @PutMapping("v1/update/role")
     public ApiResponse<?> updateRole(@RequestBody Member member){
         adminService.맴버권한수정(member);
         return ApiResponse.success("message", "Success");
     }
 
     @ApiOperation(value = "멤버목록", notes = "게스트가 아닌 멤버를 조회합니다")
-    @GetMapping("/member")
+    @GetMapping("v1/member/list")
     public ApiResponse<List<Member>> retrieveMemberList(){
         return ApiResponse.success("data", adminService.멤버목록());
     }
 
     @ApiOperation(value = "게스트목록", notes = "게스트를 조회합니다")
-    @GetMapping("/guest")
+    @GetMapping("v1/guest/list")
     public ApiResponse<List<Member>> retrieveGuestList(){
         return ApiResponse.success("data", adminService.게스트목록());
     }
