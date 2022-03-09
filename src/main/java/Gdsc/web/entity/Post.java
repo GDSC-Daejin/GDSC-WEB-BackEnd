@@ -36,21 +36,6 @@ public class Post {
     @ApiModelProperty(example = "내용")
     String content; // 내용
 
-    private String writer; // 글쓴이
-
-    @Builder //생성자
-    public Post(String title, String content, String writer){
-        this.title = title;
-        this.content = content;
-        this.writer = writer;
-    }
-
-
-    public void update(Long postId, String title, String content){
-        this.title = title;
-        this.content = content;
-    }
-
 
     @ManyToOne(optional = false , cascade = CascadeType.ALL)
     @JoinColumn(name = "USER_ID" , nullable = false, unique = true)
