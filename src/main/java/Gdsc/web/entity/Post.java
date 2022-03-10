@@ -46,18 +46,25 @@ public class Post {
     @ApiModelProperty(example = "0")
     private boolean tmpStore;
 
-    @ApiModelProperty(example = "누구한테")
+    @ApiModelProperty(example = "Backend")
     @OneToOne
     @JoinColumn
     private Category category;
 
-    @JoinColumn(name = "POST_ID")
-    @OneToMany
+    // casecade all = persist , remove !
+    // casecade persist를 할경우 post entity에서 posthastage 를 데이터 베이스 저장을 할 수 있음
+    // 물론 외부키값은 넣어줘야함!
+    // ex PostHashTag postHashtag = new postHashtags();
+    // postHashtag.setPost(post) 처럼
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostHashTag> postHashTags;
+
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL , orphanRemoval = true)
+    private List<Likes> likes;
 
     @Column(name = "MODIFIED_AT")
     @LastModifiedDate
-
     private LocalDateTime modifiedAt;
 
     @CreationTimestamp

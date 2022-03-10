@@ -1,6 +1,5 @@
 package Gdsc.web.entity;
 
-import Gdsc.web.model.PositionType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -12,7 +11,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -71,8 +69,11 @@ public class MemberInfo {
     @OneToMany(mappedBy = "memberInfo")
     private List<MemberScrapPost> memberScrapPostList;
 
-    @OneToMany(mappedBy = "memberInfo")
+    @OneToMany(mappedBy = "memberInfo" , cascade = CascadeType.REMOVE)
     private List<Post> mypost;
+
+    @OneToMany(mappedBy = "memberInfo" , cascade = CascadeType.ALL)
+    private List<MemberPortfolioUrl> memberPortfolioUrls;
 
     @ApiModelProperty(example = "1998-07-09 00:00:00.000000")
     private LocalDateTime birthday;
