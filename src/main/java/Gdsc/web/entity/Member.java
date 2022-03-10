@@ -1,17 +1,14 @@
 package Gdsc.web.entity;
 
 
-import Gdsc.web.model.PositionType;
 import Gdsc.web.model.RoleType;
 import Gdsc.web.oauth.entity.ProviderType;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -19,7 +16,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Builder
@@ -71,7 +67,7 @@ public class Member {
     private ProviderType providerType; // 어떤 소셜로그인인지 파악
 
     @JoinColumn(name = "MEMBER_INFO_ID")
-    @OneToOne
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private MemberInfo memberInfo;
 
     @Column(name = "MODIFIED_AT")
