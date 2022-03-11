@@ -28,7 +28,6 @@ public class MemberService {
         memberInfo.setMember(member);
         member.setMemberInfo(memberInfo);
         validateDuplicateUsername(member);
-        jpaMemberInfoRepository.save(memberInfo);
         memberRepository.save(member);
 
 

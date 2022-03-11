@@ -38,7 +38,7 @@ public class Post {
 
 
     @ManyToOne(optional = false , cascade = CascadeType.ALL)
-    @JoinColumn(name = "USER_ID" , nullable = false, unique = true)
+    @JoinColumn(name = "USER_ID" , nullable = false)
     private MemberInfo memberInfo;
 
     //임시 저장 여부
@@ -56,7 +56,7 @@ public class Post {
     // 물론 외부키값은 넣어줘야함!
     // ex PostHashTag postHashtag = new postHashtags();
     // postHashtag.setPost(post) 처럼
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "post" , cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostHashTag> postHashTags;
 
 

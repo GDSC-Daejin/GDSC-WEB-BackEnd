@@ -67,7 +67,7 @@ public class Member {
     private ProviderType providerType; // 어떤 소셜로그인인지 파악
 
     @JoinColumn(name = "MEMBER_INFO_ID")
-    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     private MemberInfo memberInfo;
 
     @Column(name = "MODIFIED_AT")
