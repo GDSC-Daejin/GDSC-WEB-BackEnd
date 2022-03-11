@@ -46,7 +46,6 @@ public class CategoryApiController {
     @PutMapping("api/admin/v1/category/update")
     // DTO 를 사용한 이유는 category객체로 받을 경우 데이터 보내는 것이 너무 더러워짐
     //  ex : { Category:{ "GG": "GG", "@$":"GG", "geg" :"GGG" } , String : #%## }
-
     public ApiResponse updateCategory(@RequestBody CategoryUpdateDto category) {
 
         categoryService.카테고리업데이트(category);

@@ -25,10 +25,9 @@ public class MemberService {
         member.setPassword(bCryptPasswordEncoder.encode(member.getPassword()));
         member.setRole(RoleType.MEMBER);
         MemberInfo memberInfo = new MemberInfo();
+        memberInfo.setMember(member);
         member.setMemberInfo(memberInfo);
-        memberInfo.setUserID(member.getUserId());
         validateDuplicateUsername(member);
-        jpaMemberInfoRepository.save(memberInfo);
         memberRepository.save(member);
 
 
@@ -40,10 +39,8 @@ public class MemberService {
     }
     //중복 유저네임 확인 로직
     private void validateDuplicateUsername(Member member) {
-        memberRepository.findByUsername(member.getUsername())
-                .ifPresent(m-> {
-                    throw new IllegalStateException("이미 존재하는 사용자 명 입니다");
-                });
+        Member find = memberRepository.findByUserId(member.getUserId());
+        if(find != null) throw new IllegalStateException("이미 존재하는 아이디 입니다.");
     }
 
 
@@ -53,10 +50,12 @@ public class MemberService {
     }
 
     public void 정보업데이트(String userId , MemberInfo requestMemberInfo){
-        MemberInfo memberInfo = jpaMemberInfoRepository.findByUserID(userId)
-                .orElseThrow(()-> new IllegalArgumentException("없는 사용자 입니다. 정보 노출 우려..."));
-
-
+        Member member = memberRepository.findByUserId(userId);
+        if(member==null) throw new IllegalArgumentException("없는 사용자 입니다. ");
+        MemberInfo memberInfo = jpaMemberInfoRepository.findByMember(member)
+                .orElseThrow(()-> new IllegalArgumentException("없는 사용자 입니다. "));
+        memberInfo.setGeneration(requestMemberInfo.getGeneration());
+        memberInfo.setBirthday(requestMemberInfo.getBirthday());
         memberInfo.setIntroduce(requestMemberInfo.getIntroduce());
         memberInfo.setGitEmail(requestMemberInfo.getGitEmail());
         memberInfo.setMajor(requestMemberInfo.getMajor());

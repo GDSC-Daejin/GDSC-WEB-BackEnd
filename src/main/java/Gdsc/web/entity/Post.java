@@ -26,19 +26,19 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;
 
-    @Column // 썸네일
+    @Column
     @ApiModelProperty(example = "/ec2-south/~~~/")
-    String imagePath;
+    String imagePath; // 썸네일
     @Column
     @ApiModelProperty(example = "제목")
-    String title;
+    String title; // 제목
     @Lob
     @ApiModelProperty(example = "내용")
-    String content;
+    String content; // 내용
 
 
     @ManyToOne(optional = false , cascade = CascadeType.ALL)
-    @JoinColumn(name = "USER_ID" , nullable = false, unique = true)
+    @JoinColumn(name = "USER_ID" , nullable = false)
     private MemberInfo memberInfo;
 
     //임시 저장 여부
@@ -46,24 +46,30 @@ public class Post {
     @ApiModelProperty(example = "0")
     private boolean tmpStore;
 
-    @ApiModelProperty(example = "누구한테")
+    @ApiModelProperty(example = "Backend")
     @OneToOne
     @JoinColumn
     private Category category;
 
-    @JoinColumn(name = "POST_ID")
-    @OneToMany
+    // casecade all = persist , remove !
+    // casecade persist를 할경우 post entity에서 posthastage 를 데이터 베이스 저장을 할 수 있음
+    // 물론 외부키값은 넣어줘야함!
+    // ex PostHashTag postHashtag = new postHashtags();
+    // postHashtag.setPost(post) 처럼
+    @OneToMany(mappedBy = "post" , cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostHashTag> postHashTags;
+
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL , orphanRemoval = true)
+    private List<Likes> likes;
 
     @Column(name = "MODIFIED_AT")
     @LastModifiedDate
-
     private LocalDateTime modifiedAt;
 
     @CreationTimestamp
     @ApiModelProperty(example = "2022-01-06 14:57:42.777000 ---Insert 시 자동 삽입 넣지말아요")
     private LocalDateTime uploadDate;
-
 
 
 }

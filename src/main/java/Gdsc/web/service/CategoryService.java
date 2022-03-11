@@ -2,7 +2,6 @@ package Gdsc.web.service;
 
 import Gdsc.web.dto.CategoryUpdateDto;
 import Gdsc.web.entity.Category;
-import Gdsc.web.entity.Member;
 import Gdsc.web.repository.category.JpaCategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
 package Gdsc.web.entity;
 
-import Gdsc.web.model.PositionType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,9 +27,13 @@ public class MemberInfo {
     @Column(name = "MEMBER_INFO_ID")
     private int memberInfoId;
 
-    @Column(name = "USER_ID")
-    private String userID;
+    @OneToOne(orphanRemoval = true)
+    @JoinColumn(name = "USER_ID")
+    @JsonIgnore
+    private Member member;
 
+    @Column(name = "GDSC_GENERATION")
+    private Integer generation;
     @Column
     @ApiModelProperty(example = "나는 위대한 사람")
     private String introduce;
@@ -55,6 +58,7 @@ public class MemberInfo {
     @ApiModelProperty(example = "20177878")
     private String StudentID;
 
+    @ApiModelProperty(example = "Backend")
     @Column(name = "POSITION_TYPE")
     private Gdsc.web.model.PositionType PositionType;
 
@@ -65,9 +69,14 @@ public class MemberInfo {
     @OneToMany(mappedBy = "memberInfo")
     private List<MemberScrapPost> memberScrapPostList;
 
-    @OneToMany(mappedBy = "memberInfo")
+    @OneToMany(mappedBy = "memberInfo" , cascade = CascadeType.REMOVE)
     private List<Post> mypost;
 
+    @OneToMany(mappedBy = "memberInfo" , cascade = CascadeType.ALL)
+    private List<MemberPortfolioUrl> memberPortfolioUrls;
+
+    @ApiModelProperty(example = "1998-07-09 00:00:00.000000")
+    private LocalDateTime birthday;
 
     @Column(name = "MODIFIED_AT")
     @LastModifiedDate
@@ -76,4 +85,8 @@ public class MemberInfo {
     @CreationTimestamp
     @ApiModelProperty(example = "2022-01-06 14:57:42.777000 ---Insert 시 자동 삽입 넣지말아요")
     private LocalDateTime uploadDate;
+
+
+
+
 }
