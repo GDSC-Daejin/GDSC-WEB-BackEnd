@@ -68,7 +68,7 @@ public class Member {
     private ProviderType providerType;
 
     @JoinColumn(name = "MEMBER_INFO_ID")
-    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     private MemberInfo memberInfo;
 
     @Column(name = "MODIFIED_AT")
