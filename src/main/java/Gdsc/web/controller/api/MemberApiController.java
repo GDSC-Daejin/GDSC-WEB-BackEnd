@@ -36,10 +36,16 @@ public class MemberApiController {
     }
 
     @GetMapping("/user/me")
-    public Member getUser() {
-        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public Member getUser(@AuthenticationPrincipal User principal) {
         Member member =memberService.getUserId(principal.getUsername());
         return member;
+    }
+
+    @GetMapping("/api/member/v1/me")
+    public ApiResponse getUserV2(@AuthenticationPrincipal User principal) {
+
+        Member member =memberService.getUserId(principal.getUsername());
+        return ApiResponse.success("data" , member);
     }
     @ApiOperation(value = "유저 자기 정보 업데이트" , notes = "JWT 토큰값이 들어가야 사용자를 인식 가능함")
     @PostMapping("/api/member/v1/update/me")
