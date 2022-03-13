@@ -3,6 +3,10 @@ package Gdsc.web.entity;
 
 import Gdsc.web.model.RoleType;
 import Gdsc.web.oauth.entity.ProviderType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +27,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "id")
 public class Member {
 
 
@@ -69,6 +74,7 @@ public class Member {
 
     @JoinColumn(name = "MEMBER_INFO_ID")
     @OneToOne(cascade = CascadeType.ALL)
+
     private MemberInfo memberInfo;
 
     @Column(name = "MODIFIED_AT")
