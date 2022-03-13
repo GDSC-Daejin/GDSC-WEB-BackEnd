@@ -71,4 +71,8 @@ public class MemberService {
         memberInfo.setMemberPortfolioUrls(requestMemberInfo.getMemberPortfolioUrls());
 
     }
+    @Transactional
+    public boolean 닉네임중복검사(String nickname){
+        return memberRepository.existsByMemberInfo_Nickname(nickname);
+    }
 }

@@ -41,7 +41,7 @@ public class PostApiController {
         return ApiResponse.success("data",postService.findByPostId(postId));
     }
 
-    @GetMapping("/api/v1/post/{postId}/like")
+    @PostMapping("/api/v1/post/{postId}/like")
     public ApiResponse like(@AuthenticationPrincipal User principal , @PathVariable Long postId){
         likeService.like(principal.getUsername(), postId);
         return ApiResponse.success("message","SUCCESS");
