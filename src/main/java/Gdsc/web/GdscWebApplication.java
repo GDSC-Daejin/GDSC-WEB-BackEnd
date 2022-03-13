@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @EnableConfigurationProperties(AppProperties.class)
 @SpringBootApplication
-@EnableJpaAuditing
+
 public class GdscWebApplication {
     public static void main(String[] args) {
         SpringApplication.run(GdscWebApplication.class, args);
