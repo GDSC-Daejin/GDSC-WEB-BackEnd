@@ -31,7 +31,13 @@ public class AdminApiController {
         return ApiResponse.success("message", "Success");
     }
 
-    @ApiOperation(value = "멤버목록", notes = "게스트가 아닌 멤버를 조회합니다")
+    @ApiOperation(value = "전체회원목록", notes = "모든 회원을 조회합니다.")
+    @GetMapping("v1/all/list")
+    public ApiResponse<List<Member>> retrieveUserList(){
+        return ApiResponse.success("data", adminService.전체회원목록());
+    }
+
+    @ApiOperation(value = "멤버목록", notes = "게스트가 아닌 멤버를 조회합니다.")
     @GetMapping("v1/member/list")
     public ApiResponse<List<Member>> retrieveMemberList(){
         return ApiResponse.success("data", adminService.멤버목록());
