@@ -57,6 +57,12 @@ public class MemberApiController {
         return ApiResponse.success("message" , "SUCCESS");
     }
 
+    @ApiOperation(value = "닉네임 중복검사" , notes = "nickname 보낸 값이 중복인지 검사")
+    @PostMapping("/api/member/v1/validation/nickname")
+    public ApiResponse validationNickname(@RequestBody String nickname){
+        return ApiResponse.success("data" ,!memberService.닉네임중복검사(nickname));
+    }
+
 
 
 }
