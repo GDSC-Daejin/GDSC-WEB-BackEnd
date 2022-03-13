@@ -154,7 +154,9 @@ public class PostService {
     }
     //등록
 
-
-
+    public Optional<Post> findMyPost(String userId){
+        Optional<MemberInfo> memberInfo = findMemberInfo(userId);
+        return jpaPostRepository.findByMemberInfo(memberInfo);
+    }
 
 }
