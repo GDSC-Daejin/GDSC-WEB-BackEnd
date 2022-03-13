@@ -44,7 +44,7 @@ public class PostService {
 
     @Transactional
     public void save(PostRequestDto requestDto , String userId) throws IOException {
-        MemberInfo memberInfo = findMemberInfo(userId).get();
+        MemberInfo memberInfo = findMemberInfo(userId);
         Post post = new Post();
         if(requestDto.getPostHashTags() != null){
             for(PostHashTag requestDto1 : requestDto.getPostHashTags()){
@@ -67,7 +67,7 @@ public class PostService {
     //수정
     @Transactional
     public void update(PostRequestDto requestDto, Long postId , String userId) throws IOException {
-        MemberInfo memberInfo = findMemberInfo(userId).get();
+        MemberInfo memberInfo = findMemberInfo(userId);
         Post post = jpaPostRepository.findByPostIdAndMemberInfo(postId, memberInfo) //ㅣinteger가 아니라 long 타입이라 오류? jpa Long을 integer로 바꿔야 할까?
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
         post.setCategory(requestDto.getCategory());
@@ -148,11 +148,10 @@ public class PostService {
         }
     }
 
-    public Optional<MemberInfo> findMemberInfo(String userId){
+    public MemberInfo findMemberInfo(String userId){
         Member member = jpaMemberRepository.findByUserId(userId);
-        Optional<MemberInfo> memberInfo = Optional.ofNullable(jpaMemberInfoRepository.findByMember(member)
-                .orElseThrow(
-                        () -> new IllegalArgumentException("없는 사용자 입니다" + userId)));
+        if(member == null) throw new IllegalArgumentException("없는 사용자 입니다.");
+        MemberInfo memberInfo = member.getMemberInfo();
         return memberInfo;
     }
     //등록

@@ -19,7 +19,6 @@ import java.util.List;
 public class MemberService {
 
     private final JpaMemberRepository memberRepository;
-    private final JpaMemberInfoRepository jpaMemberInfoRepository;
     private final JpaMemberPortfolioUrl jpaMemberPortfolioUrl;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -55,8 +54,7 @@ public class MemberService {
     public void 정보업데이트(String userId , MemberInfo requestMemberInfo){
         Member member = memberRepository.findByUserId(userId);
         if(member==null) throw new IllegalArgumentException("없는 사용자 입니다. ");
-        MemberInfo memberInfo = jpaMemberInfoRepository.findByMember(member)
-                .orElseThrow(()-> new IllegalArgumentException("없는 사용자 입니다. "));
+        MemberInfo memberInfo = member.getMemberInfo();
         memberInfo.setGeneration(requestMemberInfo.getGeneration());
         memberInfo.setBirthday(requestMemberInfo.getBirthday());
         memberInfo.setIntroduce(requestMemberInfo.getIntroduce());
