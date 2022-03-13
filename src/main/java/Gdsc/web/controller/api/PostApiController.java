@@ -2,14 +2,12 @@ package Gdsc.web.controller.api;
 
 import Gdsc.web.dto.ApiResponse;
 import Gdsc.web.dto.PostRequestDto;
-import Gdsc.web.entity.Post;
-import Gdsc.web.entity.PostHashTag;
+import Gdsc.web.service.LikeService;
 import Gdsc.web.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -18,6 +16,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class PostApiController {
     private final PostService postService;
+    private final LikeService likeService;
 
     //등록
     @PostMapping("/api/v1/member/post")
@@ -37,9 +36,15 @@ public class PostApiController {
     }
 
     //조회
-    @GetMapping("/api/v1/post/{PostId}")
-    public ApiResponse findByPostId(@PathVariable Long PostId){
-        return ApiResponse.success("data",postService.findByPostId(PostId));
+    @GetMapping("/api/v1/post/{postId}")
+    public ApiResponse findByPostId(@PathVariable Long postId){
+        return ApiResponse.success("data",postService.findByPostId(postId));
+    }
+
+    @GetMapping("/api/v1/post/{postId}/like")
+    public ApiResponse like(@AuthenticationPrincipal User principal , @PathVariable Long postId){
+        likeService.like(principal.getUsername(), postId);
+        return ApiResponse.success("message","SUCCESS");
     }
 
 }

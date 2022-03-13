@@ -1,6 +1,8 @@
 package Gdsc.web.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,6 +22,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "id")
 public class MemberInfo {
 
     @Id
@@ -40,7 +43,7 @@ public class MemberInfo {
 
     @Column(length = 30)
     @ApiModelProperty(example = "Rocoli")
-    private String nickName;
+    private String nickname;
 
     @Column(length = 30)
     @ApiModelProperty(example = "010-9132-1234")
@@ -70,7 +73,7 @@ public class MemberInfo {
     private List<MemberScrapPost> memberScrapPostList;
 
     @OneToMany(mappedBy = "memberInfo" , cascade = CascadeType.REMOVE)
-    private List<Post> mypost;
+    private List<Post> myPost;
 
     @OneToMany(mappedBy = "memberInfo" , cascade = CascadeType.ALL)
     private List<MemberPortfolioUrl> memberPortfolioUrls;
