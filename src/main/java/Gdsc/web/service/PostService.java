@@ -9,6 +9,7 @@ import Gdsc.web.repository.member.JpaMemberRepository;
 import Gdsc.web.repository.memberinfo.JpaMemberInfoRepository;
 import Gdsc.web.repository.post.JpaPostRepository;
 import Gdsc.web.repository.post.PostRepositoryImp;
+import Gdsc.web.repository.postHashTag.JpaPostHashTagRepository;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -33,6 +34,7 @@ public class PostService {
     private final JpaPostRepository jpaPostRepository;
     private final JpaMemberRepository jpaMemberRepository;
     private final JpaMemberInfoRepository jpaMemberInfoRepository;
+    private final JpaPostHashTagRepository jpaPostHashTagRepository;
     private final PostRepositoryImp postRepositoryImp;
 
     private final AmazonS3Client amazonS3Client;
@@ -42,7 +44,7 @@ public class PostService {
 
     @Transactional
     public void save(PostRequestDto requestDto , String userId) throws IOException {
-        MemberInfo memberInfo = findMemberInfo(userId).get();
+        MemberInfo memberInfo = findMemberInfo(userId);
         Post post = new Post();
         if(requestDto.getPostHashTags() != null){
             for(PostHashTag requestDto1 : requestDto.getPostHashTags()){
@@ -65,16 +67,17 @@ public class PostService {
     //수정
     @Transactional
     public void update(PostRequestDto requestDto, Long postId , String userId) throws IOException {
-        MemberInfo memberInfo = findMemberInfo(userId).get();
+        MemberInfo memberInfo = findMemberInfo(userId);
         Post post = jpaPostRepository.findByPostIdAndMemberInfo(postId, memberInfo) //ㅣinteger가 아니라 long 타입이라 오류? jpa Long을 integer로 바꿔야 할까?
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
         post.setCategory(requestDto.getCategory());
-        if(requestDto.getPostHashTags() != null){
-            for(PostHashTag requestDto1 : requestDto.getPostHashTags()){
-                requestDto1.setPost(post);
-            }
-            post.setPostHashTags(requestDto.getPostHashTags());
+
+        jpaPostHashTagRepository.deletePostHashTagsByPost(post);
+        for(PostHashTag requestDto1 : requestDto.getPostHashTags()){
+            requestDto1.setPost(post);
         }
+
+        post.setPostHashTags(requestDto.getPostHashTags());
         post.setContent(requestDto.getContent());
         post.setTitle(requestDto.getTitle());
         post.setTmpStore(requestDto.isTmpStore());
@@ -145,11 +148,10 @@ public class PostService {
         }
     }
 
-    public Optional<MemberInfo> findMemberInfo(String userId){
+    public MemberInfo findMemberInfo(String userId){
         Member member = jpaMemberRepository.findByUserId(userId);
-        Optional<MemberInfo> memberInfo = Optional.ofNullable(jpaMemberInfoRepository.findByMember(member)
-                .orElseThrow(
-                        () -> new IllegalArgumentException("없는 사용자 입니다" + userId)));
+        if(member == null) throw new IllegalArgumentException("없는 사용자 입니다.");
+        MemberInfo memberInfo = member.getMemberInfo();
         return memberInfo;
     }
     //등록

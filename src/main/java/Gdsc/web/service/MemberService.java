@@ -2,7 +2,9 @@ package Gdsc.web.service;
 
 import Gdsc.web.entity.Member;
 import Gdsc.web.entity.MemberInfo;
+import Gdsc.web.entity.MemberPortfolioUrl;
 import Gdsc.web.model.RoleType;
+import Gdsc.web.repository.memberPortfolioUrl.JpaMemberPortfolioUrl;
 import Gdsc.web.repository.memberinfo.JpaMemberInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,7 +19,7 @@ import java.util.List;
 public class MemberService {
 
     private final JpaMemberRepository memberRepository;
-    private final JpaMemberInfoRepository jpaMemberInfoRepository;
+    private final JpaMemberPortfolioUrl jpaMemberPortfolioUrl;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Transactional
@@ -48,20 +50,25 @@ public class MemberService {
     public Member getUserId(String userId) {
         return memberRepository.findByUserId(userId);
     }
-
+    @Transactional
     public void 정보업데이트(String userId , MemberInfo requestMemberInfo){
         Member member = memberRepository.findByUserId(userId);
         if(member==null) throw new IllegalArgumentException("없는 사용자 입니다. ");
-        MemberInfo memberInfo = jpaMemberInfoRepository.findByMember(member)
-                .orElseThrow(()-> new IllegalArgumentException("없는 사용자 입니다. "));
+        MemberInfo memberInfo = member.getMemberInfo();
         memberInfo.setGeneration(requestMemberInfo.getGeneration());
         memberInfo.setBirthday(requestMemberInfo.getBirthday());
         memberInfo.setIntroduce(requestMemberInfo.getIntroduce());
         memberInfo.setGitEmail(requestMemberInfo.getGitEmail());
         memberInfo.setMajor(requestMemberInfo.getMajor());
         memberInfo.setHashTag(requestMemberInfo.getHashTag());
-        memberInfo.setNickName(requestMemberInfo.getNickName());
+        memberInfo.setNickname(requestMemberInfo.getNickname());
         memberInfo.setPhoneNumber(requestMemberInfo.getPhoneNumber());
         memberInfo.setPositionType(requestMemberInfo.getPositionType());
+        jpaMemberPortfolioUrl.deleteMemberPortfolioUrlsByMemberInfo(memberInfo);
+        for (MemberPortfolioUrl memberPortfolioUrl:requestMemberInfo.getMemberPortfolioUrls()) {
+            memberPortfolioUrl.setMemberInfo(memberInfo);
+        }
+        memberInfo.setMemberPortfolioUrls(requestMemberInfo.getMemberPortfolioUrls());
+
     }
 }
