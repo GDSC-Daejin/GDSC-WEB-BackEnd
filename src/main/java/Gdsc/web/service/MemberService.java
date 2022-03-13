@@ -60,7 +60,7 @@ public class MemberService {
         memberInfo.setGitEmail(requestMemberInfo.getGitEmail());
         memberInfo.setMajor(requestMemberInfo.getMajor());
         memberInfo.setHashTag(requestMemberInfo.getHashTag());
-        memberInfo.setNickName(requestMemberInfo.getNickName());
+        memberInfo.setNickname(requestMemberInfo.getNickname());
         memberInfo.setPhoneNumber(requestMemberInfo.getPhoneNumber());
         memberInfo.setPositionType(requestMemberInfo.getPositionType());
     }

@@ -40,7 +40,7 @@ public class MemberInfo {
 
     @Column(length = 30)
     @ApiModelProperty(example = "Rocoli")
-    private String nickName;
+    private String nickname;
 
     @Column(length = 30)
     @ApiModelProperty(example = "010-9132-1234")
@@ -70,7 +70,7 @@ public class MemberInfo {
     private List<MemberScrapPost> memberScrapPostList;
 
     @OneToMany(mappedBy = "memberInfo" , cascade = CascadeType.REMOVE)
-    private List<Post> mypost;
+    private List<Post> myPost;
 
     @OneToMany(mappedBy = "memberInfo" , cascade = CascadeType.ALL)
     private List<MemberPortfolioUrl> memberPortfolioUrls;
