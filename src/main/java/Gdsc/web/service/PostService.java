@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -156,4 +157,9 @@ public class PostService {
         return memberInfo;
     }
     //등록
+    public List<Post> findMyPost(Member member){
+        if(member == null) throw new IllegalArgumentException("없는 사용자 입니다.");
+        MemberInfo memberInfo = findMemberInfo(member.getUserId());
+        return jpaPostRepository.findByMemberInfo(memberInfo);
+    }
 }
