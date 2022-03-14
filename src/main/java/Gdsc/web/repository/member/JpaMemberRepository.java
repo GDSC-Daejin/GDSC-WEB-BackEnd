@@ -2,6 +2,7 @@ package Gdsc.web.repository.member;
 
 import Gdsc.web.entity.Member;
 
+import Gdsc.web.entity.Post;
 import Gdsc.web.model.RoleType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

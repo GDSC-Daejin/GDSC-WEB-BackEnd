@@ -4,6 +4,7 @@ import Gdsc.web.dto.ApiResponse;
 import Gdsc.web.dto.ResponseDto;
 import Gdsc.web.entity.Member;
 import Gdsc.web.entity.MemberInfo;
+import Gdsc.web.entity.Post;
 import Gdsc.web.repository.member.JpaMemberRepository;
 import Gdsc.web.service.MemberService;
 
@@ -58,7 +59,7 @@ public class MemberApiController {
     @GetMapping("/user/post")
     public ApiResponse getPost(@AuthenticationPrincipal User principal) {
         Member member = memberService.getUserId(principal.getUsername());
-        return ApiResponse.success("data", postService.findMemberInfo(member.getUserId()));
+        return ApiResponse.success("data", memberService.findMyPost(member));
     }
 }
 

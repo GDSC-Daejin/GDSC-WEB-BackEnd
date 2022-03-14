@@ -109,6 +109,5 @@ public class Member {
         this.uploadDate = uploadDate;
         this.modifiedAt = modifiedAt;
         this.memberInfo = memberInfo;
-
     }
 }
