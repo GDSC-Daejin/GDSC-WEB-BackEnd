@@ -30,8 +30,10 @@ public class ApiResponse<T> {
         return new ApiResponse(new ApiResponseHeader(SUCCESS, SUCCESS_MESSAGE), map);
     }
 
-    public static <T> ApiResponse<T> fail() {
-        return new ApiResponse(new ApiResponseHeader(FAILED, FAILED_MESSAGE), null);
+    public static <T> ApiResponse<T> fail(String name, T body) {
+        Map<String, T> map = new HashMap<>();
+        map.put(name, body);
+        return new ApiResponse(new ApiResponseHeader(FAILED, FAILED_MESSAGE), map);
     }
 
     public static <T> ApiResponse<T> invalidAccessToken() {
