@@ -2,6 +2,7 @@ package Gdsc.web.oauth.service;
 
 import Gdsc.web.entity.Member;
 import Gdsc.web.entity.MemberInfo;
+import Gdsc.web.entity.MemberPortfolioUrl;
 import Gdsc.web.model.RoleType;
 import Gdsc.web.oauth.entity.ProviderType;
 import Gdsc.web.oauth.entity.UserPrincipal;
@@ -20,6 +21,8 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -79,6 +82,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 memberInfo
         );
         memberInfo.setMember(user);
+        List<MemberPortfolioUrl> memberPortfolioUrls = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            memberPortfolioUrls.add(new MemberPortfolioUrl(memberInfo));
+        }
         // 멤버 info 도 같이 만들기
         return userRepository.saveAndFlush(user);
     }
