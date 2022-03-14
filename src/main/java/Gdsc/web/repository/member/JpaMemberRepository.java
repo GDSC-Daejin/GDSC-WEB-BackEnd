@@ -2,7 +2,7 @@ package Gdsc.web.repository.member;
 
 import Gdsc.web.entity.Member;
 
-import Gdsc.web.entity.MemberInfo;
+import Gdsc.web.entity.Post;
 import Gdsc.web.model.RoleType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public interface JpaMemberRepository extends JpaRepository<Member, Integer> {
     //Optional<Member> findByEmail(String email);
-    Optional<Member> findByUsername(String username);
+    // Optional<Member> findByUsername(String username);
 
     /*@Query("select m from Member m where m.role = 'MEMBER' or m.role = 'CORE' or m.role = 'LEAD'")
     List<Member> findMember();

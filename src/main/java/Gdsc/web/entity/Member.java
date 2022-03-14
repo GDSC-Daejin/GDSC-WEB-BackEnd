@@ -67,10 +67,9 @@ public class Member {
     private RoleType role; // 멤버 리드
 
 
-
     @Column
     @Enumerated(EnumType.STRING)
-    private ProviderType providerType;
+    private ProviderType providerType; // 어떤 소셜로그인인지 파악
 
     @JoinColumn(name = "MEMBER_INFO_ID")
     @OneToOne(cascade = CascadeType.ALL)
@@ -110,8 +109,5 @@ public class Member {
         this.uploadDate = uploadDate;
         this.modifiedAt = modifiedAt;
         this.memberInfo = memberInfo;
-
     }
-
-
 }

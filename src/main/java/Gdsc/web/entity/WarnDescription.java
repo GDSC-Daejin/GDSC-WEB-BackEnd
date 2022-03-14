@@ -45,11 +45,4 @@ public class WarnDescription {
     @CreationTimestamp
     @ApiModelProperty(example = "2022-01-06 14:57:42.777000")
     private LocalDateTime uploadDate;
-
-
-
-
-
-
-
 }
