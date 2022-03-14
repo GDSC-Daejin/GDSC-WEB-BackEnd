@@ -2,6 +2,8 @@ package Gdsc.web.repository.post;
 
 import Gdsc.web.entity.MemberInfo;
 import Gdsc.web.entity.Post;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -12,5 +14,5 @@ public interface JpaPostRepository extends JpaRepository<Post,Integer> {
     Optional<Post> findById(Integer integer);
     Optional<Post> findByPostId(Long postId);
     Optional<Post> findByPostIdAndMemberInfo(Long postId , MemberInfo memberInfo);
-    List<Post> findByMemberInfo(MemberInfo memberInfo);
+    Page<Post> findByMemberInfo(MemberInfo memberInfo, Pageable pageable);
 }

@@ -11,6 +11,8 @@ import Gdsc.web.service.MemberService;
 import Gdsc.web.service.PostService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
@@ -25,7 +27,6 @@ public class MemberApiController {
 
     private final MemberService memberService;
     private final PostService postService;
-    private final JpaMemberRepository memberRepository;
 
     @ApiOperation(value = "관리자 권한 멤버 리스트 확인 // 수정 필요", notes = "온보딩 , 멤버 데이터 전체 봄")
     @GetMapping("/api/core/memberList")
@@ -72,10 +73,8 @@ public class MemberApiController {
 
     @ApiOperation(value ="작성 게시글 불러오기", notes = "내가 작성한 게시글을 조회")
     @GetMapping("/api/member/v1/myPost")
-    public ApiResponse myPost(@AuthenticationPrincipal User principal){
-        Member member = memberService.getUserId(principal.getUsername());
-        List<Post> post = postService.findMyPost(member);
+    public ApiResponse myPost(@AuthenticationPrincipal User principal, Pageable pageable){
+        Page<Post> post = postService.findMyPost(principal.getUsername(), pageable);
         return ApiResponse.success("data", post);
     }
 }
-
