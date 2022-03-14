@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import Gdsc.web.repository.member.JpaMemberRepository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +34,11 @@ public class MemberService {
         MemberInfo memberInfo = new MemberInfo();
         memberInfo.setMember(member);
         member.setMemberInfo(memberInfo);
+        List<MemberPortfolioUrl> memberPortfolioUrls = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            memberPortfolioUrls.add(new MemberPortfolioUrl(memberInfo));
+        }
+        memberInfo.setMemberPortfolioUrls(memberPortfolioUrls);
         validateDuplicateUsername(member);
         memberRepository.save(member);
 
@@ -68,11 +74,13 @@ public class MemberService {
         memberInfo.setNickname(requestMemberInfo.getNickname());
         memberInfo.setPhoneNumber(requestMemberInfo.getPhoneNumber());
         memberInfo.setPositionType(requestMemberInfo.getPositionType());
-        jpaMemberPortfolioUrl.deleteMemberPortfolioUrlsByMemberInfo(memberInfo);
-        for (MemberPortfolioUrl memberPortfolioUrl:requestMemberInfo.getMemberPortfolioUrls()) {
-            memberPortfolioUrl.setMemberInfo(memberInfo);
+
+        int i = 0;
+        for (MemberPortfolioUrl url: memberInfo.getMemberPortfolioUrls()) {
+            url.setWebUrl(requestMemberInfo.getMemberPortfolioUrls().get(i).getWebUrl());
+            i++;
         }
-        memberInfo.setMemberPortfolioUrls(requestMemberInfo.getMemberPortfolioUrls());
+        //memberInfo.setMemberPortfolioUrls(requestMemberInfo.getMemberPortfolioUrls());
 
     }
     @Transactional

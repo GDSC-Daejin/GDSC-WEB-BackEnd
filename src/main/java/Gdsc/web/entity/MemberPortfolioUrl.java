@@ -23,4 +23,8 @@ public class MemberPortfolioUrl {
     @ManyToOne
     @JoinColumn(name = "USER_ID")
     private MemberInfo memberInfo;
+
+    public MemberPortfolioUrl(MemberInfo memberInfo){
+        this.setMemberInfo(memberInfo);
+    }
 }
