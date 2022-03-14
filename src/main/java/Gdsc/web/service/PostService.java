@@ -89,6 +89,7 @@ public class PostService {
     }
 
     //조회
+    @Transactional(readOnly = true)
     public Post findByPostId(Long postId){
         Post entity = jpaPostRepository.findByPostId(postId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));

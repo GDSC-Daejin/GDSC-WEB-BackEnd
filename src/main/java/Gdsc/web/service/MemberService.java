@@ -75,10 +75,8 @@ public class MemberService {
         memberInfo.setMemberPortfolioUrls(requestMemberInfo.getMemberPortfolioUrls());
 
     }
-
-    public Optional<MemberInfo> findMyPost(Member member){
-        if(member == null) throw new IllegalArgumentException("없는 사용자 입니다.");
-        return jpaMemberInfoRepository.findByMember(member);
+    @Transactional
+    public boolean 닉네임중복검사(String nickname){
+        return memberRepository.existsByMemberInfo_Nickname(nickname);
     }
-
 }

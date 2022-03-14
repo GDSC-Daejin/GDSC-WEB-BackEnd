@@ -68,13 +68,13 @@ public class MemberInfo {
     @Column(name = "HashTag")
     private String hashTag;
 
-    /// not table 속성
+    /*/// not table 속성
     @OneToMany(mappedBy = "memberInfo")
     private List<MemberScrapPost> memberScrapPostList;
 
     @OneToMany(mappedBy = "memberInfo" , cascade = CascadeType.REMOVE)
     private List<Post> myPost;
-
+*/
     @OneToMany(mappedBy = "memberInfo" , cascade = CascadeType.ALL)
     private List<MemberPortfolioUrl> memberPortfolioUrls;
 

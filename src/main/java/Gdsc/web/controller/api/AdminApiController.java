@@ -52,9 +52,9 @@ public class AdminApiController {
     @ApiOperation(value = "관리자 경고 주기" , notes = "관리자들이 멤버에게 경고를 줍니다. 로그인이 되어 있어야 합니다. ")
     @PostMapping("/v1/warning")
     public ApiResponse giveWarning(@RequestBody WarningDto warningDto , @AuthenticationPrincipal User principal) {
-
         adminService.경고주기(principal.getUsername() , warningDto);
-
         return ApiResponse.success("message", "Success");
     }
+
+
 }
