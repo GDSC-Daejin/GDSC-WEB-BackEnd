@@ -17,6 +17,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,7 +35,6 @@ import java.util.UUID;
 public class PostService {
     private final JpaPostRepository jpaPostRepository;
     private final JpaMemberRepository jpaMemberRepository;
-    private final JpaMemberInfoRepository jpaMemberInfoRepository;
     private final JpaPostHashTagRepository jpaPostHashTagRepository;
     private final PostRepositoryImp postRepositoryImp;
 
@@ -156,10 +156,10 @@ public class PostService {
         MemberInfo memberInfo = member.getMemberInfo();
         return memberInfo;
     }
-    //등록
-    public List<Post> findMyPost(Member member){
-        if(member == null) throw new IllegalArgumentException("없는 사용자 입니다.");
-        MemberInfo memberInfo = findMemberInfo(member.getUserId());
-        return jpaPostRepository.findByMemberInfo(memberInfo);
+    // 내 게시글 조회
+    @Transactional(readOnly = true)
+    public List<Post> findMyPost(String userId,final Pageable pageable){
+        MemberInfo memberInfo = findMemberInfo(userId);
+        return jpaPostRepository.findByMemberInfo(memberInfo, pageable);
     }
 }
