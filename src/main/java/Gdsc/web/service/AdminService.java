@@ -41,6 +41,11 @@ public class AdminService {
     }
 
     @Transactional(readOnly = true)
+    public List<Member> 전체회원목록(){
+        return repository.findAll();
+    }
+
+    @Transactional(readOnly = true)
     public List<Member> 게스트목록(){
         List<RoleType> roleTypes = new ArrayList<>();
         roleTypes.add(RoleType.GUEST);

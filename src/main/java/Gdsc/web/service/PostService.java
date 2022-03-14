@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -89,6 +90,7 @@ public class PostService {
     }
 
     //조회
+    @Transactional(readOnly = true)
     public Post findByPostId(Long postId){
         Post entity = jpaPostRepository.findByPostId(postId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
@@ -155,8 +157,9 @@ public class PostService {
         return memberInfo;
     }
     //등록
-
-
-
-
+    public List<Post> findMyPost(Member member){
+        if(member == null) throw new IllegalArgumentException("없는 사용자 입니다.");
+        MemberInfo memberInfo = findMemberInfo(member.getUserId());
+        return jpaPostRepository.findByMemberInfo(memberInfo);
+    }
 }

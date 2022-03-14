@@ -3,9 +3,11 @@ package Gdsc.web.service;
 import Gdsc.web.entity.Member;
 import Gdsc.web.entity.MemberInfo;
 import Gdsc.web.entity.MemberPortfolioUrl;
+import Gdsc.web.entity.Post;
 import Gdsc.web.model.RoleType;
 import Gdsc.web.repository.memberPortfolioUrl.JpaMemberPortfolioUrl;
 import Gdsc.web.repository.memberinfo.JpaMemberInfoRepository;
+import Gdsc.web.repository.post.JpaPostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,12 +15,14 @@ import Gdsc.web.repository.member.JpaMemberRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class MemberService {
 
     private final JpaMemberRepository memberRepository;
+    private final JpaMemberInfoRepository jpaMemberInfoRepository;
     private final JpaMemberPortfolioUrl jpaMemberPortfolioUrl;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -70,5 +74,9 @@ public class MemberService {
         }
         memberInfo.setMemberPortfolioUrls(requestMemberInfo.getMemberPortfolioUrls());
 
+    }
+    @Transactional
+    public boolean 닉네임중복검사(String nickname){
+        return memberRepository.existsByMemberInfo_Nickname(nickname);
     }
 }

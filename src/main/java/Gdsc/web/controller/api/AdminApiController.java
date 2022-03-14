@@ -31,7 +31,13 @@ public class AdminApiController {
         return ApiResponse.success("message", "Success");
     }
 
-    @ApiOperation(value = "멤버목록", notes = "게스트가 아닌 멤버를 조회합니다")
+    @ApiOperation(value = "전체회원목록", notes = "모든 회원을 조회합니다.")
+    @GetMapping("v1/all/list")
+    public ApiResponse<List<Member>> retrieveUserList(){
+        return ApiResponse.success("data", adminService.전체회원목록());
+    }
+
+    @ApiOperation(value = "멤버목록", notes = "게스트가 아닌 멤버를 조회합니다.")
     @GetMapping("v1/member/list")
     public ApiResponse<List<Member>> retrieveMemberList(){
         return ApiResponse.success("data", adminService.멤버목록());
@@ -46,9 +52,9 @@ public class AdminApiController {
     @ApiOperation(value = "관리자 경고 주기" , notes = "관리자들이 멤버에게 경고를 줍니다. 로그인이 되어 있어야 합니다. ")
     @PostMapping("/v1/warning")
     public ApiResponse giveWarning(@RequestBody WarningDto warningDto , @AuthenticationPrincipal User principal) {
-
         adminService.경고주기(principal.getUsername() , warningDto);
-
         return ApiResponse.success("message", "Success");
     }
+
+
 }
