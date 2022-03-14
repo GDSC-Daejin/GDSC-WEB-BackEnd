@@ -11,6 +11,7 @@ import Gdsc.web.service.MemberService;
 import Gdsc.web.service.PostService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -73,7 +74,7 @@ public class MemberApiController {
     @ApiOperation(value ="작성 게시글 불러오기", notes = "내가 작성한 게시글을 조회")
     @GetMapping("/api/member/v1/myPost")
     public ApiResponse myPost(@AuthenticationPrincipal User principal, Pageable pageable){
-        List<Post> post = postService.findMyPost(principal.getUsername(), pageable);
+        Page<Post> post = postService.findMyPost(principal.getUsername(), pageable);
         return ApiResponse.success("data", post);
     }
 }

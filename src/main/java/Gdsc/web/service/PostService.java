@@ -17,6 +17,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -158,7 +159,7 @@ public class PostService {
     }
     // 내 게시글 조회
     @Transactional(readOnly = true)
-    public List<Post> findMyPost(String userId,final Pageable pageable){
+    public Page<Post> findMyPost(String userId, final Pageable pageable){
         MemberInfo memberInfo = findMemberInfo(userId);
         return jpaPostRepository.findByMemberInfo(memberInfo, pageable);
     }
