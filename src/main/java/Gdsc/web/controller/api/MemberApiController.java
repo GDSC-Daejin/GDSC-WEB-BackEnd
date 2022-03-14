@@ -62,6 +62,7 @@ public class MemberApiController {
         return ApiResponse.success("data" ,!memberService.닉네임중복검사(nickname));
     }
 
+    @ApiOperation(value ="작성 게시글 불러오기", notes = "내가 작성한 게시글을 조회")
     @GetMapping("/api/member/v1/myPost")
     public ApiResponse myPost(@AuthenticationPrincipal User principal){
         Member member = memberService.getUserId(principal.getUsername());
