@@ -26,7 +26,7 @@ public class PostApiController {
     }
 
     //수정
-    @PutMapping("/api/v1/member/post/{id}")
+    @PutMapping("/api/v1/member/post/{postId}")
     public ApiResponse update(@PathVariable Long postId,
                               @ModelAttribute @Valid PostRequestDto requestDto ,
                               @AuthenticationPrincipal User principal) throws IOException {

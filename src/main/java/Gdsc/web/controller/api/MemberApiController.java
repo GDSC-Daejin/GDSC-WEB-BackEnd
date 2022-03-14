@@ -11,7 +11,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,16 +42,27 @@ public class MemberApiController {
         return member;
     }
 
+
+    @ApiOperation(value = "Member 내용 보기" , notes = "Member 내용 값 보기")
     @GetMapping("/api/member/v1/me")
     public ApiResponse getUserV2(@AuthenticationPrincipal User principal) {
 
         Member member =memberService.getUserId(principal.getUsername());
         return ApiResponse.success("data" , member);
     }
+
+    @ApiOperation(value = "Member 내용 보기" , notes = "Member 내용 값 보기")
+    @GetMapping("/api/member/v1/info")
+    public ApiResponse getMemberInfo(@AuthenticationPrincipal User principal) {
+
+        MemberInfo memberInfo = memberService.getUserId(principal.getUsername()).getMemberInfo();
+        return ApiResponse.success("data" , memberInfo);
+    }
+
     @ApiOperation(value = "유저 자기 정보 업데이트" , notes = "JWT 토큰값이 들어가야 사용자를 인식 가능함")
     @PostMapping("/api/member/v1/update/me")
     public ApiResponse Update(@AuthenticationPrincipal User principal , @RequestBody MemberInfo memberInfo){
-        if(principal.getUsername() == null) return ApiResponse.fail();
+        if(principal == null) return ApiResponse.fail("message" , "Token is null");
         memberService.정보업데이트(principal.getUsername(),memberInfo);
         return ApiResponse.success("message" , "SUCCESS");
     }
