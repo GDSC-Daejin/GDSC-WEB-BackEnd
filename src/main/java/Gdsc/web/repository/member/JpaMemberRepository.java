@@ -2,6 +2,7 @@ package Gdsc.web.repository.member;
 
 import Gdsc.web.entity.Member;
 
+import Gdsc.web.entity.MemberInfo;
 import Gdsc.web.model.RoleType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,4 +23,5 @@ public interface JpaMemberRepository extends JpaRepository<Member, Integer> {
     Member findByUserId(String id);
     Member findByEmail(String email);
     boolean existsByMemberInfo_Nickname(String nickname);
+
 }
