@@ -71,6 +71,7 @@ public class MemberService {
         memberInfo.setGitEmail(requestMemberInfo.getGitEmail());
         memberInfo.setMajor(requestMemberInfo.getMajor());
         memberInfo.setHashTag(requestMemberInfo.getHashTag());
+        if(닉네임중복검사(requestMemberInfo.getNickname())) throw new IllegalArgumentException("중복된 닉네임 입니다.");
         memberInfo.setNickname(requestMemberInfo.getNickname());
         memberInfo.setPhoneNumber(requestMemberInfo.getPhoneNumber());
         memberInfo.setPositionType(requestMemberInfo.getPositionType());
