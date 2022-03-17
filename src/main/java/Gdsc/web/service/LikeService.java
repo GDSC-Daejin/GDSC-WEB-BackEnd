@@ -28,7 +28,7 @@ public class LikeService {
             Likes newLike = new Likes();
             newLike.setMemberInfo(memberInfo);
             newLike.setPost(post.get());
-            jpaLikeRepository.save(likes);
+            jpaLikeRepository.save(newLike);
         }else {
             jpaLikeRepository.delete(likes);
         }

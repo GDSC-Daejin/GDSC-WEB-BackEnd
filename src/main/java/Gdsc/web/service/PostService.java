@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -59,9 +60,9 @@ public class PostService {
         post.setTitle(requestDto.getTitle());
         post.setTmpStore(requestDto.isTmpStore());
         post.setMemberInfo(memberInfo);
-
-        if(requestDto.getThumbnail() != null){
-            post.setImagePath(upload(requestDto.getThumbnail() , "static"));
+        //json 형식 이미지나 , form-data 형식 이미지 둘중 하나만 들어왔을때!!
+        if(requestDto.getThumbnail() != null ^ requestDto.getBase64Thumbnail() != null){
+            post.setImagePath(upload(requestDto, "static"));
         }
 
         jpaPostRepository.save(post);
@@ -83,10 +84,10 @@ public class PostService {
         post.setContent(requestDto.getContent());
         post.setTitle(requestDto.getTitle());
         post.setTmpStore(requestDto.isTmpStore());
-        if(requestDto.getThumbnail() != null){
-            post.setImagePath(upload(requestDto.getThumbnail() , "static"));
+        //json 형식 이미지나 , form-data 형식 이미지 둘중 하나만 들어왔을때!!
+        if(requestDto.getThumbnail() != null ^ requestDto.getBase64Thumbnail() != null){
+            post.setImagePath(upload(requestDto, "static"));
         }
-        //post.setImagePath(requestDto.getImagePath());
 
     }
 
@@ -99,10 +100,9 @@ public class PostService {
     }
 
 
-    public String upload(MultipartFile multipartFile, String dirName) throws IOException {
-        File uploadFile = convert(multipartFile)  // 파일 변환할 수 없으면 에러
+    public String upload(PostRequestDto postRequestDto, String dirName) throws IOException {
+        File uploadFile = convert(postRequestDto)  // 파일 변환할 수 없으면 에러
                 .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
-
         return upload(uploadFile, dirName);
     }
 
@@ -129,13 +129,29 @@ public class PostService {
         log.info("File delete fail");
     }
 
-    // 로컬에 파일 업로드 하기
-    private Optional<File> convert(MultipartFile file) throws IOException {
-        File convertFile = new File(UUID.randomUUID()+file.getOriginalFilename());
+
+    private Optional<File> convert(PostRequestDto postRequestDto) throws IOException {
+
+        File convertFile;
+        if(postRequestDto.getThumbnail() != null){
+            convertFile = new File(UUID.randomUUID()+postRequestDto.getThumbnail().getOriginalFilename());
+        } else{
+            convertFile = new File(UUID.randomUUID()+postRequestDto.getFileName());
+        }
         if (convertFile.createNewFile()) { // 바로 위에서 지정한 경로에 File이 생성됨 (경로가 잘못되었다면 생성 불가능)
-            try (FileOutputStream fos = new FileOutputStream(convertFile)) { // FileOutputStream 데이터를 파일에 바이트 스트림으로 저장하기 위함
-                fos.write(file.getBytes());
+            if(postRequestDto.getThumbnail() != null){ // form-data 형식으로 왔을 때
+                try (FileOutputStream fos = new FileOutputStream(convertFile)) { // FileOutputStream 데이터를 파일에 바이트 스트림으로 저장하기 위함
+                    fos.write(postRequestDto.getBase64Thumbnail().getBytes());
+                }
             }
+            else if(postRequestDto.getBase64Thumbnail() != null){ // json 으로 왔을 때
+                try (FileOutputStream fos = new FileOutputStream(convertFile)) { // FileOutputStream 데이터를 파일에 바이트 스트림으로 저장하기 위함
+                    Base64.Decoder decoder = Base64.getDecoder();
+                    byte[] decodedBytes = decoder.decode(postRequestDto.getBase64Thumbnail().getBytes());
+                    fos.write(decodedBytes);
+                }
+            }
+
             return Optional.of(convertFile);
         }
         return Optional.empty();

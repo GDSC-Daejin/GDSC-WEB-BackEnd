@@ -1,5 +1,6 @@
 package Gdsc.web.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,8 +20,12 @@ public class MemberPortfolioUrl {
 
     @Column(name = "Web_Url")
     private String webUrl;
-
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "USER_ID")
     private MemberInfo memberInfo;
+
+    public MemberPortfolioUrl(MemberInfo memberInfo){
+        this.setMemberInfo(memberInfo);
+    }
 }
