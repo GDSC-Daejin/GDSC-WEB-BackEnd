@@ -22,6 +22,10 @@ public class PostRequestDto {
     @ApiModelProperty(example = "HashtagContent")
 
     private List<PostHashTag> postHashTags;
-    @ApiModelProperty(example = "이미지 주십쇼")
+    @ApiModelProperty(example = "폼타입으로 보낼때 이미지 주십쇼")
     private MultipartFile Thumbnail;
+    @ApiModelProperty(example = "base64인코딩자료")
+    private String base64Thumbnail;
+    @ApiModelProperty(example = "base64인코딩해서보낼때 필요한 파일이름")
+    private String fileName;
 }
