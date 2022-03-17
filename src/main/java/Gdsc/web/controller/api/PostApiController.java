@@ -21,7 +21,7 @@ public class PostApiController {
 
     //등록
     @ApiOperation(value = "포스트 글쓰기", notes = "Json 아니고 form type으로 보내야함")
-    @PostMapping("/api/v1/member/post")
+    @PostMapping("/api/member/v1/post")
     public ApiResponse save(@ModelAttribute @Valid PostRequestDto requestDto  , @AuthenticationPrincipal User principal) throws IOException {
         postService.save(requestDto , principal.getUsername());
         return ApiResponse.success("message", "SUCCESS");
@@ -29,7 +29,7 @@ public class PostApiController {
 
     //수정
     @ApiOperation(value = "post 업데이트", notes = "JWT 토큰으로 user정보 읽고 변한값 Json 아니고 form type으로 보내야함")
-    @PutMapping("/api/v1/member/post/{postId}")
+    @PutMapping("/api/member/v1/post/{postId}")
     public ApiResponse update(@PathVariable Long postId,
                               @ModelAttribute @Valid PostRequestDto requestDto ,
                               @AuthenticationPrincipal User principal) throws IOException {
