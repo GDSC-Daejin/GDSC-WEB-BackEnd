@@ -9,6 +9,7 @@ import Gdsc.web.repository.member.JpaMemberRepository;
 import Gdsc.web.service.MemberService;
 
 import Gdsc.web.service.PostService;
+import Gdsc.web.service.ScrapService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,6 +28,7 @@ public class MemberApiController {
 
     private final MemberService memberService;
     private final PostService postService;
+    private final ScrapService scrapService;
 
     @ApiOperation(value = "관리자 권한 멤버 리스트 확인 // 수정 필요", notes = "온보딩 , 멤버 데이터 전체 봄")
     @GetMapping("/api/core/memberList")
@@ -76,5 +78,12 @@ public class MemberApiController {
     public ApiResponse myPost(@AuthenticationPrincipal User principal, Pageable pageable){
         Page<Post> post = postService.findMyPost(principal.getUsername(), pageable);
         return ApiResponse.success("data", post);
+    }
+
+    @ApiOperation(value = "스크랩", notes = "scrap 되어있으면 delete 없으면 scrap")
+    @PostMapping("/api/v1/member/scrap/{postId}")
+    public ApiResponse scrap(@AuthenticationPrincipal User principal, @PathVariable Long postId){
+        scrapService.scrap(principal.getUsername(), postId);
+        return ApiResponse.success("message", "SUCCESS");
     }
 }
