@@ -1,5 +1,6 @@
 package Gdsc.web.service;
 
+import Gdsc.web.entity.Member;
 import Gdsc.web.entity.MemberInfo;
 import Gdsc.web.entity.MemberScrapPost;
 import Gdsc.web.entity.Post;
@@ -7,7 +8,10 @@ import Gdsc.web.repository.member.JpaMemberRepository;
 import Gdsc.web.repository.post.JpaPostRepository;
 import Gdsc.web.repository.scrap.JpaScrapRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -30,5 +34,18 @@ public class ScrapService {
         } else{
             jpaScrapRepository.delete(memberScrapPost);
         }
+    }
+
+    public MemberInfo findMemberInfo(String userId){
+        Member member = jpaMemberRepository.findByUserId(userId);
+        if(member == null) throw new IllegalArgumentException("없는 사용자 입니다.");
+        MemberInfo memberInfo = member.getMemberInfo();
+        return memberInfo;
+    }
+
+    @Transactional(readOnly = true)
+    public Page<MemberScrapPost> findMyScrapPost(String userId, final Pageable pageable){
+        MemberInfo memberInfo = findMemberInfo(userId);
+        return jpaScrapRepository.findByMemberInfo(memberInfo, pageable);
     }
 }
