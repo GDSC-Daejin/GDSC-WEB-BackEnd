@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface JpaLikeRepository extends JpaRepository<Likes , Integer> {
-    Likes findByMemberInfo_MemberInfoIdAndPost_PostId(String userId , Long PostId);
+    Likes findByMemberInfo_Member_UserIdAndPost_PostId(String userId , Long PostId);
 }
