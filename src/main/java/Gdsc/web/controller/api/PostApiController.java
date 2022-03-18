@@ -4,6 +4,7 @@ import Gdsc.web.dto.ApiResponse;
 import Gdsc.web.dto.PostRequestDto;
 import Gdsc.web.service.LikeService;
 import Gdsc.web.service.PostService;
+import Gdsc.web.service.ScrapService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,7 +21,7 @@ import java.util.Base64;
 public class PostApiController {
     private final PostService postService;
     private final LikeService likeService;
-
+    private final ScrapService scrapService;
     //등록
     @ApiOperation(value = "포스트 글쓰기", notes = "Json 아니고 form type으로 보내야함")
     @PostMapping("/api/member/v1/post")
@@ -68,5 +69,10 @@ public class PostApiController {
         likeService.like(principal.getUsername(), postId);
         return ApiResponse.success("message","SUCCESS");
     }
-
+    @ApiOperation(value = "스크랩", notes = "scrap 되어있으면 delete 없으면 scrap")
+    @PostMapping("/api/v1/post/{postId}/scrap")
+    public ApiResponse scrap(@AuthenticationPrincipal User principal, @PathVariable Long postId){
+        scrapService.scrap(principal.getUsername(), postId);
+        return ApiResponse.success("message", "SUCCESS");
+    }
 }
