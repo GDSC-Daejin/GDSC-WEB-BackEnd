@@ -8,7 +8,8 @@ import Gdsc.web.entity.MemberScrapPost;
 import Gdsc.web.entity.Post;
 import Gdsc.web.repository.member.JpaMemberRepository;
 import Gdsc.web.service.MemberService;
-
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import Gdsc.web.service.PostService;
 import Gdsc.web.service.ScrapService;
 import io.swagger.annotations.ApiOperation;
@@ -68,21 +69,23 @@ public class MemberApiController {
         return ApiResponse.success("message" , "SUCCESS");
     }
 
-    @ApiOperation(value = "닉네임 중복검사" , notes = "nickname 보낸 값이 중복인지 검사")
-    @PostMapping("/api/member/v1/validation/nickname")
+    @ApiOperation(value = "닉네임 중복검사" , notes = "nickname 보낸 값이 중복인지 검사 있으면 false return 없으면 true return")
+    @PostMapping("/api/guest/v1/validation/nickname")
     public ApiResponse validationNickname(@RequestBody String nickname){
+        // 있으면 false return 없으면 true return
         return ApiResponse.success("data" ,!memberService.닉네임중복검사(nickname));
     }
 
     @ApiOperation(value ="작성 게시글 불러오기", notes = "내가 작성한 게시글을 조회")
     @GetMapping("/api/member/v1/myPost")
-    public ApiResponse myPost(@AuthenticationPrincipal User principal, Pageable pageable){
+    public ApiResponse myPost(@AuthenticationPrincipal User principal,
+                              @PageableDefault(size = 16 ,sort = "postId",direction = Sort.Direction.DESC) Pageable pageable){
         Page<Post> post = postService.findMyPost(principal.getUsername(), pageable);
         return ApiResponse.success("data", post);
     }
 
     @ApiOperation(value = "스크랩", notes = "scrap 되어있으면 delete 없으면 scrap")
-    @PostMapping("/api/v1/member/scrap/{postId}")
+    @PostMapping("/api/member/v1/scrap/{postId}")
     public ApiResponse scrap(@AuthenticationPrincipal User principal, @PathVariable Long postId){
         scrapService.scrap(principal.getUsername(), postId);
         return ApiResponse.success("message", "SUCCESS");
@@ -90,7 +93,8 @@ public class MemberApiController {
 
     @ApiOperation(value = "스크랩한 게시글 불러오기", notes = "내가 스크랩한 게시글 조회")
     @GetMapping("/api/member/v1/myScrap")
-    public ApiResponse myScrap(@AuthenticationPrincipal User principal, Pageable pageable){
+    public ApiResponse myScrap(@AuthenticationPrincipal User principal,
+                               @PageableDefault(size = 16 ,sort = "postId",direction = Sort.Direction.DESC )Pageable pageable){
         Page<MemberScrapPost> scrap = scrapService.findMyScrapPost(principal.getUsername(), pageable);
         return ApiResponse.success("data", scrap);
     }
