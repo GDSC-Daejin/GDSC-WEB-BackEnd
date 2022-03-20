@@ -1,5 +1,7 @@
 package Gdsc.web.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,10 +28,12 @@ public class Likes {
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
+    @JsonIgnore
     private MemberInfo memberInfo;
 
     @ManyToOne
     @JoinColumn(name = "POST_ID")
+    @JsonIgnore
     private Post post;
 
 

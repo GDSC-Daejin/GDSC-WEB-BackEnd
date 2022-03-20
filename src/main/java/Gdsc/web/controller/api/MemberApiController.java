@@ -91,7 +91,7 @@ public class MemberApiController {
         return ApiResponse.success("message", "SUCCESS");
     }
 
-    @ApiOperation(value = "스크랩한 게시글 불러오기", notes = "내가 스크랩한 게시글 조회")
+    @ApiOperation(value = "스크랩한 게시글 불러오기", notes = "내가 스크랩한 게시글 조회 , 현재 오류있음")
     @GetMapping("/api/member/v1/myScrap")
     public ApiResponse myScrap(@AuthenticationPrincipal User principal,
                                @PageableDefault(size = 16 ,sort = "postId",direction = Sort.Direction.DESC )Pageable pageable){

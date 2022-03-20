@@ -1,20 +1,17 @@
 package Gdsc.web.controller.api;
 
 import Gdsc.web.dto.ApiResponse;
-import Gdsc.web.dto.PostRequestDto;
+import Gdsc.web.dto.requestDto.PostRequestDto;
 import Gdsc.web.service.LikeService;
 import Gdsc.web.service.PostService;
-import Gdsc.web.service.ScrapService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.Base64;
 
 @RestController
 @RequiredArgsConstructor
@@ -58,7 +55,7 @@ public class PostApiController {
 
 
     //조회
-    @ApiOperation(value = "post 상세보기", notes = "Postid로 상세보기")
+    @ApiOperation(value = "post 상세보기", notes = "PostId로 상세보기")
     @GetMapping("/api/v1/post/{postId}")
     public ApiResponse findByPostId(@PathVariable Long postId){
         return ApiResponse.success("data",postService.findByPostId(postId));

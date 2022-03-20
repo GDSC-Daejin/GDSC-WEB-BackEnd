@@ -1,12 +1,11 @@
 package Gdsc.web.service;
 
-import Gdsc.web.dto.PostRequestDto;
+import Gdsc.web.dto.requestDto.PostRequestDto;
 import Gdsc.web.entity.Member;
 import Gdsc.web.entity.MemberInfo;
 import Gdsc.web.entity.Post;
 import Gdsc.web.entity.PostHashTag;
 import Gdsc.web.repository.member.JpaMemberRepository;
-import Gdsc.web.repository.memberinfo.JpaMemberInfoRepository;
 import Gdsc.web.repository.post.JpaPostRepository;
 import Gdsc.web.repository.post.PostRepositoryImp;
 import Gdsc.web.repository.postHashTag.JpaPostHashTagRepository;
@@ -21,13 +20,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Base64;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 

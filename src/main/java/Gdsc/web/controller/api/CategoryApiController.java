@@ -1,14 +1,11 @@
 package Gdsc.web.controller.api;
 
 import Gdsc.web.dto.ApiResponse;
-import Gdsc.web.dto.CategoryUpdateDto;
-import Gdsc.web.dto.WarningDto;
+import Gdsc.web.dto.requestDto.CategoryUpdateDto;
 import Gdsc.web.entity.Category;
 import Gdsc.web.service.CategoryService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,7 +15,7 @@ import java.util.List;
 public class CategoryApiController {
 
     private final CategoryService categoryService;
-
+    @ApiOperation(value = "카테고리 목록" , notes = "카테고리 목록 보기 ")
     @GetMapping("/category")
     public ApiResponse<List<Category>> categoryList(){
         return ApiResponse.success("data", categoryService.카테고리목록());

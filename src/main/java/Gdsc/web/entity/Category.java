@@ -29,7 +29,7 @@ public class Category {
     @Column(name = "Category_ID")
     private int categoryId;
 
-    @Column(name = "Category_Name" , length = 30 , nullable = false)
+    @Column(name = "Category_Name" , length = 30 , nullable = false, unique = true)
     private String categoryName;
 
     @Column(name = "MODIFIED_AT")
