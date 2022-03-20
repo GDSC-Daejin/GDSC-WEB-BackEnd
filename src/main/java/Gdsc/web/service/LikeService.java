@@ -10,12 +10,14 @@ import Gdsc.web.repository.post.JpaPostRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class LikeService {
     private final JpaLikeRepository jpaLikeRepository;
     private final JpaMemberRepository jpaMemberRepository;
@@ -29,8 +31,10 @@ public class LikeService {
             newLike.setMemberInfo(memberInfo);
             newLike.setPost(post.get());
             jpaLikeRepository.save(newLike);
+            log.info( userId + " like " + postId);
         }else {
             jpaLikeRepository.delete(likes);
+            log.info( userId + " dislike " + postId);
         }
 
     }
