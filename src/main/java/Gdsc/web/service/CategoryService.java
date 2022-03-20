@@ -1,6 +1,6 @@
 package Gdsc.web.service;
 
-import Gdsc.web.dto.CategoryUpdateDto;
+import Gdsc.web.dto.requestDto.CategoryUpdateDto;
 import Gdsc.web.entity.Category;
 import Gdsc.web.repository.category.JpaCategoryRepository;
 import lombok.RequiredArgsConstructor;

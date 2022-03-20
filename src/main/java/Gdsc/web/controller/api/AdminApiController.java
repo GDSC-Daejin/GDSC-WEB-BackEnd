@@ -37,13 +37,13 @@ public class AdminApiController {
         return ApiResponse.success("data", adminService.전체회원목록());
     }
 
-    @ApiOperation(value = "멤버목록", notes = "게스트가 아닌 멤버를 조회합니다.")
+    @ApiOperation(value = "멤버목록", notes = "게스트가 아닌 멤버를 조회합니다. 전화번호 Not null 인 회원만")
     @GetMapping("v1/member/list")
     public ApiResponse<List<Member>> retrieveMemberList(){
         return ApiResponse.success("data", adminService.멤버목록());
     }
 
-    @ApiOperation(value = "게스트목록", notes = "게스트를 조회합니다")
+    @ApiOperation(value = "게스트목록", notes = "게스트를 조회합니다 Not null 인 회원만")
     @GetMapping("v1/guest/list")
     public ApiResponse<List<Member>> retrieveGuestList(){
         return ApiResponse.success("data", adminService.게스트목록());
