@@ -1,4 +1,4 @@
-package Gdsc.web.dto;
+package Gdsc.web.dto.requestDto;
 
 import lombok.Data;
 
