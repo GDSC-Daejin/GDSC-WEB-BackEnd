@@ -1,10 +1,8 @@
 package Gdsc.web.service;
 
 import Gdsc.web.dto.requestDto.PostRequestDto;
-import Gdsc.web.entity.Member;
-import Gdsc.web.entity.MemberInfo;
-import Gdsc.web.entity.Post;
-import Gdsc.web.entity.PostHashTag;
+import Gdsc.web.entity.*;
+import Gdsc.web.repository.category.JpaCategoryRepository;
 import Gdsc.web.repository.member.JpaMemberRepository;
 import Gdsc.web.repository.post.JpaPostRepository;
 import Gdsc.web.repository.post.PostRepositoryImp;
@@ -36,7 +34,7 @@ public class PostService {
     private final JpaMemberRepository jpaMemberRepository;
     private final JpaPostHashTagRepository jpaPostHashTagRepository;
     private final PostRepositoryImp postRepositoryImp;
-
+    private final JpaCategoryRepository jpaCategoryRepository;
     private final AmazonS3Client amazonS3Client;
 
     @Value("${cloud.aws.s3.bucket}")
@@ -52,7 +50,8 @@ public class PostService {
             }
             post.setPostHashTags(requestDto.getPostHashTags());
         }
-        post.setCategory(requestDto.getCategory());
+        Category category = jpaCategoryRepository.findByCategoryId(requestDto.getCategory().getCategoryId());
+        post.setCategory(category);
         post.setContent(requestDto.getContent());
         post.setTitle(requestDto.getTitle());
         post.setTmpStore(requestDto.isTmpStore());
@@ -70,7 +69,8 @@ public class PostService {
         MemberInfo memberInfo = findMemberInfo(userId);
         Post post = jpaPostRepository.findByPostIdAndMemberInfo(postId, memberInfo) //ㅣinteger가 아니라 long 타입이라 오류? jpa Long을 integer로 바꿔야 할까?
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
-        post.setCategory(requestDto.getCategory());
+        Category category = jpaCategoryRepository.findByCategoryId(requestDto.getCategory().getCategoryId());
+        post.setCategory(category);
 
         jpaPostHashTagRepository.deletePostHashTagsByPost(post);
         for(PostHashTag requestDto1 : requestDto.getPostHashTags()){
@@ -85,6 +85,7 @@ public class PostService {
         if(requestDto.getThumbnail() != null ^ requestDto.getBase64Thumbnail() != null){
             post.setImagePath(upload(requestDto, "static"));
         }
+
 
     }
 
