@@ -1,10 +1,8 @@
 package Gdsc.web.service;
 
 import Gdsc.web.dto.PostRequestDto;
-import Gdsc.web.entity.Member;
-import Gdsc.web.entity.MemberInfo;
-import Gdsc.web.entity.Post;
-import Gdsc.web.entity.PostHashTag;
+import Gdsc.web.entity.*;
+import Gdsc.web.repository.category.JpaCategoryRepository;
 import Gdsc.web.repository.member.JpaMemberRepository;
 import Gdsc.web.repository.memberinfo.JpaMemberInfoRepository;
 import Gdsc.web.repository.post.JpaPostRepository;
@@ -38,6 +36,7 @@ public class PostService {
     private final JpaPostRepository jpaPostRepository;
     private final JpaMemberRepository jpaMemberRepository;
     private final JpaPostHashTagRepository jpaPostHashTagRepository;
+    private final JpaCategoryRepository jpaCategoryRepository;
     private final PostRepositoryImp postRepositoryImp;
 
     private final AmazonS3Client amazonS3Client;
@@ -178,5 +177,12 @@ public class PostService {
     public Page<Post> findMyPost(String userId, final Pageable pageable){
         MemberInfo memberInfo = findMemberInfo(userId);
         return jpaPostRepository.findByMemberInfo(memberInfo, pageable);
+    }
+    // 내 게시글 카테고리 별 조회
+    @Transactional(readOnly = true)
+    public Page<Post> findMyPostWIthCategory(String userId, Integer categoryId, final Pageable pageable){
+        MemberInfo memberInfo = findMemberInfo(userId);
+        Optional<Category> category = jpaCategoryRepository.findByCategoryId(categoryId);
+        return jpaPostRepository.findByMemberInfoAndCategory(memberInfo, category, pageable);
     }
 }

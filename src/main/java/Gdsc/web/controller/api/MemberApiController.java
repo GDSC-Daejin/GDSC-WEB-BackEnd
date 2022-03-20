@@ -81,6 +81,14 @@ public class MemberApiController {
         return ApiResponse.success("data", post);
     }
 
+    @ApiOperation(value ="카테고리별 작성 게시글 불러오기", notes = "내가 작성한 게시글을 카테고리 별로 조회")
+    @GetMapping("api/member/v1/post/{categoryId}")
+    public ApiResponse myPostWithCategory(@AuthenticationPrincipal User principal,
+                                          @PathVariable Integer categoryId, Pageable pageable){
+        Page<Post> post = postService.findMyPostWIthCategory(principal.getUsername(), categoryId, pageable);
+        return ApiResponse.success("data", post);
+    }
+
     @ApiOperation(value = "스크랩", notes = "scrap 되어있으면 delete 없으면 scrap")
     @PostMapping("/api/v1/member/scrap/{postId}")
     public ApiResponse scrap(@AuthenticationPrincipal User principal, @PathVariable Long postId){
