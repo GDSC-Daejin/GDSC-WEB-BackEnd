@@ -47,6 +47,7 @@ public class Post {
     //임시 저장 여부
     @Column
     @ApiModelProperty(example = "0")
+    @NotNull
     private boolean tmpStore;
 
     @ApiModelProperty(example = "Backend")

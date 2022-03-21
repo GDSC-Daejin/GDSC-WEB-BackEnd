@@ -11,11 +11,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface JpaPostRepository extends JpaRepository<Post,Integer> {
-    @Override
-    Optional<Post> findById(Integer integer);
+
     Optional<Post> findByPostId(Long postId);
     Optional<Post> findByPostIdAndMemberInfo(Long postId , MemberInfo memberInfo);
     Page<Post> findByMemberInfo(MemberInfo memberInfo, Pageable pageable);
     Page<Post> findByMemberInfoAndCategory(MemberInfo memberInfo, Optional<Category> category, Pageable pageable);
-    Page<Post> findAll(Pageable pageable);
+    Page<Post> findAllByTmpStoreIsFalse(Pageable pageable);
 }

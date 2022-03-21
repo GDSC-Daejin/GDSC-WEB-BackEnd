@@ -16,7 +16,7 @@ public class CategoryApiController {
 
     private final CategoryService categoryService;
     @ApiOperation(value = "카테고리 목록" , notes = "카테고리 목록 보기 ")
-    @GetMapping("/category")
+    @GetMapping("api/v1/category")
     public ApiResponse<List<Category>> categoryList(){
         return ApiResponse.success("data", categoryService.카테고리목록());
     }
