@@ -179,9 +179,10 @@ public class PostService {
     }
     // 내 게시글 카테고리 별 조회
     @Transactional(readOnly = true)
-    public Page<Post> findMyPostWIthCategory(String userId, int categoryId, final Pageable pageable){
+    public Page<Post> findMyPostWIthCategory(String userId, String categoryName, final Pageable pageable){
         MemberInfo memberInfo = findMemberInfo(userId);
-        Category category = jpaCategoryRepository.findByCategoryId(categoryId);
+        Optional<Category> category = Optional.of(jpaCategoryRepository.findByCategoryName(categoryName).orElseThrow(
+                ()-> new IllegalArgumentException("찾을 수 없는 카테고리 입니다.")));
         return jpaPostRepository.findByMemberInfoAndCategory(memberInfo, category, pageable);
     }
 }
