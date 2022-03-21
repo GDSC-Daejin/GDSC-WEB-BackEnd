@@ -90,7 +90,7 @@ public class PostApiController {
     }
 
     @ApiOperation(value ="카테고리별 작성 게시글 불러오기", notes = "내가 작성한 게시글을 카테고리 별로 조회")
-    @GetMapping("api/member/v1/post/{categoryName}")
+    @GetMapping("api/member/v1/myPost/{categoryName}")
     public ApiResponse myPostWithCategory(@AuthenticationPrincipal User principal,
                                           @PathVariable String categoryName,
                                           @PageableDefault(size = 16 ,sort = "postId",direction = Sort.Direction.DESC)Pageable pageable){

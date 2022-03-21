@@ -44,7 +44,7 @@ public class MemberApiController {
 
 
     @ApiOperation(value = "Member 내용 보기" , notes = "Member 내용 값 보기")
-    @GetMapping("/api/member/v1/me")
+    @GetMapping("/api/guest/v1/me")
     public ApiResponse getUserV2(@AuthenticationPrincipal User principal) {
 
         Member member =memberService.getUserId(principal.getUsername());
@@ -52,7 +52,7 @@ public class MemberApiController {
     }
 
     @ApiOperation(value = "Member 내용 보기" , notes = "Member 내용 값 보기")
-    @GetMapping("/api/member/v1/info")
+    @GetMapping("/api/guest/v1/info")
     public ApiResponse getMemberInfo(@AuthenticationPrincipal User principal) {
 
         MemberInfo memberInfo = memberService.getUserId(principal.getUsername()).getMemberInfo();
@@ -60,7 +60,7 @@ public class MemberApiController {
     }
 
     @ApiOperation(value = "유저 자기 정보 업데이트" , notes = "JWT 토큰값이 들어가야 사용자를 인식 가능함")
-    @PutMapping("/api/member/v1/me")
+    @PutMapping("/api/guest/v1/me")
     public ApiResponse Update(@AuthenticationPrincipal User principal , @RequestBody MemberInfo memberInfo){
         if(principal == null) return ApiResponse.fail("message" , "Token is null");
         memberService.정보업데이트(principal.getUsername(),memberInfo);
