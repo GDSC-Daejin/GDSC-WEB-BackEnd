@@ -35,7 +35,6 @@ public class PostService {
     private final JpaPostHashTagRepository jpaPostHashTagRepository;
     private final JpaCategoryRepository jpaCategoryRepository;
     private final PostRepositoryImp postRepositoryImp;
-    private final JpaCategoryRepository jpaCategoryRepository;
     private final AmazonS3Client amazonS3Client;
 
     @Value("${cloud.aws.s3.bucket}")
@@ -180,9 +179,9 @@ public class PostService {
     }
     // 내 게시글 카테고리 별 조회
     @Transactional(readOnly = true)
-    public Page<Post> findMyPostWIthCategory(String userId, Integer categoryId, final Pageable pageable){
+    public Page<Post> findMyPostWIthCategory(String userId, int categoryId, final Pageable pageable){
         MemberInfo memberInfo = findMemberInfo(userId);
-        Optional<Category> category = jpaCategoryRepository.findByCategoryId(categoryId);
+        Category category = jpaCategoryRepository.findByCategoryId(categoryId);
         return jpaPostRepository.findByMemberInfoAndCategory(memberInfo, category, pageable);
     }
 }
