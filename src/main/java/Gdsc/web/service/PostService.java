@@ -185,4 +185,11 @@ public class PostService {
                 ()-> new IllegalArgumentException("찾을 수 없는 카테고리 입니다.")));
         return jpaPostRepository.findByMemberInfoAndCategory(memberInfo, category, pageable);
     }
+
+    //post 글 목록 불러오기
+    @Transactional(readOnly = true)
+    public Page<Post> findPostAll(final Pageable pageable){
+        return jpaPostRepository.findAll(pageable);
+    }
+
 }
