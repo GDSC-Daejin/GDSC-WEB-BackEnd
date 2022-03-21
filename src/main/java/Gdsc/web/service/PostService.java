@@ -33,8 +33,8 @@ public class PostService {
     private final JpaPostRepository jpaPostRepository;
     private final JpaMemberRepository jpaMemberRepository;
     private final JpaPostHashTagRepository jpaPostHashTagRepository;
-    private final PostRepositoryImp postRepositoryImp;
     private final JpaCategoryRepository jpaCategoryRepository;
+    private final PostRepositoryImp postRepositoryImp;
     private final AmazonS3Client amazonS3Client;
 
     @Value("${cloud.aws.s3.bucket}")
@@ -176,5 +176,13 @@ public class PostService {
     public Page<Post> findMyPost(String userId, final Pageable pageable){
         MemberInfo memberInfo = findMemberInfo(userId);
         return jpaPostRepository.findByMemberInfo(memberInfo, pageable);
+    }
+    // 내 게시글 카테고리 별 조회
+    @Transactional(readOnly = true)
+    public Page<Post> findMyPostWIthCategory(String userId, String categoryName, final Pageable pageable){
+        MemberInfo memberInfo = findMemberInfo(userId);
+        Optional<Category> category = Optional.of(jpaCategoryRepository.findByCategoryName(categoryName).orElseThrow(
+                ()-> new IllegalArgumentException("찾을 수 없는 카테고리 입니다.")));
+        return jpaPostRepository.findByMemberInfoAndCategory(memberInfo, category, pageable);
     }
 }
