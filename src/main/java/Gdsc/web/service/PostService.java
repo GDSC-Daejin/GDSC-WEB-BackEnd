@@ -50,8 +50,8 @@ public class PostService {
             }
             post.setPostHashTags(requestDto.getPostHashTags());
         }
-        Category category = jpaCategoryRepository.findByCategoryId(requestDto.getCategory().getCategoryId());
-        post.setCategory(category);
+        Optional<Category> category = jpaCategoryRepository.findByCategoryName(requestDto.getCategory().getCategoryName());
+        post.setCategory(category.get());
         post.setContent(requestDto.getContent());
         post.setTitle(requestDto.getTitle());
         post.setTmpStore(requestDto.isTmpStore());
