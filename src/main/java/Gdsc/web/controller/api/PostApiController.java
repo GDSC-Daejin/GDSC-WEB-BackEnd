@@ -2,10 +2,13 @@ package Gdsc.web.controller.api;
 
 import Gdsc.web.dto.ApiResponse;
 import Gdsc.web.dto.requestDto.PostRequestDto;
+import Gdsc.web.entity.Post;
 import Gdsc.web.service.LikeService;
 import Gdsc.web.service.PostService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
@@ -66,4 +69,12 @@ public class PostApiController {
         likeService.like(principal.getUsername(), postId);
         return ApiResponse.success("message","SUCCESS");
     }
+
+    @ApiOperation(value = "post 글 목록 불러오기", notes = "글 목록 불러오기")
+    @GetMapping("/api/post/list")
+    public ApiResponse findPostAll(Pageable pageable){
+        Page<Post> post = postService.findPostAll(pageable);
+        return ApiResponse.success("data", post);
+    }
+
 }
