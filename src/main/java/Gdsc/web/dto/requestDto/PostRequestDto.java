@@ -1,10 +1,8 @@
 package Gdsc.web.dto.requestDto;
 
 import Gdsc.web.entity.Category;
-import Gdsc.web.entity.PostHashTag;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -21,7 +19,7 @@ public class PostRequestDto {
     private Category category;
 
     @ApiModelProperty(example = "HashtagContent")
-    private List<PostHashTag> postHashTags;
+    private String postHashTags;
     @ApiModelProperty(example = "폼타입으로 보낼때 이미지 주십쇼")
     private MultipartFile Thumbnail;
     @ApiModelProperty(example = "base64인코딩자료")
