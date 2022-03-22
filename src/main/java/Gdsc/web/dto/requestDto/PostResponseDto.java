@@ -1,16 +1,15 @@
-package Gdsc.web.dto;
+package Gdsc.web.dto.requestDto;
 
 import Gdsc.web.entity.Category;
-import Gdsc.web.entity.PostHashTag;
+import Gdsc.web.entity.Likes;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public class PostRequestDto {
+public class PostResponseDto {
     @ApiModelProperty(example = "제목")
     private String title;
     @ApiModelProperty(example = "내용")
@@ -20,8 +19,9 @@ public class PostRequestDto {
     @ApiModelProperty(example = "Backend")
     private Category category;
     @ApiModelProperty(example = "HashtagContent")
+    private String postHashTags;
 
-    private List<PostHashTag> postHashTags;
-    @ApiModelProperty(example = "이미지 주십쇼")
-    private MultipartFile Thumbnail;
+    private List<Likes> likes;
+    private LocalDateTime modifiedAt;
+    private LocalDateTime uploadDate;
 }

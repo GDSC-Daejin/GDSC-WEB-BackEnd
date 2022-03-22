@@ -29,7 +29,7 @@ public class Category {
     @Column(name = "Category_ID")
     private int categoryId;
 
-    @Column(name = "Category_Name" , length = 30 , nullable = false)
+    @Column(name = "Category_Name" , length = 30 , nullable = false, unique = true)
     private String categoryName;
 
     @Column(name = "MODIFIED_AT")
@@ -37,6 +37,6 @@ public class Category {
     private LocalDateTime modifiedAt;
 
     @CreationTimestamp
-    @ApiModelProperty(example = "2022-01-06 14:57:42.777000 ---Insert 시 자동 삽입 넣지말아요")
+    @ApiModelProperty(example = "2022-01-06 14:57:42.777000")
     private LocalDateTime uploadDate;
 }

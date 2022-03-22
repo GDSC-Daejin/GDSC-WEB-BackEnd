@@ -1,15 +1,10 @@
 package Gdsc.web.service;
 
-import Gdsc.web.dto.PostRequestDto;
-import Gdsc.web.entity.Member;
-import Gdsc.web.entity.MemberInfo;
-import Gdsc.web.entity.Post;
-import Gdsc.web.entity.PostHashTag;
+import Gdsc.web.dto.requestDto.PostRequestDto;
+import Gdsc.web.entity.*;
+import Gdsc.web.repository.category.JpaCategoryRepository;
 import Gdsc.web.repository.member.JpaMemberRepository;
-import Gdsc.web.repository.memberinfo.JpaMemberInfoRepository;
 import Gdsc.web.repository.post.JpaPostRepository;
-import Gdsc.web.repository.post.PostRepositoryImp;
-import Gdsc.web.repository.postHashTag.JpaPostHashTagRepository;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -17,14 +12,15 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.List;
+import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,10 +30,7 @@ import java.util.UUID;
 public class PostService {
     private final JpaPostRepository jpaPostRepository;
     private final JpaMemberRepository jpaMemberRepository;
-    private final JpaMemberInfoRepository jpaMemberInfoRepository;
-    private final JpaPostHashTagRepository jpaPostHashTagRepository;
-    private final PostRepositoryImp postRepositoryImp;
-
+    private final JpaCategoryRepository jpaCategoryRepository;
     private final AmazonS3Client amazonS3Client;
 
     @Value("${cloud.aws.s3.bucket}")
@@ -47,20 +40,16 @@ public class PostService {
     public void save(PostRequestDto requestDto , String userId) throws IOException {
         MemberInfo memberInfo = findMemberInfo(userId);
         Post post = new Post();
-        if(requestDto.getPostHashTags() != null){
-            for(PostHashTag requestDto1 : requestDto.getPostHashTags()){
-                requestDto1.setPost(post);
-            }
-            post.setPostHashTags(requestDto.getPostHashTags());
-        }
-        post.setCategory(requestDto.getCategory());
+        post.setPostHashTags(requestDto.getPostHashTags());
+        Optional<Category> category = jpaCategoryRepository.findByCategoryName(requestDto.getCategory().getCategoryName());
+        post.setCategory(category.get());
         post.setContent(requestDto.getContent());
         post.setTitle(requestDto.getTitle());
         post.setTmpStore(requestDto.isTmpStore());
         post.setMemberInfo(memberInfo);
-
-        if(requestDto.getThumbnail() != null){
-            post.setImagePath(upload(requestDto.getThumbnail() , "static"));
+        //json 형식 이미지나 , form-data 형식 이미지 둘중 하나만 들어왔을때!!
+        if(requestDto.getThumbnail() != null ^ requestDto.getBase64Thumbnail() != null){
+            post.setImagePath(upload(requestDto, "static"));
         }
 
         jpaPostRepository.save(post);
@@ -71,21 +60,17 @@ public class PostService {
         MemberInfo memberInfo = findMemberInfo(userId);
         Post post = jpaPostRepository.findByPostIdAndMemberInfo(postId, memberInfo) //ㅣinteger가 아니라 long 타입이라 오류? jpa Long을 integer로 바꿔야 할까?
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
-        post.setCategory(requestDto.getCategory());
-
-        jpaPostHashTagRepository.deletePostHashTagsByPost(post);
-        for(PostHashTag requestDto1 : requestDto.getPostHashTags()){
-            requestDto1.setPost(post);
-        }
-
+        Category category = jpaCategoryRepository.findByCategoryId(requestDto.getCategory().getCategoryId());
+        post.setCategory(category);
         post.setPostHashTags(requestDto.getPostHashTags());
         post.setContent(requestDto.getContent());
         post.setTitle(requestDto.getTitle());
         post.setTmpStore(requestDto.isTmpStore());
-        if(requestDto.getThumbnail() != null){
-            post.setImagePath(upload(requestDto.getThumbnail() , "static"));
+        //json 형식 이미지나 , form-data 형식 이미지 둘중 하나만 들어왔을때!!
+        if(requestDto.getThumbnail() != null ^ requestDto.getBase64Thumbnail() != null){
+            post.setImagePath(upload(requestDto, "static"));
         }
-        //post.setImagePath(requestDto.getImagePath());
+
 
     }
 
@@ -98,10 +83,9 @@ public class PostService {
     }
 
 
-    public String upload(MultipartFile multipartFile, String dirName) throws IOException {
-        File uploadFile = convert(multipartFile)  // 파일 변환할 수 없으면 에러
+    public String upload(PostRequestDto postRequestDto, String dirName) throws IOException {
+        File uploadFile = convert(postRequestDto)  // 파일 변환할 수 없으면 에러
                 .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
-
         return upload(uploadFile, dirName);
     }
 
@@ -128,13 +112,29 @@ public class PostService {
         log.info("File delete fail");
     }
 
-    // 로컬에 파일 업로드 하기
-    private Optional<File> convert(MultipartFile file) throws IOException {
-        File convertFile = new File(UUID.randomUUID()+file.getOriginalFilename());
+
+    private Optional<File> convert(PostRequestDto postRequestDto) throws IOException {
+
+        File convertFile;
+        if(postRequestDto.getThumbnail() != null){
+            convertFile = new File(UUID.randomUUID()+postRequestDto.getThumbnail().getOriginalFilename());
+        } else{
+            convertFile = new File(UUID.randomUUID()+postRequestDto.getFileName());
+        }
         if (convertFile.createNewFile()) { // 바로 위에서 지정한 경로에 File이 생성됨 (경로가 잘못되었다면 생성 불가능)
-            try (FileOutputStream fos = new FileOutputStream(convertFile)) { // FileOutputStream 데이터를 파일에 바이트 스트림으로 저장하기 위함
-                fos.write(file.getBytes());
+            if(postRequestDto.getThumbnail() != null){ // form-data 형식으로 왔을 때
+                try (FileOutputStream fos = new FileOutputStream(convertFile)) { // FileOutputStream 데이터를 파일에 바이트 스트림으로 저장하기 위함
+                    fos.write(postRequestDto.getBase64Thumbnail().getBytes());
+                }
             }
+            else if(postRequestDto.getBase64Thumbnail() != null){ // json 으로 왔을 때
+                try (FileOutputStream fos = new FileOutputStream(convertFile)) { // FileOutputStream 데이터를 파일에 바이트 스트림으로 저장하기 위함
+                    Base64.Decoder decoder = Base64.getDecoder();
+                    byte[] decodedBytes = decoder.decode(postRequestDto.getBase64Thumbnail().getBytes());
+                    fos.write(decodedBytes);
+                }
+            }
+
             return Optional.of(convertFile);
         }
         return Optional.empty();
@@ -156,10 +156,32 @@ public class PostService {
         MemberInfo memberInfo = member.getMemberInfo();
         return memberInfo;
     }
-    //등록
-    public List<Post> findMyPost(Member member){
-        if(member == null) throw new IllegalArgumentException("없는 사용자 입니다.");
-        MemberInfo memberInfo = findMemberInfo(member.getUserId());
-        return jpaPostRepository.findByMemberInfo(memberInfo);
+    // 내 게시글 조회
+    @Transactional(readOnly = true)
+    public Page<Post> findMyPost(String userId, final Pageable pageable){
+        MemberInfo memberInfo = findMemberInfo(userId);
+        return jpaPostRepository.findByMemberInfo(memberInfo, pageable);
     }
+    // 내 게시글 카테고리 별 조회
+    @Transactional(readOnly = true)
+    public Page<Post> findMyPostWIthCategory(String userId, String categoryName, final Pageable pageable){
+        MemberInfo memberInfo = findMemberInfo(userId);
+        Optional<Category> category = Optional.of(jpaCategoryRepository.findByCategoryName(categoryName).orElseThrow(
+                ()-> new IllegalArgumentException("찾을 수 없는 카테고리 입니다.")));
+        return jpaPostRepository.findByMemberInfoAndCategory(memberInfo, category, pageable);
+    }
+    // 모든 게시글 카테고리 별 조회
+    @Transactional(readOnly = true)
+    public Page<Post> findPostAllWithCategory(String categoryName, final Pageable pageable){
+        Optional<Category> category = Optional.of(jpaCategoryRepository.findByCategoryName(categoryName).orElseThrow(
+                () -> new IllegalArgumentException("찾을 수 없는 카테고리 입니다.")));
+        return jpaPostRepository.findByCategoryAndTmpStoreIsFalse(category, pageable);
+    }
+
+    //post 글 목록 불러오기
+    @Transactional(readOnly = true)
+    public Page<Post> findPostAll(final Pageable pageable){
+        return jpaPostRepository.findAllByTmpStoreIsFalse(pageable);
+    }
+
 }

@@ -10,27 +10,31 @@ import Gdsc.web.repository.post.JpaPostRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class LikeService {
     private final JpaLikeRepository jpaLikeRepository;
     private final JpaMemberRepository jpaMemberRepository;
     private final JpaPostRepository jpaPostRepository;
     public void like(String userId, Long postId){
-        Likes likes = jpaLikeRepository.findByMemberInfo_MemberInfoIdAndPost_PostId(userId , postId);
+        Likes likes = jpaLikeRepository.findByMemberInfo_Member_UserIdAndPost_PostId(userId , postId);
         if(likes == null){
             Optional<Post> post = Optional.ofNullable(jpaPostRepository.findByPostId(postId).orElseThrow(() -> new IllegalArgumentException("존재 하지 않는 포스트 입니다.")));
             MemberInfo memberInfo = jpaMemberRepository.findByUserId(userId).getMemberInfo();
             Likes newLike = new Likes();
             newLike.setMemberInfo(memberInfo);
             newLike.setPost(post.get());
-            jpaLikeRepository.save(likes);
+            jpaLikeRepository.save(newLike);
+            log.info( userId + " like " + postId);
         }else {
             jpaLikeRepository.delete(likes);
+            log.info( userId + " dislike " + postId);
         }
 
     }

@@ -47,6 +47,7 @@ public class Post {
     //임시 저장 여부
     @Column
     @ApiModelProperty(example = "0")
+    @NotNull
     private boolean tmpStore;
 
     @ApiModelProperty(example = "Backend")
@@ -59,8 +60,8 @@ public class Post {
     // 물론 외부키값은 넣어줘야함!
     // ex PostHashTag postHashtag = new postHashtags();
     // postHashtag.setPost(post) 처럼
-    @OneToMany(mappedBy = "post" , cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PostHashTag> postHashTags;
+    @Column(name = "POST_HASH_TAGS")
+    private String postHashTags;
 
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL , orphanRemoval = true)
