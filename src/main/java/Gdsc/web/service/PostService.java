@@ -73,7 +73,11 @@ public class PostService {
 
 
     }
-
+    @Transactional
+    public void deletePost(Long postId, String userId){
+        MemberInfo memberInfo = findMemberInfo(userId);
+        jpaPostRepository.deleteByPostIdAndAndMemberInfo(postId , memberInfo);
+    }
     //조회
     @Transactional(readOnly = true)
     public Post findByPostId(Long postId){
