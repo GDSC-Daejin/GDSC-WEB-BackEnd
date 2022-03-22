@@ -1,5 +1,6 @@
 package Gdsc.web.service;
 
+import Gdsc.web.dto.mapping.MemberScrapPostResponseMapping;
 import Gdsc.web.entity.Member;
 import Gdsc.web.entity.MemberInfo;
 import Gdsc.web.entity.MemberScrapPost;
@@ -44,8 +45,8 @@ public class ScrapService {
     }
 
     @Transactional(readOnly = true)
-    public Page<MemberScrapPost> findMyScrapPost(String userId, final Pageable pageable){
+    public Page<MemberScrapPostResponseMapping> findMyScrapPost(String userId, final Pageable pageable){
         MemberInfo memberInfo = findMemberInfo(userId);
-        return jpaScrapRepository.findByMemberInfo(memberInfo, pageable);
+        return jpaScrapRepository.findByMemberInfo(memberInfo , pageable);
     }
 }
