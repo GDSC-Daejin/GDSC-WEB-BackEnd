@@ -5,8 +5,6 @@ import Gdsc.web.entity.*;
 import Gdsc.web.repository.category.JpaCategoryRepository;
 import Gdsc.web.repository.member.JpaMemberRepository;
 import Gdsc.web.repository.post.JpaPostRepository;
-import Gdsc.web.repository.post.PostRepositoryImp;
-import Gdsc.web.repository.postHashTag.JpaPostHashTagRepository;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -32,7 +30,6 @@ import java.util.UUID;
 public class PostService {
     private final JpaPostRepository jpaPostRepository;
     private final JpaMemberRepository jpaMemberRepository;
-    private final JpaPostHashTagRepository jpaPostHashTagRepository;
     private final JpaCategoryRepository jpaCategoryRepository;
     private final AmazonS3Client amazonS3Client;
 
@@ -43,12 +40,7 @@ public class PostService {
     public void save(PostRequestDto requestDto , String userId) throws IOException {
         MemberInfo memberInfo = findMemberInfo(userId);
         Post post = new Post();
-        if(requestDto.getPostHashTags() != null){
-            for(PostHashTag requestDto1 : requestDto.getPostHashTags()){
-                requestDto1.setPost(post);
-            }
-            post.setPostHashTags(requestDto.getPostHashTags());
-        }
+        post.setPostHashTags(requestDto.getPostHashTags());
         Optional<Category> category = jpaCategoryRepository.findByCategoryName(requestDto.getCategory().getCategoryName());
         post.setCategory(category.get());
         post.setContent(requestDto.getContent());
@@ -70,12 +62,6 @@ public class PostService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
         Category category = jpaCategoryRepository.findByCategoryId(requestDto.getCategory().getCategoryId());
         post.setCategory(category);
-
-        jpaPostHashTagRepository.deletePostHashTagsByPost(post);
-        for(PostHashTag requestDto1 : requestDto.getPostHashTags()){
-            requestDto1.setPost(post);
-        }
-
         post.setPostHashTags(requestDto.getPostHashTags());
         post.setContent(requestDto.getContent());
         post.setTitle(requestDto.getTitle());
