@@ -34,7 +34,6 @@ public class PostService {
     private final JpaMemberRepository jpaMemberRepository;
     private final JpaPostHashTagRepository jpaPostHashTagRepository;
     private final JpaCategoryRepository jpaCategoryRepository;
-    private final PostRepositoryImp postRepositoryImp;
     private final AmazonS3Client amazonS3Client;
 
     @Value("${cloud.aws.s3.bucket}")
@@ -189,7 +188,7 @@ public class PostService {
     //post 글 목록 불러오기
     @Transactional(readOnly = true)
     public Page<Post> findPostAll(final Pageable pageable){
-        return jpaPostRepository.findAll(pageable);
+        return jpaPostRepository.findAllByTmpStoreIsFalse(pageable);
     }
 
 }

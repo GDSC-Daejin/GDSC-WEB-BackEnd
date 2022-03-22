@@ -37,6 +37,6 @@ public class Category {
     private LocalDateTime modifiedAt;
 
     @CreationTimestamp
-    @ApiModelProperty(example = "2022-01-06 14:57:42.777000 ---Insert 시 자동 삽입 넣지말아요")
+    @ApiModelProperty(example = "2022-01-06 14:57:42.777000")
     private LocalDateTime uploadDate;
 }

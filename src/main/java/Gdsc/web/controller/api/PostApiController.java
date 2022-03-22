@@ -9,6 +9,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +22,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class PostApiController {
     private final PostService postService;
-    private final LikeService likeService;
+
 
     //등록
     @ApiOperation(value = "포스트 글쓰기", notes = "Json 아니고 form type으로 보내야함")
@@ -63,18 +65,36 @@ public class PostApiController {
     public ApiResponse findByPostId(@PathVariable Long postId){
         return ApiResponse.success("data",postService.findByPostId(postId));
     }
-    @ApiOperation(value = "좋아요!", notes = "좋아요 있으면 delete 없으면 없애기")
-    @PostMapping("/api/v1/post/{postId}/like")
-    public ApiResponse like(@AuthenticationPrincipal User principal , @PathVariable Long postId){
-        likeService.like(principal.getUsername(), postId);
-        return ApiResponse.success("message","SUCCESS");
-    }
 
-    @ApiOperation(value = "post 글 목록 불러오기", notes = "글 목록 불러오기")
-    @GetMapping("/api/post/list")
-    public ApiResponse findPostAll(Pageable pageable){
+
+    @ApiOperation(value = "post 글 목록 불러오기",
+            notes = "글 목록 불러오기 ex : api/v1/post/list?page=0&size=5&sort=postId.desc" +
+                    "page : 몇번째 page 불러올건지 " +
+                    "size : 1페이지 당 개수" +
+                    "sort : 어떤것을 기준으로 정렬 할 것 인지" +
+                    "default : Size  16 , sort postId" +
+                    "임시저장글 X")
+    @GetMapping("/api/v1/post/list")
+    public ApiResponse findPostAll( @PageableDefault(size = 16 ,sort = "id",direction = Sort.Direction.DESC ) Pageable pageable){
         Page<Post> post = postService.findPostAll(pageable);
         return ApiResponse.success("data", post);
     }
 
+
+    @ApiOperation(value ="작성 게시글 불러오기", notes = "내가 작성한 게시글을 조회")
+    @GetMapping("/api/member/v1/myPost")
+    public ApiResponse myPost(@AuthenticationPrincipal User principal,
+                              @PageableDefault(size = 16 ,sort = "postId",direction = Sort.Direction.DESC) Pageable pageable){
+        Page<Post> post = postService.findMyPost(principal.getUsername(), pageable);
+        return ApiResponse.success("data", post);
+    }
+
+    @ApiOperation(value ="카테고리별 작성 게시글 불러오기", notes = "내가 작성한 게시글을 카테고리 별로 조회")
+    @GetMapping("api/member/v1/myPost/{categoryName}")
+    public ApiResponse myPostWithCategory(@AuthenticationPrincipal User principal,
+                                          @PathVariable String categoryName,
+                                          @PageableDefault(size = 16 ,sort = "postId",direction = Sort.Direction.DESC)Pageable pageable){
+        Page<Post> post = postService.findMyPostWIthCategory(principal.getUsername(), categoryName, pageable);
+        return ApiResponse.success("data", post);
+    }
 }
