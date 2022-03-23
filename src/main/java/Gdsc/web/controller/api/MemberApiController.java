@@ -37,6 +37,7 @@ public class MemberApiController {
     }*/
 
     @GetMapping("/user/me")
+    @ApiOperation(value = "삭제예정 멤버정보", notes = "삭제 예정 api/guest/v1/me 또는 /info api 를 이용하시길 ")
     public Member getUser(@AuthenticationPrincipal User principal) {
         Member member =memberService.getUserId(principal.getUsername());
         return member;
@@ -51,7 +52,7 @@ public class MemberApiController {
         return ApiResponse.success("data" , member);
     }
 
-    @ApiOperation(value = "Member 내용 보기" , notes = "Member 내용 값 보기")
+    @ApiOperation(value = "Member 내용 보기" , notes = "MemberInfo 내용 값 보기")
     @GetMapping("/api/guest/v1/info")
     public ApiResponse getMemberInfo(@AuthenticationPrincipal User principal) {
 
