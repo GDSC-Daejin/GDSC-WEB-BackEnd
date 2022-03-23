@@ -18,5 +18,6 @@ public interface JpaPostRepository extends JpaRepository<Post,Integer> {
     Page<Post> findByMemberInfoAndCategory(MemberInfo memberInfo, Optional<Category> category, Pageable pageable);
     Page<Post> findByCategoryAndTmpStoreIsFalse(Optional<Category> category, Pageable pageable);
     Page<Post> findAllByTmpStoreIsFalse(Pageable pageable);
+    Page<Post> findByPostHashTagsIsContainingAndTmpStoreIsFalse(String postHashTags, Pageable pageable);
     void deleteByPostIdAndAndMemberInfo(Long postId , MemberInfo memberInfo);
 }

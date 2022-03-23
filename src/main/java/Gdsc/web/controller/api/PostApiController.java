@@ -7,6 +7,7 @@ import Gdsc.web.service.LikeService;
 import Gdsc.web.service.PostService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -96,7 +97,13 @@ public class PostApiController {
         Page<Post> post = postService.findPostAllWithCategory(categoryName, pageable);
         return ApiResponse.success("data", post);
     }
-
+    @ApiOperation(value = "해시태그 별 글 목록 불러오기", notes = "해시태그 별 모든 게시글을 조회합니다.")
+    @GetMapping("/api/v1/post/hashtag/{tagName}")
+    public ApiResponse findPostAllWithPostHashTag(@PathVariable String tagName, @PageableDefault
+            (size = 16, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable){
+        Page<Post> post = postService.findPostAllWithPostHashTag(tagName, pageable);
+        return ApiResponse.success("data", post);
+    }
     @ApiOperation(value ="작성 게시글 불러오기", notes = "내가 작성한 게시글을 조회")
     @GetMapping("/api/member/v1/myPost")
     public ApiResponse myPost(@AuthenticationPrincipal User principal,
