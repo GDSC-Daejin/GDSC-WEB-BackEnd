@@ -182,6 +182,11 @@ public class PostService {
                 () -> new IllegalArgumentException("찾을 수 없는 카테고리 입니다.")));
         return jpaPostRepository.findByCategoryAndTmpStoreIsFalse(PostResponseMapping.class,category, pageable);
     }
+    // 모든 게시글 해시태그 별 조회
+    @Transactional(readOnly = true)
+    public Page<Post> findPostAllWithPostHashTag(String tagName, final Pageable pageable){
+        return jpaPostRepository.findByPostHashTagsIsContainingAndTmpStoreIsFalse(tagName, pageable);
+    }
 
     //post 글 목록 불러오기
     @Transactional(readOnly = true)
