@@ -1,5 +1,6 @@
 package Gdsc.web.dto.requestDto;
 
+import Gdsc.web.dto.mapping.PostResponseMapping;
 import Gdsc.web.entity.Category;
 import Gdsc.web.entity.Likes;
 import io.swagger.annotations.ApiModelProperty;

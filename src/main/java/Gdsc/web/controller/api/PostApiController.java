@@ -1,7 +1,9 @@
 package Gdsc.web.controller.api;
 
 import Gdsc.web.dto.ApiResponse;
+import Gdsc.web.dto.mapping.PostResponseMapping;
 import Gdsc.web.dto.requestDto.PostRequestDto;
+import Gdsc.web.dto.requestDto.PostResponseDto;
 import Gdsc.web.entity.Post;
 import Gdsc.web.service.LikeService;
 import Gdsc.web.service.PostService;
@@ -84,8 +86,8 @@ public class PostApiController {
                     "default : Size  16 , sort postId\n" +
                     "임시저장글은 불러오지 않음\n")
     @GetMapping("/api/v1/post/list")
-    public ApiResponse findPostAll( @PageableDefault(size = 16 ,sort = "id",direction = Sort.Direction.DESC ) Pageable pageable){
-        Page<Post> post = postService.findPostAll(pageable);
+    public ApiResponse findPostAll( @PageableDefault(size = 16 ,sort = "postId",direction = Sort.Direction.DESC ) Pageable pageable){
+        Page<?> post = postService.findPostAll(pageable);
         return ApiResponse.success("data", post);
     }
 
@@ -93,7 +95,7 @@ public class PostApiController {
     @GetMapping("/api/v1/post/list/{categoryName}")
     public ApiResponse findPostAllWithCategory(@PathVariable String categoryName, @PageableDefault
             (size = 16, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable){
-        Page<Post> post = postService.findPostAllWithCategory(categoryName, pageable);
+        Page<?> post = postService.findPostAllWithCategory(categoryName, pageable);
         return ApiResponse.success("data", post);
     }
 
@@ -110,7 +112,7 @@ public class PostApiController {
     public ApiResponse myPostWithCategory(@AuthenticationPrincipal User principal,
                                           @PathVariable String categoryName,
                                           @PageableDefault(size = 16 ,sort = "postId",direction = Sort.Direction.DESC)Pageable pageable){
-        Page<Post> post = postService.findMyPostWIthCategory(principal.getUsername(), categoryName, pageable);
+        Page<?> post = postService.findMyPostWIthCategory(principal.getUsername(), categoryName, pageable);
         return ApiResponse.success("data", post);
     }
 }
