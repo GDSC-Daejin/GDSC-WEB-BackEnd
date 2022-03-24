@@ -42,7 +42,7 @@ public class AuthController {
     private  final MemberService memberService;
     private final static long THREE_DAYS_MSEC = 259200000;
     private final static String REFRESH_TOKEN = "refresh_token";
-    @ApiOperation(value = "회원가입", notes = "회원가입 할때 쓰는 놈")
+    @ApiOperation(value = "회원가입 테스트용", notes = "회원가입 할때 쓰는 놈 Api 테스트 용으로 삭제 예정")
     @PostMapping("/test/auth/join")
     public ResponseDto<Integer> join(@RequestBody Member member) {
 
@@ -50,6 +50,7 @@ public class AuthController {
         // 수정필요
         return new ResponseDto<Integer>(HttpStatus.OK, 1, "성공");
     }
+    @ApiOperation(value = "로그인 테스트", notes = "로그인 할때 쓰는 놈 Api 테스트 용으로 삭제 예정")
     @PostMapping("/test/auth/login")
     public ApiResponse login(
             HttpServletRequest request,
@@ -98,6 +99,7 @@ public class AuthController {
     }
 
     @GetMapping("/refresh")
+    @ApiOperation(value = "refresh 토큰을 이용하여 JWT 토큰 재발급", notes = "토큰이 expired 되어야 작동함")
     public ApiResponse refreshToken (HttpServletRequest request, HttpServletResponse response) {
         // access token 확인
         String accessToken = HeaderUtil.getAccessToken(request);

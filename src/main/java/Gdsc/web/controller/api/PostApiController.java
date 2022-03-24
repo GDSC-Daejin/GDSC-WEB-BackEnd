@@ -1,12 +1,15 @@
 package Gdsc.web.controller.api;
 
 import Gdsc.web.dto.ApiResponse;
+import Gdsc.web.dto.mapping.PostResponseMapping;
 import Gdsc.web.dto.requestDto.PostRequestDto;
+import Gdsc.web.dto.requestDto.PostResponseDto;
 import Gdsc.web.entity.Post;
 import Gdsc.web.service.LikeService;
 import Gdsc.web.service.PostService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -48,6 +51,13 @@ public class PostApiController {
         return ApiResponse.success("message","SUCCESS");
     }
 
+    // 삭제
+    @ApiOperation(value = "post 삭제" , notes = "현재 로그인한 사람과 일치해야 삭제 가능")
+    @DeleteMapping("/api/member/v2/post/{postId}")
+    public ApiResponse deletePost(@PathVariable Long postId ,@AuthenticationPrincipal User principal){
+        postService.deletePost(postId , principal.getUsername());
+        return ApiResponse.success("message" , "SUCCESS");
+    }
     @ApiOperation(value = "post 업데이트", notes = "Json Base 64데이터")
     @PutMapping("/api/member/v2/post/{postId}")
     public ApiResponse updateJsonPost(@PathVariable Long postId,
@@ -60,7 +70,9 @@ public class PostApiController {
 
 
     //조회
-    @ApiOperation(value = "post 상세보기", notes = "PostId로 상세보기")
+    @ApiOperation(value = "post 상세보기",
+            notes = "PostId로 상세보기\n" +
+                    "api 주소에 PathVariable 주면 됩니다.")
     @GetMapping("/api/v1/post/{postId}")
     public ApiResponse findByPostId(@PathVariable Long postId){
         return ApiResponse.success("data",postService.findByPostId(postId));
@@ -68,15 +80,15 @@ public class PostApiController {
 
 
     @ApiOperation(value = "post 글 목록 불러오기",
-            notes = "글 목록 불러오기 ex : api/v1/post/list?page=0&size=5&sort=postId.desc" +
-                    "page : 몇번째 page 불러올건지 " +
-                    "size : 1페이지 당 개수" +
-                    "sort : 어떤것을 기준으로 정렬 할 것 인지" +
-                    "default : Size  16 , sort postId" +
-                    "임시저장글 X")
+            notes = "글 목록 불러오기 ex : api/v1/post/list?page=0&size=5&sort=postId.desc\n" +
+                    "page : 몇번째 page 불러올건지\n" +
+                    "size : 1페이지 당 개수\n" +
+                    "sort : 어떤것을 기준으로 정렬 할 것 인지\n" +
+                    "default : Size  16 , sort postId\n" +
+                    "임시저장글은 불러오지 않음\n")
     @GetMapping("/api/v1/post/list")
-    public ApiResponse findPostAll( @PageableDefault(size = 16 ,sort = "id",direction = Sort.Direction.DESC ) Pageable pageable){
-        Page<Post> post = postService.findPostAll(pageable);
+    public ApiResponse findPostAll( @PageableDefault(size = 16 ,sort = "postId",direction = Sort.Direction.DESC ) Pageable pageable){
+        Page<?> post = postService.findPostAll(pageable);
         return ApiResponse.success("data", post);
     }
 
@@ -84,10 +96,16 @@ public class PostApiController {
     @GetMapping("/api/v1/post/list/{categoryName}")
     public ApiResponse findPostAllWithCategory(@PathVariable String categoryName, @PageableDefault
             (size = 16, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable){
-        Page<Post> post = postService.findPostAllWithCategory(categoryName, pageable);
+        Page<?> post = postService.findPostAllWithCategory(categoryName, pageable);
         return ApiResponse.success("data", post);
     }
-
+    @ApiOperation(value = "해시태그 별 글 목록 불러오기", notes = "해시태그 별 모든 게시글을 조회합니다.")
+    @GetMapping("/api/v1/post/hashtag/{tagName}")
+    public ApiResponse findPostAllWithPostHashTag(@PathVariable String tagName, @PageableDefault
+            (size = 16, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable){
+        Page<Post> post = postService.findPostAllWithPostHashTag(tagName, pageable);
+        return ApiResponse.success("data", post);
+    }
     @ApiOperation(value ="작성 게시글 불러오기", notes = "내가 작성한 게시글을 조회")
     @GetMapping("/api/member/v1/myPost")
     public ApiResponse myPost(@AuthenticationPrincipal User principal,
@@ -101,7 +119,7 @@ public class PostApiController {
     public ApiResponse myPostWithCategory(@AuthenticationPrincipal User principal,
                                           @PathVariable String categoryName,
                                           @PageableDefault(size = 16 ,sort = "postId",direction = Sort.Direction.DESC)Pageable pageable){
-        Page<Post> post = postService.findMyPostWIthCategory(principal.getUsername(), categoryName, pageable);
+        Page<?> post = postService.findMyPostWIthCategory(principal.getUsername(), categoryName, pageable);
         return ApiResponse.success("data", post);
     }
 }
