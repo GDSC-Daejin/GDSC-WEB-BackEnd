@@ -184,8 +184,8 @@ public class PostService {
     }
     // 모든 게시글 해시태그 별 조회
     @Transactional(readOnly = true)
-    public Page<Post> findPostAllWithPostHashTag(String tagName, final Pageable pageable){
-        return jpaPostRepository.findByPostHashTagsIsContainingAndTmpStoreIsFalse(tagName, pageable);
+    public Page<?> findPostAllWithPostHashTag(String tagName, final Pageable pageable){
+        return jpaPostRepository.findByPostHashTagsIsContainingOrContentIsContainingAndTmpStoreIsFalse(PostResponseMapping.class,tagName ,tagName, pageable);
     }
 
     //post 글 목록 불러오기
