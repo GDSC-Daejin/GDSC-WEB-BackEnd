@@ -103,10 +103,10 @@ public class PostApiController {
     @GetMapping("/api/v1/post/hashtag/{tagName}")
     public ApiResponse findPostAllWithPostHashTag(@PathVariable String tagName, @PageableDefault
             (size = 16, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable){
-        Page<Post> post = postService.findPostAllWithPostHashTag(tagName, pageable);
+        Page<?> post = postService.findPostAllWithPostHashTag(tagName, pageable);
         return ApiResponse.success("data", post);
     }
-    @ApiOperation(value ="작성 게시글 불러오기", notes = "내가 작성한 게시글을 조회")
+    @ApiOperation(value ="내가 작성한 게시글 불러오기", notes = "내가 작성한 게시글을 조회")
     @GetMapping("/api/member/v1/myPost")
     public ApiResponse myPost(@AuthenticationPrincipal User principal,
                               @PageableDefault(size = 16 ,sort = "postId",direction = Sort.Direction.DESC) Pageable pageable){
