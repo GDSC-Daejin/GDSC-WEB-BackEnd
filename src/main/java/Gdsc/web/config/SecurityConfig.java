@@ -12,6 +12,7 @@ import Gdsc.web.oauth.service.CustomUserDetailsService;
 import Gdsc.web.oauth.token.AuthTokenProvider;
 import Gdsc.web.repository.UserRefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,14 +30,20 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final CorsFilter corsFilter;
-
-    private final AppProperties appProperties;
-    private final AuthTokenProvider tokenProvider;
-    private final CustomUserDetailsService userDetailsService;
-    private final CustomOAuth2UserService oAuth2UserService;
-    private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
-    private final UserRefreshTokenRepository userRefreshTokenRepository;
+    @Autowired
+    private CorsFilter corsFilter;
+    @Autowired
+    private AppProperties appProperties;
+    @Autowired
+    private AuthTokenProvider tokenProvider;
+    @Autowired
+    private CustomUserDetailsService userDetailsService;
+    @Autowired
+    private CustomOAuth2UserService oAuth2UserService;
+    @Autowired
+    private TokenAccessDeniedHandler tokenAccessDeniedHandler;
+    @Autowired
+    private UserRefreshTokenRepository userRefreshTokenRepository;
 
     /*
      * UserDetailsService 설정

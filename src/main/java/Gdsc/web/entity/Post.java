@@ -75,5 +75,14 @@ public class Post {
     @ApiModelProperty(example = "2022-01-06 14:57:42.777000 ---Insert 시 자동 삽입 넣지말아요")
     private LocalDateTime uploadDate;
 
+    @Builder
+    public Post(String title , String content , MemberInfo memberInfo , boolean tmpStore , Category category , String postHashTags){
+        this.title = title;
+        this.content = content;
+        this.memberInfo = memberInfo;
+        this.tmpStore = tmpStore;
+        this.category =category;
+        this.postHashTags = postHashTags;
+    }
 
 }
