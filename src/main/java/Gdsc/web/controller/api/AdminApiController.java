@@ -3,18 +3,12 @@ package Gdsc.web.controller.api;
 import Gdsc.web.dto.ApiResponse;
 import Gdsc.web.dto.WarningDto;
 import Gdsc.web.entity.Member;
-import Gdsc.web.entity.WarnDescription;
 import Gdsc.web.service.AdminService;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.Principal;
 import java.util.List;
 
 @RestController

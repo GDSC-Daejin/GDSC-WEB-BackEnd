@@ -1,15 +1,11 @@
 package Gdsc.web.controller.api;
 
 import Gdsc.web.dto.ApiResponse;
-import Gdsc.web.dto.mapping.PostResponseMapping;
 import Gdsc.web.dto.requestDto.PostRequestDto;
-import Gdsc.web.dto.requestDto.PostResponseDto;
 import Gdsc.web.entity.Post;
-import Gdsc.web.service.LikeService;
 import Gdsc.web.service.PostService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -17,8 +13,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 import java.io.IOException;
 
 @RestController
