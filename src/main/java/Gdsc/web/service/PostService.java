@@ -83,7 +83,7 @@ public class PostService {
         }
         jpaPostRepository.delete(post.get());
     }
-    
+
 
     //조회
     @Transactional(readOnly = true)
