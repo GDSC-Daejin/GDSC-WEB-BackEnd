@@ -15,6 +15,8 @@ import Gdsc.web.repository.member.JpaMemberRepository;
 import Gdsc.web.repository.post.JpaPostRepository;
 import Gdsc.web.service.MemberService;
 import Gdsc.web.service.PostService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.catalina.Store;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.jupiter.api.DisplayName;
@@ -34,6 +36,7 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -53,33 +56,52 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Transactional
-@AutoConfigureMockMvc
+@RunWith(SpringRunner.class)
 //@DataJpaTest(excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {SecurityConfig.class}))
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@AutoConfigureMockMvc
 class PostApiControllerTest {
     @Autowired
     private WebApplicationContext context;
+
 
 
     @Autowired
     private PostService postService;
 
     private MockMvc mvc;
-    
+
+    @MockBean
+    private UserPrincipal user;
     @Autowired
     private MemberService memberService;
     @Autowired
     private JpaMemberRepository memberRepository;
+    @Autowired
+    private JpaCategoryRepository categoryRepository;
     private Member member;
     @Before
     public void setup() {
-        this.mvc = MockMvcBuilders
-                .webAppContextSetup(context)
-                .apply(springSecurity())
-                .build();
+        mvc = MockMvcBuilders.webAppContextSetup(context).apply(springSecurity()).build();
 
+
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        memberService.deleteMemberForTest(user.getUserId());
+    }
+
+
+    @Test
+    @WithMockUser(roles="MEMBER")
+    @DisplayName("포스트 데이터 저장 테스트")
+    void saveJsonPost() throws Exception {
+        //given
         MemberInfo memberInfo = new MemberInfo();
         LocalDateTime now = LocalDateTime.now();
         member = new Member(
@@ -89,7 +111,7 @@ class PostApiControllerTest {
                 "Y",
                 "https://ca.slack-edge.com/T02BE2ERU5A-U02C8B72LT1-e35fe9b38122-512",
                 ProviderType.GOOGLE,
-                RoleType.GUEST,
+                RoleType.MEMBER,
                 now,
                 now,
                 memberInfo
@@ -97,38 +119,31 @@ class PostApiControllerTest {
         memberInfo.setMember(member);
         memberService.회원가입(member);
 
-    }
-    @Before
-    public void setupPrincipal(){
         user = new UserPrincipal(
-                 member.getUserId(),
-                 member.getPassword(),
-                 member.getProviderType(),
-                 member.getRole(),
+                member.getUserId(),
+                member.getPassword(),
+                member.getProviderType(),
+                member.getRole(),
                 Collections.singletonList(new SimpleGrantedAuthority(member.getRole().getCode()))
         );
 
-    }
-    @After
-    public void tearDown() throws Exception {
-        memberService.deleteMemberForTest(user.getUserId());
-    }
 
-
-    @Test
-    void saveFormData() {
-    }
-
-    @Test
-    @WithMockUser(roles="MEMBER")
-    @DisplayName("포스트 데이터 저장 테스트")
-    void saveJsonPost() throws IOException {
         PostRequestDto postRequestDto = new PostRequestDto();
         postRequestDto.setContent("content");
         Category category = new Category();
+        category.setCategoryName("category");
+        categoryRepository.save(category);
+
         postRequestDto.setCategory(category);
         postRequestDto.setTitle("title");
         postService.save(postRequestDto , user.getUserId());
+
+        String url = "http://localhost:" + 8080 + "/api/v1/post/list";
+        //when
+        mvc.perform(get(url)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(new ObjectMapper().writeValueAsString(postRequestDto)))
+                .andExpect(status().isOk());
     }
 
 
