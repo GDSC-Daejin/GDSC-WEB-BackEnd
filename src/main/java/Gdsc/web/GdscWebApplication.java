@@ -11,6 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+
 @EnableConfigurationProperties(AppProperties.class)
 @SpringBootApplication
 @ComponentScan({ "Gdsc.web.*"})

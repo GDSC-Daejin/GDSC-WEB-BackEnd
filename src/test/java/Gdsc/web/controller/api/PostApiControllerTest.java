@@ -58,7 +58,7 @@ class PostApiControllerTest {
     @Autowired
     private WebApplicationContext context;
 
-    
+
     @MockBean
     PostService postService;
 
