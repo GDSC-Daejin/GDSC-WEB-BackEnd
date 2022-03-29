@@ -64,8 +64,10 @@ class PostApiControllerTest {
 
     @MockBean
     private UserPrincipal user;
-    @Autowired
-    MemberService memberService;
+    @MockBean
+    private MemberService memberService;
+    @MockBean
+    private JpaMemberRepository memberRepository;
     private Member member;
     @Before
     public void setup() {
@@ -125,39 +127,5 @@ class PostApiControllerTest {
         postService.save(postRequestDto , user.getUserId());
     }
 
-    @Test
-    void updateFormData() {
-    }
 
-    @Test
-    void deletePost() {
-    }
-
-    @Test
-    void updateJsonPost() {
-    }
-
-    @Test
-    void findByPostId() {
-    }
-
-    @Test
-    void findPostAll() {
-    }
-
-    @Test
-    void findPostAllWithCategory() {
-    }
-
-    @Test
-    void findPostAllWithPostHashTag() {
-    }
-
-    @Test
-    void myPost() {
-    }
-
-    @Test
-    void myPostWithCategory() {
-    }
 }
