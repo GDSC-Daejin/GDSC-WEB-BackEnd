@@ -68,7 +68,8 @@ dependencies {
     implementation 'com.github.maricn:logback-slack-appender:1.4.0'
     // aws
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
-
+    // test 관련 database
+    implementation 'com.h2database:h2'
 }
 
 test {

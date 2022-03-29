@@ -77,8 +77,14 @@ public class PostService {
     @Transactional
     public void deletePost(Long postId, String userId){
         MemberInfo memberInfo = findMemberInfo(userId);
-        jpaPostRepository.deleteByPostIdAndAndMemberInfo(postId , memberInfo);
+        Optional<Post> post = jpaPostRepository.findByPostIdAndMemberInfo(postId, memberInfo);
+        if(post.get().getImagePath() != null){
+            fileDelete(post.get().getImagePath());
+        }
+        jpaPostRepository.delete(post.get());
     }
+
+
     //조회
     @Transactional(readOnly = true)
     public Post findByPostId(Long postId){
@@ -193,6 +199,10 @@ public class PostService {
     public Page<?> findPostAll(final Pageable pageable){
 
         return jpaPostRepository.findAllByTmpStoreIsFalse(PostResponseMapping.class,pageable);
+    }
+    @Transactional
+    public Page<?> findPostAllByTitle(String title, final Pageable pageable){
+        return jpaPostRepository.findByTitleIsContainingAndTmpStoreIsFalse(PostResponseMapping.class,title, pageable);
     }
 
 }

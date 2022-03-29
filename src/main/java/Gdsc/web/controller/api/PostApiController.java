@@ -100,10 +100,17 @@ public class PostApiController {
         return ApiResponse.success("data", post);
     }
     @ApiOperation(value = "해시태그 별 글 목록 불러오기", notes = "해시태그 별 모든 게시글을 조회합니다.")
-    @GetMapping("/api/v1/post/hashtag/{tagName}")
-    public ApiResponse findPostAllWithPostHashTag(@PathVariable String tagName, @PageableDefault
+    @GetMapping("/api/v1/post/search/{word}")
+    public ApiResponse findPostAllWithPostHashTag(@PathVariable String word, @PageableDefault
             (size = 16, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable){
-        Page<?> post = postService.findPostAllWithPostHashTag(tagName, pageable);
+        Page<?> post = postService.findPostAllWithPostHashTag(word, pageable);
+        return ApiResponse.success("data", post);
+    }
+    @ApiOperation(value = "제목 검색", notes = "해시태그 별 모든 게시글을 조회합니다.")
+    @GetMapping("/api/v1/post/search/{title}")
+    public ApiResponse findPostAllWithTitle(@PathVariable String title, @PageableDefault
+            (size = 16, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable){
+        Page<?> post = postService.findPostAllByTitle(title, pageable);
         return ApiResponse.success("data", post);
     }
     @ApiOperation(value ="내가 작성한 게시글 불러오기", notes = "내가 작성한 게시글을 조회")
