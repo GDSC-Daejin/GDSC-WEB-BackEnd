@@ -24,7 +24,8 @@ jobs:
       uses: actions/setup-java@v1.4.3
       with:
         java-version: 1.8
-        
+      env:
+        CI: ""
     - name: Grant execute permission for gradlew
       run: chmod +x ./gradlew
       shell: bash
@@ -32,7 +33,7 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew  clean build
       shell: bash
-      
+
       #work flow 시간
     - name: Get current time
       uses: 1466587594/get-current-time@v2
