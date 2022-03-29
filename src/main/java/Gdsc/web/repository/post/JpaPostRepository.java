@@ -21,6 +21,6 @@ public interface JpaPostRepository extends JpaRepository<Post,Integer> {
     <T> Page<T> findByCategoryAndTmpStoreIsFalse(Class<T> tClass,Optional<Category> category, Pageable pageable);
     <T> Page<T> findAllByTmpStoreIsFalse(Class<T> tClass,Pageable pageable);
     <T> Page<T> findByPostHashTagsIsContainingOrContentIsContainingAndTmpStoreIsFalse(Class<T> tClass, String postHashTags,String content,Pageable pageable);
-
+    <T> Page<T> findByTitleIsContainingAndTmpStoreIsFalse(Class<T> tClass, String title,Pageable pageable);
     void deleteByPostIdAndAndMemberInfo(Long postId , MemberInfo memberInfo);
 }

@@ -73,7 +73,6 @@ public class Member {
 
     @JoinColumn(name = "MEMBER_INFO_ID")
     @OneToOne(cascade = CascadeType.ALL)
-
     private MemberInfo memberInfo;
 
     @Column(name = "MODIFIED_AT")
