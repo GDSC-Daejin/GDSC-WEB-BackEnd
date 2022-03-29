@@ -53,6 +53,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Transactional
 @AutoConfigureMockMvc
+@RunWith(SpringRunner.class)
 class PostApiControllerTest {
     @Autowired
     private WebApplicationContext context;
@@ -71,7 +72,7 @@ class PostApiControllerTest {
     private Member member;
     @Before
     public void setup() {
-        mvc = MockMvcBuilders
+        this.mvc = MockMvcBuilders
                 .webAppContextSetup(context)
                 .apply(springSecurity())
                 .build();
