@@ -28,12 +28,12 @@ public class PostApiController {
 
 
     //등록
-    @ApiOperation(value = "포스트 글쓰기", notes = "Json 아니고 form type으로 보내야함")
+    /*@ApiOperation(value = "포스트 글쓰기", notes = "Json 아니고 form type으로 보내야함")
     @PostMapping("/api/member/v1/post")
     public ApiResponse saveFormData(@ModelAttribute @Valid PostRequestDto requestDto  , @AuthenticationPrincipal User principal) throws IOException {
         postService.save(requestDto , principal.getUsername());
         return ApiResponse.success("message", "SUCCESS");
-    }
+    }*/
     @ApiOperation(value = "포스트 글쓰기", notes = "Json base64인코딩 한 내용!")
     @PostMapping("/api/member/v2/post")
     public ApiResponse saveJsonPost(@RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal User principal) throws IOException {
@@ -41,7 +41,7 @@ public class PostApiController {
         return ApiResponse.success("message", "SUCCESS");
     }
     //수정
-    @ApiOperation(value = "post 업데이트", notes = "JWT 토큰으로 user정보 읽고 변한값 Json 아니고 form type으로 보내야함")
+    /*@ApiOperation(value = "post 업데이트", notes = "JWT 토큰으로 user정보 읽고 변한값 Json 아니고 form type으로 보내야함")
     @PutMapping("/api/member/v1/post/{postId}")
     public ApiResponse updateFormData(@PathVariable Long postId,
                               @ModelAttribute @Valid PostRequestDto requestDto ,
@@ -49,7 +49,7 @@ public class PostApiController {
 
         postService.update(requestDto, postId , principal.getUsername());
         return ApiResponse.success("message","SUCCESS");
-    }
+    }*/
 
     // 삭제
     @ApiOperation(value = "post 삭제" , notes = "현재 로그인한 사람과 일치해야 삭제 가능")
