@@ -63,16 +63,14 @@ class PostApiControllerTest {
     private WebApplicationContext context;
 
 
-    @MockBean
-    PostService postService;
+    @Autowired
+    private PostService postService;
 
     private MockMvc mvc;
-
-    @MockBean
-    private UserPrincipal user;
-    @MockBean
+    
+    @Autowired
     private MemberService memberService;
-    @MockBean
+    @Autowired
     private JpaMemberRepository memberRepository;
     private Member member;
     @Before
