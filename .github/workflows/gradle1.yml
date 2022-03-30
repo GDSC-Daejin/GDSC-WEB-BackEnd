@@ -39,7 +39,7 @@ jobs:
           DEV_SPRING_PROPERTIES: ${{ secrets.DEV_SPRING_PROPERTIES }}
 
     - name: Build with Gradle
-      run: ./gradlew clean :server:build -Pprofile=dev
+      run: ./gradlew clean build -Pprofile=dev
 
 
       #work flow 시간
