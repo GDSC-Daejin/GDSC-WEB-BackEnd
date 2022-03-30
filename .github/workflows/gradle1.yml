@@ -24,15 +24,24 @@ jobs:
       uses: actions/setup-java@v1.4.3
       with:
         java-version: 1.8
-        
+      env:
+        CI: ""
     - name: Grant execute permission for gradlew
       run: chmod +x ./gradlew
       shell: bash
 
     - name: Build with Gradle
-      run: ./gradlew  clean build
+      run: ./gradlew  clean build -x test
       shell: bash
-      
+
+#    - name: Test with Gradle
+#      run: SPRING_PROFILES_ACTIVE=[test] ./gradlew test
+#    - name: Publish Unit Test Results
+#      uses: EnricoMi/publish-unit-test-result-action@v1
+#      if: ${{ always() }}
+#      with:
+#        files: build/test-results/**/*.xml
+
       #work flow 시간
     - name: Get current time
       uses: 1466587594/get-current-time@v2

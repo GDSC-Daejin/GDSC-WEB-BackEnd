@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
 
 @EnableConfigurationProperties(AppProperties.class)
@@ -17,6 +18,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ComponentScan({ "Gdsc.web.*"})
 @ComponentScan(basePackages = {"Gdsc.web.repository.member"})
 @EnableJpaRepositories(basePackages = {"Gdsc.web.repository"})
+@EnableWebSecurity
 public class GdscWebApplication {
     public static void main(String[] args) {
         SpringApplication.run(GdscWebApplication.class, args);
