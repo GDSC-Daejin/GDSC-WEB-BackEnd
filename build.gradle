@@ -70,7 +70,7 @@ dependencies {
     // aws
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
     // test 관련 database
-    implementation 'com.h2database:h2'
+    runtimeOnly 'com.h2database:h2'
 }
 
 test {
