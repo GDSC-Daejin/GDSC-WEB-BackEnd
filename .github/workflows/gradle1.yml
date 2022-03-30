@@ -34,7 +34,7 @@ jobs:
       run: |
           touch src/main/resources/application-dev.properties
           echo "$DEV_SPRING_PROPERTIES" > application-dev.properties.b64
-          base64 -d -i application-dev.properties.b64 > server/src/main/resources/application-dev.properties
+          base64 -d -i application-dev.properties.b64 > src/main/resources/application-dev.properties
       env:
           DEV_SPRING_PROPERTIES: ${{ secrets.DEV_SPRING_PROPERTIES }}
 
