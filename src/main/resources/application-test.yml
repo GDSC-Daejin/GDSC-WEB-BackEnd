@@ -1,0 +1,23 @@
+spring:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
+    hibernate:
+      dialect: org.hibernate.dialect.mysql5.MySQL5Dialect
+      show-sql: true
+#spring.datasource.url=jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1
+#spring.datasource.driverClassName=org.h2.Driver
+#spring.datasource.username=root
+#spring.datasource.password=
+#spring.h2.console.enabled=true
+#spring.h2.console.path=/h2-console
+#spring.jpa.hibernate.dialect=org.hibernate.dialect.mysql.MySQLDialect
+#spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+#spring.jpa.hibernate.ddl-auto=create-drop
+
+
+#Test OAuth
+#
+#spring.security.oauth2.client.registration.google.client-id=test
+#spring.security.oauth2.client.registration.google.client-secret=test
+#spring.security.oauth2.client.registration.google.scope=profile, email

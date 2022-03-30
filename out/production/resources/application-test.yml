@@ -5,9 +5,6 @@ spring:
     hibernate:
       dialect: org.hibernate.dialect.mysql5.MySQL5Dialect
       show-sql: true
-
-
-
 #spring.datasource.url=jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1
 #spring.datasource.driverClassName=org.h2.Driver
 #spring.datasource.username=root
@@ -24,4 +21,3 @@ spring:
 #spring.security.oauth2.client.registration.google.client-id=test
 #spring.security.oauth2.client.registration.google.client-secret=test
 #spring.security.oauth2.client.registration.google.scope=profile, email
-
