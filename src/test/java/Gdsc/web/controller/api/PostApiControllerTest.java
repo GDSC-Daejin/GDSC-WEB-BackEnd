@@ -76,7 +76,8 @@ class PostApiControllerTest {
     @Autowired
     private PostService postService;
 
-    private MockMvc mvc;
+    private
+    MockMvc mvc;
 
     @MockBean
     private UserPrincipal user;
