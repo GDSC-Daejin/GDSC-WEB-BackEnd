@@ -12,6 +12,7 @@ import Gdsc.web.oauth.info.OAuth2UserInfoFactory;
 import Gdsc.web.repository.memberinfo.JpaMemberInfoRepository;
 import Gdsc.web.repository.member.JpaMemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -27,9 +28,10 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
-
-    private final JpaMemberRepository userRepository;
-    private final JpaMemberInfoRepository memberInfoRepository;
+    @Autowired
+    private JpaMemberRepository jpaMemberRepository;
+    @Autowired
+    private JpaMemberInfoRepository memberInfoRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -49,7 +51,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         ProviderType providerType = ProviderType.valueOf(userRequest.getClientRegistration().getRegistrationId().toUpperCase());
 
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
-        Member savedUser = userRepository.findByUserId(userInfo.getId());
+        Member savedUser = jpaMemberRepository.findByUserId(userInfo.getId());
 
         if (savedUser != null) {
             if (providerType != savedUser.getProviderType()) {
@@ -87,7 +89,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             memberPortfolioUrls.add(new MemberPortfolioUrl(memberInfo));
         }
         // 멤버 info 도 같이 만들기
-        return userRepository.saveAndFlush(user);
+        return jpaMemberRepository.saveAndFlush(user);
     }
 
     private Member updateUser(Member user, OAuth2UserInfo userInfo) {
