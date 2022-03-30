@@ -30,17 +30,17 @@ jobs:
       run: chmod +x ./gradlew
       shell: bash
 
-    - name: Create Spring Properties
-      run: |
-          touch src/main/resources/application-dev.properties
-          echo "$DEV_SPRING_PROPERTIES" > application-dev.properties.b64
-          base64 -d -i application-dev.properties.b64 > src/main/resources/application-dev.properties
-      env:
-          DEV_SPRING_PROPERTIES: ${{ secrets.DEV_SPRING_PROPERTIES }}
-
     - name: Build with Gradle
-      run: ./gradlew clean build -Pprofile=dev
+      run: ./gradlew  clean build -x test
+      shell: bash
 
+#    - name: Test with Gradle
+#      run: SPRING_PROFILES_ACTIVE=[test] ./gradlew test
+#    - name: Publish Unit Test Results
+#      uses: EnricoMi/publish-unit-test-result-action@v1
+#      if: ${{ always() }}
+#      with:
+#        files: build/test-results/**/*.xml
 
       #work flow 시간
     - name: Get current time
