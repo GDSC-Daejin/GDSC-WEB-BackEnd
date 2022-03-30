@@ -41,7 +41,7 @@ jobs:
       if: ${{ always() }}
       with:
         files: build/test-results/**/*.xml
-        
+
       #work flow 시간
     - name: Get current time
       uses: 1466587594/get-current-time@v2
