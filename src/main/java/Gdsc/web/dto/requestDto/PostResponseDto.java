@@ -17,6 +17,8 @@ public class PostResponseDto {
     private String content;
     @ApiModelProperty(example = "false")
     private boolean tmpStore;
+    @ApiModelProperty(example = "false")
+    private boolean blocked;
     @ApiModelProperty(example = "Backend")
     private Category category;
     @ApiModelProperty(example = "HashtagContent")

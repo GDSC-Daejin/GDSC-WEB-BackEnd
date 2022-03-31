@@ -5,8 +5,10 @@ import Gdsc.web.dto.WarningDto;
 import Gdsc.web.entity.Member;
 import Gdsc.web.entity.WarnDescription;
 import Gdsc.web.service.AdminService;
+import Gdsc.web.service.PostBlockService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,10 +21,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/admin")
+@RequiredArgsConstructor
 public class AdminApiController {
 
-    @Autowired
-    private AdminService adminService;
+    private final AdminService adminService;
+    private final PostBlockService postBlockService;
 
     @ApiOperation(value = "권한변경", notes = "권한 등급을 변경함.")
     @PutMapping("v1/update/role")
@@ -56,5 +59,10 @@ public class AdminApiController {
         return ApiResponse.success("message", "Success");
     }
 
-
+    @ApiOperation(value = "관리자 포스트 블럭", notes = "관리자는 유해한 게시글을 블럭하거나 해제할 수 있습니다.")
+    @PostMapping("v1/block/{postId}")
+    public ApiResponse blockPost(@PathVariable Long postId){
+        postBlockService.block(postId);
+        return ApiResponse.success("message", "Success");
+    }
 }

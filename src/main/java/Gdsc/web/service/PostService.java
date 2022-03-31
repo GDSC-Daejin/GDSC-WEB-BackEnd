@@ -180,19 +180,19 @@ public class PostService {
     public Page<?> findPostAllWithCategory(String categoryName, final Pageable pageable){
         Optional<Category> category = Optional.of(jpaCategoryRepository.findByCategoryName(categoryName).orElseThrow(
                 () -> new IllegalArgumentException("찾을 수 없는 카테고리 입니다.")));
-        return jpaPostRepository.findByCategoryAndTmpStoreIsFalse(PostResponseMapping.class,category, pageable);
+        return jpaPostRepository.findByCategoryAndTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,category, pageable);
     }
     // 모든 게시글 해시태그 별 조회
     @Transactional(readOnly = true)
     public Page<?> findPostAllWithPostHashTag(String tagName, final Pageable pageable){
-        return jpaPostRepository.findByPostHashTagsIsContainingOrContentIsContainingAndTmpStoreIsFalse(PostResponseMapping.class,tagName ,tagName, pageable);
+        return jpaPostRepository.findByPostHashTagsIsContainingOrContentIsContainingAndTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,tagName ,tagName, pageable);
     }
 
     //post 글 목록 불러오기
     @Transactional(readOnly = true)
     public Page<?> findPostAll(final Pageable pageable){
 
-        return jpaPostRepository.findAllByTmpStoreIsFalse(PostResponseMapping.class,pageable);
+        return jpaPostRepository.findAllByTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,pageable);
     }
 
 }

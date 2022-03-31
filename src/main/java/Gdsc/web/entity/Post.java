@@ -75,5 +75,8 @@ public class Post {
     @ApiModelProperty(example = "2022-01-06 14:57:42.777000 ---Insert 시 자동 삽입 넣지말아요")
     private LocalDateTime uploadDate;
 
-
+    @Column
+    @ApiModelProperty(example = "0")
+    @NotNull
+    private boolean blocked;
 }
