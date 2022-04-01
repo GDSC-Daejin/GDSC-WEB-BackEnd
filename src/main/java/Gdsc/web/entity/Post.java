@@ -45,7 +45,7 @@ public class Post {
     private MemberInfo memberInfo;
 
     //임시 저장 여부
-    @Column
+    @Column(columnDefinition = "boolean default false")
     @ApiModelProperty(example = "false")
     @NotNull
     private boolean tmpStore;
@@ -76,8 +76,8 @@ public class Post {
     private LocalDateTime uploadDate;
 
 
-    @Column
-    @ApiModelProperty(example = "flase")
+    @Column(columnDefinition = "boolean default false")
+    @ApiModelProperty(example = "false")
     @NotNull
     private boolean blocked;
 

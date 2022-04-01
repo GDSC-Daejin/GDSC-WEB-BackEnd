@@ -46,7 +46,6 @@ public class PostService {
         post.setCategory(category.get());
         post.setContent(requestDto.getContent());
         post.setTitle(requestDto.getTitle());
-        post.setTmpStore(requestDto.isTmpStore());
         post.setMemberInfo(memberInfo);
         //json 형식 이미지나 , form-data 형식 이미지 둘중 하나만 들어왔을때!!
         if(requestDto.getThumbnail() != null ^ requestDto.getBase64Thumbnail() != null){
@@ -66,7 +65,6 @@ public class PostService {
         post.setPostHashTags(requestDto.getPostHashTags());
         post.setContent(requestDto.getContent());
         post.setTitle(requestDto.getTitle());
-        post.setTmpStore(requestDto.isTmpStore());
         //json 형식 이미지나 , form-data 형식 이미지 둘중 하나만 들어왔을때!!
         if(requestDto.getThumbnail() != null ^ requestDto.getBase64Thumbnail() != null){
             post.setImagePath(upload(requestDto, "static"));
