@@ -88,4 +88,10 @@ public class MemberService {
     public boolean 닉네임중복검사(String nickname){
         return memberRepository.existsByMemberInfo_Nickname(nickname);
     }
+
+    @Transactional
+    public void deleteMemberForTest(String userId){
+        Member member = memberRepository.findByUserId(userId);
+        memberRepository.delete(member);
+    }
 }

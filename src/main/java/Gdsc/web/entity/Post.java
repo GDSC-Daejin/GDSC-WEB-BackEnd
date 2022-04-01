@@ -46,7 +46,7 @@ public class Post {
 
     //임시 저장 여부
     @Column
-    @ApiModelProperty(example = "0")
+    @ApiModelProperty(example = "false")
     @NotNull
     private boolean tmpStore;
 
@@ -75,8 +75,21 @@ public class Post {
     @ApiModelProperty(example = "2022-01-06 14:57:42.777000 ---Insert 시 자동 삽입 넣지말아요")
     private LocalDateTime uploadDate;
 
+
     @Column
-    @ApiModelProperty(example = "0")
+    @ApiModelProperty(example = "flase")
     @NotNull
     private boolean blocked;
+
+    @Builder
+    public Post(String title , String content , MemberInfo memberInfo , boolean tmpStore , Category category , String postHashTags){
+        this.title = title;
+        this.content = content;
+        this.memberInfo = memberInfo;
+        this.tmpStore = tmpStore;
+        this.category =category;
+        this.postHashTags = postHashTags;
+    }
+
+
 }

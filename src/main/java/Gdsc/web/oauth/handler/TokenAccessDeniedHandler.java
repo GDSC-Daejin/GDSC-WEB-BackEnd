@@ -1,6 +1,7 @@
 package Gdsc.web.oauth.handler;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
@@ -11,10 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-@RequiredArgsConstructor
 public class TokenAccessDeniedHandler implements AccessDeniedHandler {
-
-    private final HandlerExceptionResolver handlerExceptionResolver;
+    @Autowired(required = false)
+    private HandlerExceptionResolver handlerExceptionResolver;
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
