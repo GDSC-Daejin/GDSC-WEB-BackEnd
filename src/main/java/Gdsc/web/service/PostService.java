@@ -179,7 +179,7 @@ public class PostService {
         MemberInfo memberInfo = findMemberInfo(userId);
         Optional<Category> category = Optional.of(jpaCategoryRepository.findByCategoryName(categoryName).orElseThrow(
                 ()-> new IllegalArgumentException("찾을 수 없는 카테고리 입니다.")));
-        return jpaPostRepository.findByMemberInfoAndCategory(PostResponseMapping.class,memberInfo, category, pageable);
+        return jpaPostRepository.findByMemberInfoAndCategoryIsFalse(PostResponseMapping.class,memberInfo, category, pageable);
     }
     // 모든 게시글 카테고리 별 조회
     @Transactional(readOnly = true)
@@ -202,7 +202,7 @@ public class PostService {
     }
     @Transactional
     public Page<?> findPostAllByTitle(String title, final Pageable pageable){
-        return jpaPostRepository.findByTitleIsContainingAndTmpStoreIsFalse(PostResponseMapping.class,title, pageable);
+        return jpaPostRepository.findAllByTitleContainingAndTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,title, pageable);
     }
 
 }
