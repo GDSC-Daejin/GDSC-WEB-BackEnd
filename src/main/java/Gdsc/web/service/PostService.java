@@ -81,10 +81,10 @@ public class PostService {
     }
     //조회
     @Transactional(readOnly = true)
-    public Post findByPostId(Long postId){
-        Post entity = jpaPostRepository.findByPostId(postId)
+    public PostResponseMapping findByPostIdAndBlockIsFalse(Long postId){
+
+        return jpaPostRepository.findByPostIdAndBlockedIsFalse(postId,PostResponseMapping.class)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
-        return entity;
     }
 
 
@@ -163,9 +163,9 @@ public class PostService {
     }
     // 내 게시글 조회
     @Transactional(readOnly = true)
-    public Page<Post> findMyPost(String userId, final Pageable pageable){
+    public Page<?> findMyPost(String userId, final Pageable pageable){
         MemberInfo memberInfo = findMemberInfo(userId);
-        return jpaPostRepository.findByMemberInfo(memberInfo, pageable);
+        return jpaPostRepository.findByMemberInfo(PostResponseMapping.class,memberInfo, pageable);
     }
     // 내 게시글 카테고리 별 조회
     @Transactional(readOnly = true)
