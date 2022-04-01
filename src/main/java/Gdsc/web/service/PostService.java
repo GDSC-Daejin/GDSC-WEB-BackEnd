@@ -87,10 +87,10 @@ public class PostService {
 
     //조회
     @Transactional(readOnly = true)
-    public Post findByPostId(Long postId){
-        Post entity = jpaPostRepository.findByPostId(postId)
+    public PostResponseMapping findByPostIdAndBlockIsFalse(Long postId){
+
+        return jpaPostRepository.findByPostIdAndBlockedIsFalse(postId,PostResponseMapping.class)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
-        return entity;
     }
 
 
@@ -169,9 +169,9 @@ public class PostService {
     }
     // 내 게시글 조회
     @Transactional(readOnly = true)
-    public Page<Post> findMyPost(String userId, final Pageable pageable){
+    public Page<?> findMyPost(String userId, final Pageable pageable){
         MemberInfo memberInfo = findMemberInfo(userId);
-        return jpaPostRepository.findByMemberInfo(memberInfo, pageable);
+        return jpaPostRepository.findByMemberInfo(PostResponseMapping.class,memberInfo, pageable);
     }
     // 내 게시글 카테고리 별 조회
     @Transactional(readOnly = true)
@@ -179,30 +179,30 @@ public class PostService {
         MemberInfo memberInfo = findMemberInfo(userId);
         Optional<Category> category = Optional.of(jpaCategoryRepository.findByCategoryName(categoryName).orElseThrow(
                 ()-> new IllegalArgumentException("찾을 수 없는 카테고리 입니다.")));
-        return jpaPostRepository.findByMemberInfoAndCategory(PostResponseMapping.class,memberInfo, category, pageable);
+        return jpaPostRepository.findByMemberInfoAndCategoryIsFalse(PostResponseMapping.class,memberInfo, category, pageable);
     }
     // 모든 게시글 카테고리 별 조회
     @Transactional(readOnly = true)
     public Page<?> findPostAllWithCategory(String categoryName, final Pageable pageable){
         Optional<Category> category = Optional.of(jpaCategoryRepository.findByCategoryName(categoryName).orElseThrow(
                 () -> new IllegalArgumentException("찾을 수 없는 카테고리 입니다.")));
-        return jpaPostRepository.findByCategoryAndTmpStoreIsFalse(PostResponseMapping.class,category, pageable);
+        return jpaPostRepository.findByCategoryAndTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,category, pageable);
     }
     // 모든 게시글 해시태그 별 조회
     @Transactional(readOnly = true)
     public Page<?> findPostAllWithPostHashTag(String tagName, final Pageable pageable){
-        return jpaPostRepository.findByPostHashTagsIsContainingOrContentIsContainingAndTmpStoreIsFalse(PostResponseMapping.class,tagName ,tagName, pageable);
+        return jpaPostRepository.findByPostHashTagsIsContainingOrContentIsContainingAndTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,tagName ,tagName, pageable);
     }
 
     //post 글 목록 불러오기
     @Transactional(readOnly = true)
     public Page<?> findPostAll(final Pageable pageable){
 
-        return jpaPostRepository.findAllByTmpStoreIsFalse(PostResponseMapping.class,pageable);
+        return jpaPostRepository.findAllByTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,pageable);
     }
     @Transactional
     public Page<?> findPostAllByTitle(String title, final Pageable pageable){
-        return jpaPostRepository.findByTitleIsContainingAndTmpStoreIsFalse(PostResponseMapping.class,title, pageable);
+        return jpaPostRepository.findAllByTitleContainingAndTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,title, pageable);
     }
 
 }
