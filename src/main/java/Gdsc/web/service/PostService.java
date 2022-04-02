@@ -37,6 +37,8 @@ public class PostService {
     @Value("${cloud.aws.s3.bucket}")
     public String bucket;  // S3 버킷 이름
 
+    @Value("${cloud.aws.s3.Url}")
+    private String bucketUrl;
     @Transactional
     public void save(PostRequestDto requestDto , String userId) throws IOException {
         MemberInfo memberInfo = findMemberInfo(userId);
@@ -151,8 +153,9 @@ public class PostService {
 
     // delete s3에 올려진 사진
     public void fileDelete(String imageUrl) {
-
+        imageUrl= imageUrl.replace(bucketUrl , "");
         try {
+            log.info("imageUrl: " + (imageUrl).replace(File.separatorChar, '/'));
             amazonS3Client.deleteObject(bucket, (imageUrl).replace(File.separatorChar, '/'));
         } catch (AmazonServiceException e) {
             log.error(e.getErrorCode() + " : 버킷 이미지 삭제 실패 ");
