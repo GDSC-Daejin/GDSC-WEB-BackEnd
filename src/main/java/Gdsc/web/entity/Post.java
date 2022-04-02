@@ -40,7 +40,7 @@ public class Post {
     String content; // 내용
 
 
-    @ManyToOne(optional = false , cascade = CascadeType.ALL)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "USER_ID" , nullable = false)
     private MemberInfo memberInfo;
 
