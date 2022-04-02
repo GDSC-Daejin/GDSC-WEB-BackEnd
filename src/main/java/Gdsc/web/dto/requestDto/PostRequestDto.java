@@ -14,8 +14,6 @@ public class PostRequestDto {
     @ApiModelProperty(example = "내용")
     private String content;
     @ApiModelProperty(example = "false")
-    private boolean tmpStore;
-    @ApiModelProperty(example = "false")
     private boolean blocked;
     @ApiModelProperty(example = "Backend")
     private Category category;
