@@ -28,6 +28,7 @@ public class MemberEntityFactory {
                 now,
                 memberInfo
         );
+        member.setPassword("password");
         memberInfo.setMember(member);
         List<MemberPortfolioUrl> memberPortfolioUrls = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
@@ -51,6 +52,7 @@ public class MemberEntityFactory {
                 now,
                 memberInfo
         );
+        member.setPassword("password");
         memberInfo.setMember(member);
         List<MemberPortfolioUrl> memberPortfolioUrls = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
@@ -75,6 +77,7 @@ public class MemberEntityFactory {
                 now,
                 memberInfo
         );
+        member.setPassword("password");
         memberInfo.setMember(member);
         List<MemberPortfolioUrl> memberPortfolioUrls = new ArrayList<>();
         for (int i = 0; i < 5; i++) {

@@ -84,7 +84,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 memberInfo
         );
         memberInfo.setMember(user);
-        memberInfoRepository.save(memberInfo);
         List<MemberPortfolioUrl> memberPortfolioUrls = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             memberPortfolioUrls.add(new MemberPortfolioUrl(memberInfo));
