@@ -180,7 +180,7 @@ public class PostService {
         MemberInfo memberInfo = findMemberInfo(userId);
         Optional<Category> category = Optional.of(jpaCategoryRepository.findByCategoryName(categoryName).orElseThrow(
                 ()-> new IllegalArgumentException("찾을 수 없는 카테고리 입니다.")));
-        return jpaPostRepository.findByMemberInfoAndCategoryIsFalse(PostResponseMapping.class,memberInfo, category, pageable);
+        return jpaPostRepository.findByMemberInfoAndCategoryAndTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,memberInfo, category, pageable);
     }
     // 모든 게시글 카테고리 별 조회
     @Transactional(readOnly = true)
