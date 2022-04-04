@@ -39,7 +39,7 @@ public class MemberInfo {
     @ApiModelProperty(example = "나는 위대한 사람")
     private String introduce;
 
-    @Column(length = 30)
+    @Column(length = 30 ,unique = true)
     @ApiModelProperty(example = "Rocoli")
     private String nickname;
 
