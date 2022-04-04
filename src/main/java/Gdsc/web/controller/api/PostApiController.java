@@ -6,6 +6,7 @@ import Gdsc.web.entity.Post;
 import Gdsc.web.service.PostService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -14,7 +15,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
-
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class PostApiController {
@@ -57,8 +58,8 @@ public class PostApiController {
     public ApiResponse updateJsonPost(@PathVariable Long postId,
                                       @RequestBody PostRequestDto requestDto ,
                                       @AuthenticationPrincipal User principal) throws IOException {
-
         postService.update(requestDto, postId , principal.getUsername());
+
         return ApiResponse.success("message","SUCCESS");
     }
 
@@ -69,7 +70,7 @@ public class PostApiController {
                     "api 주소에 PathVariable 주면 됩니다.")
     @GetMapping("/api/v1/post/{postId}")
     public ApiResponse findByPostId(@PathVariable Long postId){
-        return ApiResponse.success("data",postService.findByPostId(postId));
+        return ApiResponse.success("data",postService.findByPostIdAndBlockIsFalse(postId));
     }
 
 
@@ -111,7 +112,7 @@ public class PostApiController {
     @GetMapping("/api/member/v1/myPost")
     public ApiResponse myPost(@AuthenticationPrincipal User principal,
                               @PageableDefault(size = 16 ,sort = "postId",direction = Sort.Direction.DESC) Pageable pageable){
-        Page<Post> post = postService.findMyPost(principal.getUsername(), pageable);
+        Page<?> post = postService.findMyPost(principal.getUsername(), pageable);
         return ApiResponse.success("data", post);
     }
 

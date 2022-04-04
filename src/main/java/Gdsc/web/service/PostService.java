@@ -37,6 +37,8 @@ public class PostService {
     @Value("${cloud.aws.s3.bucket}")
     public String bucket;  // S3 버킷 이름
 
+    @Value("${cloud.aws.s3.Url}")
+    private String bucketUrl;
     @Transactional
     public void save(PostRequestDto requestDto , String userId) throws IOException {
         MemberInfo memberInfo = findMemberInfo(userId);
@@ -46,7 +48,6 @@ public class PostService {
         post.setCategory(category.get());
         post.setContent(requestDto.getContent());
         post.setTitle(requestDto.getTitle());
-        post.setTmpStore(requestDto.isTmpStore());
         post.setMemberInfo(memberInfo);
         //json 형식 이미지나 , form-data 형식 이미지 둘중 하나만 들어왔을때!!
         if(requestDto.getThumbnail() != null ^ requestDto.getBase64Thumbnail() != null){
@@ -61,12 +62,11 @@ public class PostService {
         MemberInfo memberInfo = findMemberInfo(userId);
         Post post = jpaPostRepository.findByPostIdAndMemberInfo(postId, memberInfo) //ㅣinteger가 아니라 long 타입이라 오류? jpa Long을 integer로 바꿔야 할까?
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
-        Category category = jpaCategoryRepository.findByCategoryId(requestDto.getCategory().getCategoryId());
+        Category category = jpaCategoryRepository.findByCategoryName(requestDto.getCategory().getCategoryName()).get();
         post.setCategory(category);
         post.setPostHashTags(requestDto.getPostHashTags());
         post.setContent(requestDto.getContent());
         post.setTitle(requestDto.getTitle());
-        post.setTmpStore(requestDto.isTmpStore());
         //json 형식 이미지나 , form-data 형식 이미지 둘중 하나만 들어왔을때!!
         if(requestDto.getThumbnail() != null ^ requestDto.getBase64Thumbnail() != null){
             post.setImagePath(upload(requestDto, "static"));
@@ -87,10 +87,10 @@ public class PostService {
 
     //조회
     @Transactional(readOnly = true)
-    public Post findByPostId(Long postId){
-        Post entity = jpaPostRepository.findByPostId(postId)
+    public PostResponseMapping findByPostIdAndBlockIsFalse(Long postId){
+
+        return jpaPostRepository.findByPostIdAndBlockedIsFalse(postId,PostResponseMapping.class)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
-        return entity;
     }
 
 
@@ -153,8 +153,9 @@ public class PostService {
 
     // delete s3에 올려진 사진
     public void fileDelete(String imageUrl) {
-
+        imageUrl= imageUrl.replace(bucketUrl , "");
         try {
+            log.info("imageUrl: " + (imageUrl).replace(File.separatorChar, '/'));
             amazonS3Client.deleteObject(bucket, (imageUrl).replace(File.separatorChar, '/'));
         } catch (AmazonServiceException e) {
             log.error(e.getErrorCode() + " : 버킷 이미지 삭제 실패 ");
@@ -169,9 +170,9 @@ public class PostService {
     }
     // 내 게시글 조회
     @Transactional(readOnly = true)
-    public Page<Post> findMyPost(String userId, final Pageable pageable){
+    public Page<?> findMyPost(String userId, final Pageable pageable){
         MemberInfo memberInfo = findMemberInfo(userId);
-        return jpaPostRepository.findByMemberInfo(memberInfo, pageable);
+        return jpaPostRepository.findByMemberInfo(PostResponseMapping.class,memberInfo, pageable);
     }
     // 내 게시글 카테고리 별 조회
     @Transactional(readOnly = true)
@@ -179,30 +180,30 @@ public class PostService {
         MemberInfo memberInfo = findMemberInfo(userId);
         Optional<Category> category = Optional.of(jpaCategoryRepository.findByCategoryName(categoryName).orElseThrow(
                 ()-> new IllegalArgumentException("찾을 수 없는 카테고리 입니다.")));
-        return jpaPostRepository.findByMemberInfoAndCategory(PostResponseMapping.class,memberInfo, category, pageable);
+        return jpaPostRepository.findByMemberInfoAndCategoryIsFalse(PostResponseMapping.class,memberInfo, category, pageable);
     }
     // 모든 게시글 카테고리 별 조회
     @Transactional(readOnly = true)
     public Page<?> findPostAllWithCategory(String categoryName, final Pageable pageable){
         Optional<Category> category = Optional.of(jpaCategoryRepository.findByCategoryName(categoryName).orElseThrow(
                 () -> new IllegalArgumentException("찾을 수 없는 카테고리 입니다.")));
-        return jpaPostRepository.findByCategoryAndTmpStoreIsFalse(PostResponseMapping.class,category, pageable);
+        return jpaPostRepository.findByCategoryAndTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,category, pageable);
     }
     // 모든 게시글 해시태그 별 조회
     @Transactional(readOnly = true)
     public Page<?> findPostAllWithPostHashTag(String tagName, final Pageable pageable){
-        return jpaPostRepository.findByPostHashTagsIsContainingOrContentIsContainingAndTmpStoreIsFalse(PostResponseMapping.class,tagName ,tagName, pageable);
+        return jpaPostRepository.findByPostHashTagsIsContainingOrContentIsContainingAndTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,tagName ,tagName, pageable);
     }
 
     //post 글 목록 불러오기
     @Transactional(readOnly = true)
     public Page<?> findPostAll(final Pageable pageable){
 
-        return jpaPostRepository.findAllByTmpStoreIsFalse(PostResponseMapping.class,pageable);
+        return jpaPostRepository.findAllByTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,pageable);
     }
     @Transactional
     public Page<?> findPostAllByTitle(String title, final Pageable pageable){
-        return jpaPostRepository.findByTitleIsContainingAndTmpStoreIsFalse(PostResponseMapping.class,title, pageable);
+        return jpaPostRepository.findAllByTitleContainingAndTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,title, pageable);
     }
 
 }
