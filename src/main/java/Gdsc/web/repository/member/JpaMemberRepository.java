@@ -22,6 +22,7 @@ public interface JpaMemberRepository extends JpaRepository<Member, Integer> {
     List<Member> findMembersByRoleInAndMemberInfo_PhoneNumberIsNotNull(@Param("role") List<RoleType> roleTypes);
     Member findByUserId(String id);
     Member findByEmail(String email);
-    boolean existsByMemberInfo_Nickname(String nickname);
+    boolean existsByMemberInfo_Nickname(String updateNickname);
+    boolean existsByMemberInfo_NicknameAndMemberInfo_NicknameNot(String updateNickname , String nickname);
     boolean deleteByEmail(String s);
 }
