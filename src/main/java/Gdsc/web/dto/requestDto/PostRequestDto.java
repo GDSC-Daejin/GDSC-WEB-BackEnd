@@ -2,12 +2,18 @@ package Gdsc.web.dto.requestDto;
 
 import Gdsc.web.entity.Category;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PostRequestDto {
     @ApiModelProperty(example = "제목")
     private String title;
@@ -26,4 +32,5 @@ public class PostRequestDto {
     private String base64Thumbnail;
     @ApiModelProperty(example = "base64인코딩해서보낼때 필요한 파일이름")
     private String fileName;
+
 }

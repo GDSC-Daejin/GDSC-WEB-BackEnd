@@ -64,7 +64,7 @@ public class Post {
     private String postHashTags;
 
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL , orphanRemoval = true)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Likes> likes;
 
     @Column(name = "MODIFIED_AT")

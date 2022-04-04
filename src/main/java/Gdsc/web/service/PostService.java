@@ -62,7 +62,7 @@ public class PostService {
         MemberInfo memberInfo = findMemberInfo(userId);
         Post post = jpaPostRepository.findByPostIdAndMemberInfo(postId, memberInfo) //ㅣinteger가 아니라 long 타입이라 오류? jpa Long을 integer로 바꿔야 할까?
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
-        Category category = jpaCategoryRepository.findByCategoryId(requestDto.getCategory().getCategoryId());
+        Category category = jpaCategoryRepository.findByCategoryName(requestDto.getCategory().getCategoryName()).get();
         post.setCategory(category);
         post.setPostHashTags(requestDto.getPostHashTags());
         post.setContent(requestDto.getContent());
