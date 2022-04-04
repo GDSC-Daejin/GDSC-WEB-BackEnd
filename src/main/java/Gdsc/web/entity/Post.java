@@ -38,6 +38,9 @@ public class Post {
     @Lob
     @ApiModelProperty(example = "내용")
     String content; // 내용
+    @Column(columnDefinition = "integer default 0", nullable = false)
+    private int view; //조회수
+
 
 
     @ManyToOne(optional = false)

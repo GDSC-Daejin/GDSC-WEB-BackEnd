@@ -206,4 +206,10 @@ public class PostService {
         return jpaPostRepository.findAllByTitleContainingAndTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,title, pageable);
     }
 
+    //조회수
+    @Transactional
+    public int updateView(Long postId){
+        return jpaPostRepository.updateView(postId);
+    }
+
 }

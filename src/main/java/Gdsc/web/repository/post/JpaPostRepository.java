@@ -7,6 +7,8 @@ import Gdsc.web.repository.scrap.T;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
@@ -27,4 +29,9 @@ public interface JpaPostRepository extends JpaRepository<Post,Integer> {
 
     void deleteByPostIdAndAndMemberInfo(Long postId , MemberInfo memberInfo);
     void deleteByPostId(Long postId);
+
+    @Modifying
+    @Query("update Post p set p.view = p.view + 1 where p.postId = :postId")
+    int updateView(Long postId);
+
 }
