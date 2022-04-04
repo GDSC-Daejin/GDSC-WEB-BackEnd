@@ -30,8 +30,6 @@ public interface JpaPostRepository extends JpaRepository<Post,Integer> {
     void deleteByPostIdAndAndMemberInfo(Long postId , MemberInfo memberInfo);
     void deleteByPostId(Long postId);
 
-    @Modifying
-    @Query("update Post p set p.view = p.view + 1 where p.postId = :postId")
-    int updateView(Long postId);
+
 
 }

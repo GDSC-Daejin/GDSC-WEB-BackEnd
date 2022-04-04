@@ -208,8 +208,9 @@ public class PostService {
 
     //조회수
     @Transactional
-    public int updateView(Long postId){
-        return jpaPostRepository.updateView(postId);
+    public void updateView(Long postId){
+        Optional<Post> post = jpaPostRepository.findByPostId(postId);
+        post.get().setView(post.get().getView()+1);
     }
 
 }
