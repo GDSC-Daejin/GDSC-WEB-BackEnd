@@ -26,7 +26,7 @@ public class CategoryService {
     }
     @Transactional
     public void 카테고리삭제(Category category){
-        jpaCategoryRepository.delete(category);
+        jpaCategoryRepository.deleteByCategoryName(category.getCategoryName());
     }
     @Transactional
     public void 카테고리업데이트(CategoryUpdateDto categoryUpdateDto){

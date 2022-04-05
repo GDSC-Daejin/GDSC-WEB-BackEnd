@@ -91,14 +91,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class PostApiControllerTest {
     @Autowired
     private WebApplicationContext context;
-    @Autowired
-    private AppProperties appProperties;
-    @Autowired
-    private AuthTokenProvider tokenProvider;
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    private AuthToken accessToken;
     private MockMvc mvc;
 
     @MockBean

@@ -69,6 +69,7 @@ public class PostService {
         post.setTitle(requestDto.getTitle());
         //json 형식 이미지나 , form-data 형식 이미지 둘중 하나만 들어왔을때!!
         if(requestDto.getThumbnail() != null ^ requestDto.getBase64Thumbnail() != null){
+            fileDelete(post.getImagePath());
             post.setImagePath(upload(requestDto, "static"));
         }
 
