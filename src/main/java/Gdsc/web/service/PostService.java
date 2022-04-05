@@ -195,4 +195,10 @@ public class PostService {
         return jpaPostRepository.findAllByTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,pageable);
     }
 
+    @Transactional(readOnly = true)
+    public Page<?> findBockedPostAll(final Pageable pageable){
+
+        return jpaPostRepository.findAllByTmpStoreIsFalseAndBlockedIsTrue(PostResponseMapping.class,pageable);
+    }
+
 }
