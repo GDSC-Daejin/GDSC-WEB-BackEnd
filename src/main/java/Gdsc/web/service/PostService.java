@@ -206,11 +206,13 @@ public class PostService {
         return jpaPostRepository.findAllByTitleContainingAndTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,title, pageable);
     }
 
-    //조회수
+    public Page<?> findBockedPostAll(final Pageable pageable){
+
+        return jpaPostRepository.findAllByTmpStoreIsFalseAndBlockedIsTrue(PostResponseMapping.class,pageable);
+    }
     @Transactional
     public void updateView(Long postId){
         Optional<Post> post = jpaPostRepository.findByPostId(postId);
         post.get().setView(post.get().getView()+1);
     }
-
 }
