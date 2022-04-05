@@ -8,7 +8,7 @@ public class CategoryEntityFactory {
     public static Category categoryBackendEntity(){
         Category category = new Category();
         category.setUploadDate(LocalDateTime.now());
-        category.setCategoryName("Backend2");
+        category.setCategoryName("Backend");
         return category;
     }
     public static Category categoryFrontEndEntity(){
