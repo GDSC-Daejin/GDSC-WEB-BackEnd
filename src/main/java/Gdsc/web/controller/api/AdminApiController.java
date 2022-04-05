@@ -3,12 +3,20 @@ package Gdsc.web.controller.api;
 import Gdsc.web.dto.ApiResponse;
 import Gdsc.web.dto.WarningDto;
 import Gdsc.web.entity.Member;
+import Gdsc.web.entity.Post;
+import Gdsc.web.entity.WarnDescription;
 import Gdsc.web.service.AdminService;
 import Gdsc.web.service.PostBlockService;
+import Gdsc.web.service.PostService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +28,7 @@ import java.util.List;
 public class AdminApiController {
 
     private final AdminService adminService;
+    private final PostService postService;
     private final PostBlockService postBlockService;
 
     @ApiOperation(value = "권한변경", notes = "권한 등급을 변경함.")
@@ -59,5 +68,12 @@ public class AdminApiController {
     public ApiResponse blockPost(@PathVariable Long postId){
         postBlockService.block(postId);
         return ApiResponse.success("message", "Success");
+    }
+
+    @ApiOperation(value = "관리자 블럭 포스트 불러오기", notes = "블럭된 포스트를 불러옵니다")
+    @GetMapping("v1/block")
+    public ApiResponse blockPost(@PageableDefault(size = 16 ,sort = "postId",direction = Sort.Direction.DESC) Pageable pageable){
+        Page<?> post = postService.findBockedPostAll(pageable);
+        return ApiResponse.success("data", post);
     }
 }
