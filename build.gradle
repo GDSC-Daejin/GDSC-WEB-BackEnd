@@ -47,13 +47,14 @@ dependencies {
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.2'
     implementation 'jakarta.xml.bind:jakarta.xml.bind-api:2.3.2'
     implementation group:'com.auth0',name:'java-jwt',version:'3.16.0'
-
     // test 관련
     testImplementation('org.springframework.boot:spring-boot-starter-test')
     testImplementation("org.springframework.security:spring-security-test") // 권한 관련
 
     runtimeOnly('org.springframework.boot:spring-boot-devtools')
-
+    // java 8 에러 역직렬화 문제 해결
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
 
     //swagger
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
@@ -68,7 +69,8 @@ dependencies {
     implementation 'com.github.maricn:logback-slack-appender:1.4.0'
     // aws
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
-
+    // test 관련 database
+    runtimeOnly 'com.h2database:h2'
 }
 
 test {

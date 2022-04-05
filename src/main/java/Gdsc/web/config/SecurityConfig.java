@@ -1,6 +1,6 @@
 package Gdsc.web.config;
 
-import Gdsc.web.model.RoleType;
+
 import Gdsc.web.oauth.exception.RestAuthenticationEntryPoint;
 import Gdsc.web.oauth.filter.TokenAuthenticationFilter;
 import Gdsc.web.oauth.handler.OAuth2AuthenticationFailureHandler;
@@ -11,7 +11,9 @@ import Gdsc.web.oauth.service.CustomOAuth2UserService;
 import Gdsc.web.oauth.service.CustomUserDetailsService;
 import Gdsc.web.oauth.token.AuthTokenProvider;
 import Gdsc.web.repository.UserRefreshTokenRepository;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,23 +23,29 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
 import Gdsc.web.config.properties.*;
 import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final CorsFilter corsFilter;
-
-    private final AppProperties appProperties;
-    private final AuthTokenProvider tokenProvider;
-    private final CustomUserDetailsService userDetailsService;
-    private final CustomOAuth2UserService oAuth2UserService;
-    private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
-    private final UserRefreshTokenRepository userRefreshTokenRepository;
-
+    @Autowired
+    private CorsFilter corsFilter;
+    @Autowired
+    private AppProperties appProperties;
+    @Autowired
+    private AuthTokenProvider tokenProvider;
+    @Autowired
+    private CustomUserDetailsService userDetailsService;
+    @Autowired
+    private CustomOAuth2UserService oAuth2UserService;
+    @Autowired
+    private TokenAccessDeniedHandler tokenAccessDeniedHandler;
+    @Autowired
+    private UserRefreshTokenRepository userRefreshTokenRepository;
     /*
      * UserDetailsService 설정
      * */
