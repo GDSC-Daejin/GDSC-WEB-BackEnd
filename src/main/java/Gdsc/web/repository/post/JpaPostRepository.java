@@ -7,6 +7,8 @@ import Gdsc.web.repository.scrap.T;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
@@ -18,8 +20,7 @@ public interface JpaPostRepository extends JpaRepository<Post,Integer> {
     <T> Optional<T> findByPostIdAndBlockedIsFalse(Long postId, Class<T> type);
     Optional<Post> findByPostIdAndMemberInfo(Long postId , MemberInfo memberInfo);
     <T> Page <T> findByMemberInfo(Class<T> tClass,MemberInfo memberInfo, Pageable pageable);
-    <T> Page<T> findByMemberInfoAndCategoryIsFalse(Class<T> tClass,MemberInfo memberInfo, Optional<Category> category, Pageable pageable);
-
+    <T> Page<T> findByMemberInfoAndCategoryAndTmpStoreIsFalseAndBlockedIsFalse(Class<T> tClass,MemberInfo memberInfo, Optional<Category> category, Pageable pageable);
     <T> Page<T> findByCategoryAndTmpStoreIsFalseAndBlockedIsFalse(Class<T> tClass,Optional<Category> category, Pageable pageable);
     <T> Page<T> findAllByTmpStoreIsFalseAndBlockedIsFalse(Class<T> tClass,Pageable pageable);
     <T> Page<T> findByPostHashTagsIsContainingOrContentIsContainingAndTmpStoreIsFalseAndBlockedIsFalse(Class<T> tClass, String postHashTags,String content,Pageable pageable);
@@ -28,4 +29,7 @@ public interface JpaPostRepository extends JpaRepository<Post,Integer> {
 
     void deleteByPostIdAndAndMemberInfo(Long postId , MemberInfo memberInfo);
     void deleteByPostId(Long postId);
+
+
+
 }

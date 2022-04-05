@@ -38,14 +38,17 @@ public class Post {
     @Lob
     @ApiModelProperty(example = "내용")
     String content; // 내용
+    @Column(columnDefinition = "integer default 0", nullable = false)
+    private int view; //조회수
 
 
-    @ManyToOne(optional = false , cascade = CascadeType.ALL)
+
+    @ManyToOne(optional = false)
     @JoinColumn(name = "USER_ID" , nullable = false)
     private MemberInfo memberInfo;
 
     //임시 저장 여부
-    @Column
+    @Column(columnDefinition = "boolean default false")
     @ApiModelProperty(example = "false")
     @NotNull
     private boolean tmpStore;
@@ -64,7 +67,7 @@ public class Post {
     private String postHashTags;
 
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL , orphanRemoval = true)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Likes> likes;
 
     @Column(name = "MODIFIED_AT")
@@ -76,8 +79,8 @@ public class Post {
     private LocalDateTime uploadDate;
 
 
-    @Column
-    @ApiModelProperty(example = "flase")
+    @Column(columnDefinition = "boolean default false")
+    @ApiModelProperty(example = "false")
     @NotNull
     private boolean blocked;
 
