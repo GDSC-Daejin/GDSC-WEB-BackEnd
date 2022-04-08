@@ -173,7 +173,7 @@ public class PostService {
     @Transactional(readOnly = true)
     public Page<?> findMyPost(String userId, final Pageable pageable){
         MemberInfo memberInfo = findMemberInfo(userId);
-        return jpaPostRepository.findByMemberInfo(PostResponseMapping.class,memberInfo, pageable);
+        return jpaPostRepository.findByMemberInfoAndTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,memberInfo, pageable);
     }
     // 내 게시글 카테고리 별 조회
     @Transactional(readOnly = true)
