@@ -69,6 +69,7 @@ public class PostService {
         post.setTitle(requestDto.getTitle());
         //json 형식 이미지나 , form-data 형식 이미지 둘중 하나만 들어왔을때!!
         if(requestDto.getThumbnail() != null ^ requestDto.getBase64Thumbnail() != null){
+            fileDelete(post.getImagePath());
             post.setImagePath(upload(requestDto, "static"));
         }
 
@@ -172,7 +173,7 @@ public class PostService {
     @Transactional(readOnly = true)
     public Page<?> findMyPost(String userId, final Pageable pageable){
         MemberInfo memberInfo = findMemberInfo(userId);
-        return jpaPostRepository.findByMemberInfo(PostResponseMapping.class,memberInfo, pageable);
+        return jpaPostRepository.findByMemberInfoAndTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,memberInfo, pageable);
     }
     // 내 게시글 카테고리 별 조회
     @Transactional(readOnly = true)
@@ -206,11 +207,13 @@ public class PostService {
         return jpaPostRepository.findAllByTitleContainingAndTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,title, pageable);
     }
 
-    //조회수
+    public Page<?> findBockedPostAll(final Pageable pageable){
+
+        return jpaPostRepository.findAllByTmpStoreIsFalseAndBlockedIsTrue(PostResponseMapping.class,pageable);
+    }
     @Transactional
     public void updateView(Long postId){
         Optional<Post> post = jpaPostRepository.findByPostId(postId);
         post.get().setView(post.get().getView()+1);
     }
-
 }

@@ -63,7 +63,7 @@ public class AuthController {
                         authReqModel.getPassword()
                 )
         );
-        System.out.println(authReqModel.getPassword());
+        //System.out.println(authReqModel.getPassword());
         String userId = authReqModel.getId();
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
