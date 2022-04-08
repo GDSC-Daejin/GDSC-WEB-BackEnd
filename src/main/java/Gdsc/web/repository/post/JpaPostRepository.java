@@ -21,6 +21,7 @@ public interface JpaPostRepository extends JpaRepository<Post,Integer> {
     Optional<Post> findByPostIdAndMemberInfo(Long postId , MemberInfo memberInfo);
     <T> Page <T> findByMemberInfo(Class<T> tClass,MemberInfo memberInfo, Pageable pageable);
     <T> Page<T> findByMemberInfoAndCategoryAndTmpStoreIsFalseAndBlockedIsFalse(Class<T> tClass,MemberInfo memberInfo, Optional<Category> category, Pageable pageable);
+    <T> Page<T> findByMemberInfoAndTmpStoreIsFalseAndBlockedIsFalse(Class<T> tClass,MemberInfo memberInfo, Pageable pageable);
     <T> Page<T> findByCategoryAndTmpStoreIsFalseAndBlockedIsFalse(Class<T> tClass,Optional<Category> category, Pageable pageable);
     <T> Page<T> findAllByTmpStoreIsFalseAndBlockedIsFalse(Class<T> tClass,Pageable pageable);
     <T> Page<T> findByPostHashTagsIsContainingOrContentIsContainingAndTmpStoreIsFalseAndBlockedIsFalse(Class<T> tClass, String postHashTags,String content,Pageable pageable);
@@ -29,6 +30,7 @@ public interface JpaPostRepository extends JpaRepository<Post,Integer> {
 
     void deleteByPostIdAndAndMemberInfo(Long postId , MemberInfo memberInfo);
     void deleteByPostId(Long postId);
+
 
 
 
