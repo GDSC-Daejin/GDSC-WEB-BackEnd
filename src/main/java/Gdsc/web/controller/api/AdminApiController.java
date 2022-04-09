@@ -2,9 +2,11 @@ package Gdsc.web.controller.api;
 
 import Gdsc.web.dto.ApiResponse;
 import Gdsc.web.dto.WarningDto;
+import Gdsc.web.dto.requestDto.MemberRoleUpdateDto;
 import Gdsc.web.entity.Member;
 import Gdsc.web.entity.Post;
 import Gdsc.web.entity.WarnDescription;
+import Gdsc.web.model.RoleType;
 import Gdsc.web.service.AdminService;
 import Gdsc.web.service.PostBlockService;
 import Gdsc.web.service.PostService;
@@ -33,8 +35,10 @@ public class AdminApiController {
 
     @ApiOperation(value = "권한변경", notes = "권한 등급을 변경함.")
     @PutMapping("v1/update/role")
-    public ApiResponse<?> updateRole(@RequestBody Member member){
-        adminService.맴버권한수정(member);
+    public ApiResponse<?> updateRole(@RequestBody MemberRoleUpdateDto memberRoleUpdateDto){
+        String userId = memberRoleUpdateDto.getUserId();
+        RoleType role = memberRoleUpdateDto.getRole();
+        adminService.맴버권한수정(userId, role);
         return ApiResponse.success("message", "Success");
     }
 
