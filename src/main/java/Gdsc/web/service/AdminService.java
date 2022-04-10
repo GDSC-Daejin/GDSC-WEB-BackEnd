@@ -22,13 +22,12 @@ public class AdminService {
     private final JpaMemberRepository repository;
     private final JpaWarnDescription jpaWarnDescription;
     @Transactional
-    public void 맴버권한수정(final Member member){
+    public void 맴버권한수정(String userId, RoleType role){
+        Member member = repository.findByUserId(userId);
         // Validations
         validate(member);
 
-        final Member original = repository.findByUserId(member.getUserId());
-        original.setRole(member.getRole());
-
+        member.setRole(role);
     }
 
     @Transactional(readOnly = true)
