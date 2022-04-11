@@ -20,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "id")
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "memberInfoId")
 public class MemberInfo {
 
     @Id
