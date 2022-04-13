@@ -38,7 +38,6 @@ class BasicControllerTest {
     @BeforeEach
     void setup(){
         mvc = MockMvcBuilders.webAppContextSetup(context)
-                .apply(springSecurity())
                 .build();
     }
     @WithMockUser(roles = "MEMBER")
