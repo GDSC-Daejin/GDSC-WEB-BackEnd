@@ -117,9 +117,6 @@ class PostApiControllerTest {
                 .alwaysDo(print())
                 .build();
         member = MemberEntityFactory.adminMemberEntity();
-        MemberInfo memberInfo = member.getMemberInfo();
-        memberInfo.setMember(member);
-        memberInfoRepository.save(memberInfo);
         memberRepository.saveAndFlush(member);
 
 
@@ -127,9 +124,9 @@ class PostApiControllerTest {
 
     @After
     public void tearDown() throws Exception {
-        /*postRepository.deleteAll();
+        postRepository.deleteAll();
         memberRepository.deleteAll();
-        categoryRepository.deleteAll();*/
+        categoryRepository.deleteAll();
     }
 
 

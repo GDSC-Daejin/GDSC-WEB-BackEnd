@@ -64,25 +64,30 @@ public class MemberService {
     public void 정보업데이트(String userId , MemberInfo requestMemberInfo){
         Member member = memberRepository.findByUserId(userId);
         if(member==null) throw new IllegalArgumentException("없는 사용자 입니다. ");
-        MemberInfo memberInfo = member.getMemberInfo();
-        memberInfo.setGeneration(requestMemberInfo.getGeneration());
-        memberInfo.setBirthday(requestMemberInfo.getBirthday());
-        memberInfo.setIntroduce(requestMemberInfo.getIntroduce());
-        memberInfo.setGitEmail(requestMemberInfo.getGitEmail());
-        memberInfo.setMajor(requestMemberInfo.getMajor());
-        memberInfo.setHashTag(requestMemberInfo.getHashTag());
-        //if(닉네임중복검사(requestMemberInfo.getNickname())) throw new IllegalArgumentException("중복된 닉네임 입니다.");
-        memberInfo.setNickname(requestMemberInfo.getNickname());
-        memberInfo.setPhoneNumber(requestMemberInfo.getPhoneNumber());
-        memberInfo.setPositionType(requestMemberInfo.getPositionType());
+        // if requestMemberInfo's element is null, it means that user didn't change element.
 
-        int i = 0;
-        for (MemberPortfolioUrl url: memberInfo.getMemberPortfolioUrls()) {
+        if(requestMemberInfo.getIntroduce() != null) member.getMemberInfo().setIntroduce(requestMemberInfo.getIntroduce());
+        if(requestMemberInfo.getBirthday() != null)  member.getMemberInfo().setBirthday(requestMemberInfo.getBirthday());
+        if(requestMemberInfo.getGitEmail() != null) member.getMemberInfo().setGitEmail(requestMemberInfo.getGitEmail());
+        if(requestMemberInfo.getGeneration() != null) member.getMemberInfo().setGeneration(requestMemberInfo.getGeneration());
+        if(requestMemberInfo.getHashTag() != null) member.getMemberInfo().setHashTag(requestMemberInfo.getHashTag());
+        if(requestMemberInfo.getPhoneNumber() != null) member.getMemberInfo().setPhoneNumber(requestMemberInfo.getPhoneNumber());
+        if(requestMemberInfo.getMajor() != null) member.getMemberInfo().setMajor(requestMemberInfo.getMajor());
+        if(requestMemberInfo.getStudentID() != null) member.getMemberInfo().setStudentID(requestMemberInfo.getStudentID());
+        if(requestMemberInfo.getPositionType() != null) member.getMemberInfo().setPositionType(requestMemberInfo.getPositionType());
+        if(requestMemberInfo.getNickname() != null && !닉네임중복검사(requestMemberInfo.getNickname())) member.getMemberInfo().setNickname(requestMemberInfo.getNickname());
+        for(int i = 0; i < requestMemberInfo.getMemberPortfolioUrls().size(); i++) {
             if(i>=requestMemberInfo.getMemberPortfolioUrls().size()) break;
-            url.setWebUrl(requestMemberInfo.getMemberPortfolioUrls().get(i).getWebUrl());
-            i++;
+            if(requestMemberInfo.getMemberPortfolioUrls().get(i).getWebUrl() != null){
+                member.getMemberInfo().getMemberPortfolioUrls().get(i)
+                        .setWebUrl(
+                                requestMemberInfo.
+                                        getMemberPortfolioUrls().
+                                        get(i).
+                                        getWebUrl());
+            }
         }
-        //memberInfo.setMemberPortfolioUrls(requestMemberInfo.getMemberPortfolioUrls());
+
 
     }
     @Transactional

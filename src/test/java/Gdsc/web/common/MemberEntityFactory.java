@@ -30,6 +30,7 @@ public class MemberEntityFactory {
         );
         member.setPassword("password");
         memberInfo.setMember(member);
+        memberInfo.setPhoneNumber("010-1234-5678");
         List<MemberPortfolioUrl> memberPortfolioUrls = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             memberPortfolioUrls.add(new MemberPortfolioUrl(memberInfo));

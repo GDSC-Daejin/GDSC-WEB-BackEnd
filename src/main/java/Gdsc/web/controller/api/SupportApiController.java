@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class SupportApiController {
     private final SupportService supportService;
-    @GetMapping("/api/admin/v1/support/limit")
+    @GetMapping("/api/support/limit")
     public ResponseDto<SupportDto> list() {
         return new ResponseDto<>(HttpStatus.OK, supportService.지원제한(), "지원제한 정보");
     }

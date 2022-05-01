@@ -17,7 +17,7 @@ import java.util.Optional;
 public interface JpaPostRepository extends JpaRepository<Post,Integer> {
 
     Optional<Post> findByPostId(Long postId);
-    <T> Optional<T> findByPostIdAndBlockedIsFalse(Long postId, Class<T> type);
+    <T> Optional<T> findByPostIdAndBlockedIsFalseAndTmpStoreIsFalse(Long postId, Class<T> type);
     Optional<Post> findByPostIdAndMemberInfo(Long postId , MemberInfo memberInfo);
     <T> Page <T> findByMemberInfo(Class<T> tClass,MemberInfo memberInfo, Pageable pageable);
     <T> Page<T> findByMemberInfoAndCategoryAndTmpStoreIsFalseAndBlockedIsFalse(Class<T> tClass,MemberInfo memberInfo, Optional<Category> category, Pageable pageable);
@@ -27,7 +27,8 @@ public interface JpaPostRepository extends JpaRepository<Post,Integer> {
     <T> Page<T> findByPostHashTagsIsContainingOrContentIsContainingAndTmpStoreIsFalseAndBlockedIsFalse(Class<T> tClass, String postHashTags,String content,Pageable pageable);
     <T> Page<T> findAllByTmpStoreIsFalseAndBlockedIsTrue(Class<T> tClass, Pageable pageable);
     <T> Page<T> findAllByTitleContainingAndTmpStoreIsFalseAndBlockedIsFalse(Class<T> tClass,String title,Pageable pageable);
-
+     <T> Page<T> findAllByTmpStoreIsTrueAndMemberInfo(Class<T> tClass,MemberInfo memberInfo, Pageable pageable);
+    <T> T findByMemberInfoAndTmpStoreIsTrueAndPostId(Class<T> tClass,MemberInfo memberInfo,Long postId);
     void deleteByPostIdAndAndMemberInfo(Long postId , MemberInfo memberInfo);
     void deleteByPostId(Long postId);
 

@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -51,6 +52,7 @@ public class Post {
     @Column(columnDefinition = "boolean default false")
     @ApiModelProperty(example = "false")
     @NotNull
+    @ColumnDefault("false")
     private boolean tmpStore;
 
     @ApiModelProperty(example = "Backend")
