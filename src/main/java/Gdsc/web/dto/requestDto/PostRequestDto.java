@@ -23,7 +23,8 @@ public class PostRequestDto {
     private boolean blocked;
     @ApiModelProperty(example = "Backend")
     private Category category;
-
+    @ApiModelProperty(example = "false")
+    private boolean tmpStore;
     @ApiModelProperty(example = "HashtagContent")
     private String postHashTags;
     @ApiModelProperty(example = "폼타입으로 보낼때 이미지 주십쇼")
@@ -33,4 +34,7 @@ public class PostRequestDto {
     @ApiModelProperty(example = "base64인코딩해서보낼때 필요한 파일이름")
     private String fileName;
 
+    public boolean getTmpStore() {
+        return this.tmpStore;
+    }
 }
