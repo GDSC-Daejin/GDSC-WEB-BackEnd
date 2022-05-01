@@ -169,7 +169,7 @@ public class PostApiController {
     @GetMapping("/api/member/v1/myPost/temp/{postId}")
     public ApiResponse myPostTemp(@AuthenticationPrincipal User principal,
                                   @PathVariable Long postId){
-        return ApiResponse.success("data",  postService.findMyTmpPost(principal.getUsername(), postId););
+        return ApiResponse.success("data",  postService.findMyTmpPost(principal.getUsername(), postId));
     }
 
 }
