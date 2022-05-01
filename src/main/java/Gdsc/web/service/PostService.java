@@ -49,6 +49,7 @@ public class PostService {
         post.setContent(requestDto.getContent());
         post.setTitle(requestDto.getTitle());
         post.setMemberInfo(memberInfo);
+        post.setTmpStore(requestDto.getTmpStore());
         //json 형식 이미지나 , form-data 형식 이미지 둘중 하나만 들어왔을때!!
         if(requestDto.getThumbnail() != null ^ requestDto.getBase64Thumbnail() != null){
             post.setImagePath(upload(requestDto, "static"));
@@ -67,6 +68,7 @@ public class PostService {
         post.setPostHashTags(requestDto.getPostHashTags());
         post.setContent(requestDto.getContent());
         post.setTitle(requestDto.getTitle());
+        post.setTmpStore(requestDto.getTmpStore());
         //json 형식 이미지나 , form-data 형식 이미지 둘중 하나만 들어왔을때!!
         if(requestDto.getThumbnail() != null ^ requestDto.getBase64Thumbnail() != null){
             fileDelete(post.getImagePath());
@@ -90,7 +92,7 @@ public class PostService {
     @Transactional(readOnly = true)
     public PostResponseMapping findByPostIdAndBlockIsFalse(Long postId){
 
-        return jpaPostRepository.findByPostIdAndBlockedIsFalse(postId,PostResponseMapping.class)
+        return jpaPostRepository.findByPostIdAndBlockedIsFalseAndTmpStoreIsFalse(postId,PostResponseMapping.class)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
     }
 
@@ -210,6 +212,15 @@ public class PostService {
     public Page<?> findBockedPostAll(final Pageable pageable){
 
         return jpaPostRepository.findAllByTmpStoreIsFalseAndBlockedIsTrue(PostResponseMapping.class,pageable);
+    }
+    public Page<?> findAllMyTmpPost(String userId, final Pageable pageable){
+        MemberInfo memberInfo = findMemberInfo(userId);
+        return jpaPostRepository.findAllByTmpStoreIsTrueAndMemberInfo(PostResponseMapping.class,memberInfo, pageable);
+    }
+    public PostResponseMapping findMyTmpPost(String userId, Long postId){
+        MemberInfo memberInfo = findMemberInfo(userId);
+        return jpaPostRepository.findByMemberInfoAndTmpStoreIsTrueAndPostId(PostResponseMapping.class,memberInfo, postId);
+
     }
     @Transactional
     public void updateView(Long postId){
