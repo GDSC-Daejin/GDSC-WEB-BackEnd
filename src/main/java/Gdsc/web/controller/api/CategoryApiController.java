@@ -33,9 +33,7 @@ public class CategoryApiController {
     @ApiOperation(value = "카테고리 삭제" , notes = "카테고리 삭제, 포스트가 해당 카테고리를 사용하고 있지 않아야 합니다.")
     @DeleteMapping("api/admin/v1/category/delete")
     public ApiResponse deleteCategory(@RequestBody Category category) {
-
         categoryService.카테고리삭제(category);
-
        return ApiResponse.success("message", "Success");
     }
 
