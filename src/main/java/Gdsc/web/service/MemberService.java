@@ -76,17 +76,23 @@ public class MemberService {
         if(requestMemberInfo.getStudentID() != null) member.getMemberInfo().setStudentID(requestMemberInfo.getStudentID());
         if(requestMemberInfo.getPositionType() != null) member.getMemberInfo().setPositionType(requestMemberInfo.getPositionType());
         if(requestMemberInfo.getNickname() != null && !닉네임중복검사(requestMemberInfo.getNickname())) member.getMemberInfo().setNickname(requestMemberInfo.getNickname());
-        for(int i = 0; i < requestMemberInfo.getMemberPortfolioUrls().size(); i++) {
-            if(i>=requestMemberInfo.getMemberPortfolioUrls().size()) break;
-            if(requestMemberInfo.getMemberPortfolioUrls().get(i).getWebUrl() != null){
-                member.getMemberInfo().getMemberPortfolioUrls().get(i)
-                        .setWebUrl(
-                                requestMemberInfo.
-                                        getMemberPortfolioUrls().
-                                        get(i).
-                                        getWebUrl());
+
+        if(requestMemberInfo.getMemberPortfolioUrls() != null) {
+            List<MemberPortfolioUrl> memberPortfolioUrls = member.getMemberInfo().getMemberPortfolioUrls();
+            if(requestMemberInfo.getMemberPortfolioUrls().size() > memberPortfolioUrls.size()) {
+                for(int i = memberPortfolioUrls.size(); i < requestMemberInfo.getMemberPortfolioUrls().size(); i++) {
+                    memberPortfolioUrls.add(new MemberPortfolioUrl(member.getMemberInfo()));
+                }
+            }else {
+                for (int i = 0; i < memberPortfolioUrls.size(); i++) {
+                    if(requestMemberInfo.getMemberPortfolioUrls().get(i).getWebUrl() != null) {
+                        memberPortfolioUrls.get(i).setWebUrl(requestMemberInfo.getMemberPortfolioUrls().get(i).getWebUrl());
+                    }
+                }
             }
+
         }
+
 
 
     }
