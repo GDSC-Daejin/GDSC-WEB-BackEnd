@@ -83,7 +83,11 @@ public class MemberService {
                 for(int i = memberPortfolioUrls.size(); i < requestMemberInfo.getMemberPortfolioUrls().size(); i++) {
                     memberPortfolioUrls.add(new MemberPortfolioUrl(member.getMemberInfo()));
                 }
-            }else {
+            } else if (requestMemberInfo.getMemberPortfolioUrls().size() < memberPortfolioUrls.size()) {
+                for(int i = memberPortfolioUrls.size() - 1; i >= requestMemberInfo.getMemberPortfolioUrls().size(); i--) {
+                    memberPortfolioUrls.remove(i);
+                }
+            } else {
                 for (int i = 0; i < memberPortfolioUrls.size(); i++) {
                     if(requestMemberInfo.getMemberPortfolioUrls().get(i).getWebUrl() != null) {
                         memberPortfolioUrls.get(i).setWebUrl(requestMemberInfo.getMemberPortfolioUrls().get(i).getWebUrl());
