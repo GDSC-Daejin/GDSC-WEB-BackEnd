@@ -84,10 +84,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 memberInfo
         );
         memberInfo.setMember(user);
+
         List<MemberPortfolioUrl> memberPortfolioUrls = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             memberPortfolioUrls.add(new MemberPortfolioUrl(memberInfo));
         }
+        memberInfo.setMemberPortfolioUrls(memberPortfolioUrls);
         // 멤버 info 도 같이 만들기
         return jpaMemberRepository.saveAndFlush(user);
     }
