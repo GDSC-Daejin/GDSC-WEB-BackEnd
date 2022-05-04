@@ -26,7 +26,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "id")
-@EqualsAndHashCode(of = "userId")
+@EqualsAndHashCode(of = "id")
 public class Member {
 
 
