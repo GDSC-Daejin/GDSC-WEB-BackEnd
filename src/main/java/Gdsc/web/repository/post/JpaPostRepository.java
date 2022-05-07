@@ -3,15 +3,10 @@ package Gdsc.web.repository.post;
 import Gdsc.web.entity.Category;
 import Gdsc.web.entity.MemberInfo;
 import Gdsc.web.entity.Post;
-import Gdsc.web.repository.scrap.T;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface JpaPostRepository extends JpaRepository<Post,Integer> {
