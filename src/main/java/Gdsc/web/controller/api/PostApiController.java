@@ -136,7 +136,7 @@ public class PostApiController {
         return ApiResponse.success("data", post);
     }
     @ApiOperation(value = "제목 검색", notes = "해시태그 별 모든 게시글을 조회합니다.")
-    @GetMapping("/api/v1/post/search/{title}")
+    @GetMapping("/api/v1/post/search/title/{title}")
     public ApiResponse findPostAllWithTitle(@PathVariable String title, @PageableDefault
             (size = 16, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable){
         Page<?> post = postService.findPostAllByTitle(title, pageable);
