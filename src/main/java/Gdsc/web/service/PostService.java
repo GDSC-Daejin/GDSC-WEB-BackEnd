@@ -135,6 +135,8 @@ public class PostService {
         } else{
             convertFile = new File(UUID.randomUUID()+postRequestDto.getFileName());
         }
+        // grant write permission on linux
+        Runtime.getRuntime().exec("chmod 777 " + convertFile.getAbsolutePath());
         if (convertFile.createNewFile()) { // 바로 위에서 지정한 경로에 File이 생성됨 (경로가 잘못되었다면 생성 불가능)
             if(postRequestDto.getThumbnail() != null){ // form-data 형식으로 왔을 때
                 try (FileOutputStream fos = new FileOutputStream(convertFile)) { // FileOutputStream 데이터를 파일에 바이트 스트림으로 저장하기 위함
