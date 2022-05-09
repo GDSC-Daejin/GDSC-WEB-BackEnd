@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -52,7 +53,9 @@ public class PostService {
         post.setTmpStore(requestDto.getTmpStore());
         //json 형식 이미지나 , form-data 형식 이미지 둘중 하나만 들어왔을때!!
         if(requestDto.getThumbnail() != null ^ requestDto.getBase64Thumbnail() != null){
-            post.setImagePath(upload(requestDto, "static"));
+            if(!Objects.equals(requestDto.getBase64Thumbnail(), "")){
+                post.setImagePath(upload(requestDto, "static"));
+            }
         }
 
         jpaPostRepository.save(post);
@@ -71,8 +74,11 @@ public class PostService {
         post.setTmpStore(requestDto.getTmpStore());
         //json 형식 이미지나 , form-data 형식 이미지 둘중 하나만 들어왔을때!!
         if(requestDto.getThumbnail() != null ^ requestDto.getBase64Thumbnail() != null){
-            fileDelete(post.getImagePath());
-            post.setImagePath(upload(requestDto, "static"));
+            if(!Objects.equals(requestDto.getBase64Thumbnail(), "")){
+                fileDelete(post.getImagePath());
+                post.setImagePath(upload(requestDto, "static"));
+            }
+
         }
 
 
@@ -128,12 +134,12 @@ public class PostService {
 
 
     private Optional<File> convert(PostRequestDto postRequestDto) throws IOException {
-
+        String serverPath = "tmp/";
         File convertFile;
         if(postRequestDto.getThumbnail() != null){
-            convertFile = new File(UUID.randomUUID()+postRequestDto.getThumbnail().getOriginalFilename());
+            convertFile = new File(serverPath + UUID.randomUUID()+postRequestDto.getThumbnail().getOriginalFilename());
         } else{
-            convertFile = new File(UUID.randomUUID()+postRequestDto.getFileName());
+            convertFile = new File(serverPath + UUID.randomUUID()+postRequestDto.getFileName());
         }
         // grant write permission on linux
         Runtime.getRuntime().exec("chmod 777 " + convertFile.getAbsolutePath());
