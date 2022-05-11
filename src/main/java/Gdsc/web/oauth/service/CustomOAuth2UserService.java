@@ -2,7 +2,6 @@ package Gdsc.web.oauth.service;
 
 import Gdsc.web.entity.Member;
 import Gdsc.web.entity.MemberInfo;
-import Gdsc.web.entity.MemberPortfolioUrl;
 import Gdsc.web.model.RoleType;
 import Gdsc.web.oauth.entity.ProviderType;
 import Gdsc.web.oauth.entity.UserPrincipal;
@@ -85,11 +84,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         );
         memberInfo.setMember(user);
 
-        List<MemberPortfolioUrl> memberPortfolioUrls = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            memberPortfolioUrls.add(new MemberPortfolioUrl(memberInfo));
-        }
-        memberInfo.setMemberPortfolioUrls(memberPortfolioUrls);
         // 멤버 info 도 같이 만들기
         return jpaMemberRepository.saveAndFlush(user);
     }
