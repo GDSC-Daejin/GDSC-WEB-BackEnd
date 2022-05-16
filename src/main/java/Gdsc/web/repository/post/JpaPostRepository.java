@@ -27,5 +27,6 @@ public interface JpaPostRepository extends JpaRepository<Post,Integer> {
     <T> T findByMemberInfoAndTmpStoreIsTrueAndPostId(Class<T> tClass,MemberInfo memberInfo,Long postId);
     void deleteByPostIdAndAndMemberInfo(Long postId , MemberInfo memberInfo);
     void deleteByPostId(Long postId);
-    <T> Page<T> findAllByTmpStoreIsTrueAndMemberInfoAndCategory(Class<PostResponseMapping> postResponseMappingClass, MemberInfo memberInfo, Optional<Category> category);
+    <T> Page<T> findAllByTmpStoreIsTrueAndMemberInfoAndCategory(Class<T> tClass, MemberInfo memberInfo, Optional<Category> category , Pageable pageable);
+
 }
