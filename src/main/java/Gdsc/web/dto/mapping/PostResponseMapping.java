@@ -14,6 +14,7 @@ public interface PostResponseMapping {
     String imagePath();
     String getContent();
     String getTitle();
+    String getImagePath();
     boolean isTmpStore();
     Category getCategory();
     String getPostHashTags();

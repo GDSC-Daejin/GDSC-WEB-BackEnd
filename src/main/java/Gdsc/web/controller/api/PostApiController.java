@@ -165,6 +165,13 @@ public class PostApiController {
         Page<?> post = postService.findAllMyTmpPost(principal.getUsername(), pageable);
         return ApiResponse.success("data", post);
     }
+    @ApiOperation(value = "내 임시 저장글 카테고리별 불러오기", notes = "임시 저장글을 카테고리 별로 불러옵니다.")
+    @GetMapping("/api/member/v1/myPost/temp/{categoryName}")
+    public ApiResponse myPostTempWithCategory(@AuthenticationPrincipal User principal,
+                                              @PathVariable String categoryName){
+        Page<?> post = postService.findAllMyTmpPostWithCategory(principal.getUsername(), categoryName);
+        return ApiResponse.success("data", post);
+    }
     @ApiOperation(value = "내 임시 저장글 상세보기", notes = "임시 저장글을 불러옵니다.")
     @GetMapping("/api/member/v1/myPost/temp/{postId}")
     public ApiResponse myPostTemp(@AuthenticationPrincipal User principal,

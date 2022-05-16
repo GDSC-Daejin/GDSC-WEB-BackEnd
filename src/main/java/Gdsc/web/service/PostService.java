@@ -235,4 +235,11 @@ public class PostService {
         Optional<Post> post = jpaPostRepository.findByPostId(postId);
         post.get().setView(post.get().getView()+1);
     }
+
+    public Page<?> findAllMyTmpPostWithCategory(String username, String categoryName) {
+        MemberInfo memberInfo = findMemberInfo(username);
+        Optional<Category> category = Optional.of(jpaCategoryRepository.findByCategoryName(categoryName).orElseThrow(
+                ()-> new IllegalArgumentException("찾을 수 없는 카테고리 입니다.")));
+        return jpaPostRepository.findAllByTmpStoreIsTrueAndMemberInfoAndCategory(PostResponseMapping.class,memberInfo, category);
+    }
 }
