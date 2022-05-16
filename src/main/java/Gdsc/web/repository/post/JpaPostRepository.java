@@ -1,5 +1,6 @@
 package Gdsc.web.repository.post;
 
+import Gdsc.web.dto.mapping.PostResponseMapping;
 import Gdsc.web.entity.Category;
 import Gdsc.web.entity.MemberInfo;
 import Gdsc.web.entity.Post;
@@ -26,8 +27,5 @@ public interface JpaPostRepository extends JpaRepository<Post,Integer> {
     <T> T findByMemberInfoAndTmpStoreIsTrueAndPostId(Class<T> tClass,MemberInfo memberInfo,Long postId);
     void deleteByPostIdAndAndMemberInfo(Long postId , MemberInfo memberInfo);
     void deleteByPostId(Long postId);
-
-
-
-
+    <T> Page<T> findAllByTmpStoreIsTrueAndMemberInfoAndCategory(Class<PostResponseMapping> postResponseMappingClass, MemberInfo memberInfo, Optional<Category> category);
 }
