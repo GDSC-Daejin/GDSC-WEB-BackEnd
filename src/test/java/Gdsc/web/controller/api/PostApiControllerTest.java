@@ -124,7 +124,8 @@ class PostApiControllerTest {
                 .build();
         member = MemberEntityFactory.adminMemberEntity();
         memberRepository.saveAndFlush(member);
-
+        // 영속화가 안되서 나오는 문제 , save  후에 영속화를 해줘야함
+        member = memberRepository.findByEmail(member.getEmail());
 
     }
 
@@ -142,6 +143,7 @@ class PostApiControllerTest {
     void saveJsonPost() throws Exception {
         //given
         Category category = CategoryEntityFactory.categoryBackendEntity();
+
         Post post = PostEntityFactory.falseBlockFalseTmpStorePostEntity(member , category);
         categoryRepository.save(category);
 
