@@ -72,9 +72,13 @@ public class MemberInfo {
 
     @OneToMany(mappedBy = "memberInfo" , cascade = CascadeType.REMOVE)
     private List<Post> myPost;
-*/
-    @OneToMany(mappedBy = "memberInfo" , cascade = CascadeType.ALL)
-    private List<MemberPortfolioUrl> memberPortfolioUrls;
+*/  @Column(name = "GIT_URL")
+    private String gitHubUrl;
+    @Column(name = "BLOG_URL")
+    private String blogUrl;
+    @Column(name = "ETC_URL")
+    private String etcUrl;
+
 
     @ApiModelProperty(example = "1998-07-09 00:00:00.000000")
     private LocalDateTime birthday;

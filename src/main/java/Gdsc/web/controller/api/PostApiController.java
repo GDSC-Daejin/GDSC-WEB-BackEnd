@@ -136,7 +136,7 @@ public class PostApiController {
         return ApiResponse.success("data", post);
     }
     @ApiOperation(value = "제목 검색", notes = "해시태그 별 모든 게시글을 조회합니다.")
-    @GetMapping("/api/v1/post/search/{title}")
+    @GetMapping("/api/v1/post/search/title/{title}")
     public ApiResponse findPostAllWithTitle(@PathVariable String title, @PageableDefault
             (size = 16, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable){
         Page<?> post = postService.findPostAllByTitle(title, pageable);
@@ -165,8 +165,16 @@ public class PostApiController {
         Page<?> post = postService.findAllMyTmpPost(principal.getUsername(), pageable);
         return ApiResponse.success("data", post);
     }
+    @ApiOperation(value = "내 임시 저장글 카테고리별 불러오기", notes = "임시 저장글을 카테고리 별로 불러옵니다.")
+    @GetMapping("/api/member/v1/myPost/temp/{categoryName}")
+    public ApiResponse myPostTempWithCategory(@AuthenticationPrincipal User principal,
+                                              @PathVariable String categoryName,
+                                              @PageableDefault(size = 16 ,sort = "postId",direction = Sort.Direction.DESC)Pageable pageable){
+        Page<?> post = postService.findAllMyTmpPostWithCategory(principal.getUsername(), categoryName,pageable);
+        return ApiResponse.success("data", post);
+    }
     @ApiOperation(value = "내 임시 저장글 상세보기", notes = "임시 저장글을 불러옵니다.")
-    @GetMapping("/api/member/v1/myPost/temp/{postId}")
+    @GetMapping("/api/member/v1/myPost/temp/post/{postId}")
     public ApiResponse myPostTemp(@AuthenticationPrincipal User principal,
                                   @PathVariable Long postId){
         return ApiResponse.success("data",  postService.findMyTmpPost(principal.getUsername(), postId));

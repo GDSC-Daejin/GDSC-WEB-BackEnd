@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -52,7 +53,9 @@ public class PostService {
         post.setTmpStore(requestDto.getTmpStore());
         //json 형식 이미지나 , form-data 형식 이미지 둘중 하나만 들어왔을때!!
         if(requestDto.getThumbnail() != null ^ requestDto.getBase64Thumbnail() != null){
-            post.setImagePath(upload(requestDto, "static"));
+            if(!Objects.equals(requestDto.getBase64Thumbnail(), "")){
+                post.setImagePath(upload(requestDto, "static"));
+            }
         }
 
         jpaPostRepository.save(post);
@@ -71,8 +74,11 @@ public class PostService {
         post.setTmpStore(requestDto.getTmpStore());
         //json 형식 이미지나 , form-data 형식 이미지 둘중 하나만 들어왔을때!!
         if(requestDto.getThumbnail() != null ^ requestDto.getBase64Thumbnail() != null){
-            fileDelete(post.getImagePath());
-            post.setImagePath(upload(requestDto, "static"));
+            if(!Objects.equals(requestDto.getBase64Thumbnail(), "")){
+                fileDelete(post.getImagePath());
+                post.setImagePath(upload(requestDto, "static"));
+            }
+
         }
 
 
@@ -128,13 +134,15 @@ public class PostService {
 
 
     private Optional<File> convert(PostRequestDto postRequestDto) throws IOException {
-
+        String serverPath = "tmp/";
         File convertFile;
         if(postRequestDto.getThumbnail() != null){
-            convertFile = new File(UUID.randomUUID()+postRequestDto.getThumbnail().getOriginalFilename());
+            convertFile = new File(serverPath + UUID.randomUUID()+postRequestDto.getThumbnail().getOriginalFilename());
         } else{
-            convertFile = new File(UUID.randomUUID()+postRequestDto.getFileName());
+            convertFile = new File(serverPath + UUID.randomUUID()+postRequestDto.getFileName());
         }
+        // grant write permission on linux
+        Runtime.getRuntime().exec("chmod 777 " + convertFile.getAbsolutePath());
         if (convertFile.createNewFile()) { // 바로 위에서 지정한 경로에 File이 생성됨 (경로가 잘못되었다면 생성 불가능)
             if(postRequestDto.getThumbnail() != null){ // form-data 형식으로 왔을 때
                 try (FileOutputStream fos = new FileOutputStream(convertFile)) { // FileOutputStream 데이터를 파일에 바이트 스트림으로 저장하기 위함
@@ -226,5 +234,12 @@ public class PostService {
     public void updateView(Long postId){
         Optional<Post> post = jpaPostRepository.findByPostId(postId);
         post.get().setView(post.get().getView()+1);
+    }
+
+    public Page<?> findAllMyTmpPostWithCategory(String username, String categoryName,Pageable pageable){
+        MemberInfo memberInfo = findMemberInfo(username);
+        Optional<Category> category = Optional.of(jpaCategoryRepository.findByCategoryName(categoryName).orElseThrow(
+                ()-> new IllegalArgumentException("찾을 수 없는 카테고리 입니다.")));
+        return jpaPostRepository.findAllByTmpStoreIsTrueAndMemberInfoAndCategory(PostResponseMapping.class,memberInfo, category, pageable);
     }
 }

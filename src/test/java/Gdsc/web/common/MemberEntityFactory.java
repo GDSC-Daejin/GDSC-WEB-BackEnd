@@ -2,7 +2,6 @@ package Gdsc.web.common;
 
 import Gdsc.web.entity.Member;
 import Gdsc.web.entity.MemberInfo;
-import Gdsc.web.entity.MemberPortfolioUrl;
 import Gdsc.web.model.RoleType;
 import Gdsc.web.oauth.entity.ProviderType;
 import lombok.Data;
@@ -31,10 +30,7 @@ public class MemberEntityFactory {
         member.setPassword("password");
         memberInfo.setMember(member);
         memberInfo.setPhoneNumber("010-1234-5678");
-        List<MemberPortfolioUrl> memberPortfolioUrls = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            memberPortfolioUrls.add(new MemberPortfolioUrl(memberInfo));
-        }
+
 
         return member;
     }
@@ -55,10 +51,7 @@ public class MemberEntityFactory {
         );
         member.setPassword("password");
         memberInfo.setMember(member);
-        List<MemberPortfolioUrl> memberPortfolioUrls = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            memberPortfolioUrls.add(new MemberPortfolioUrl(memberInfo));
-        }
+
 
         return member;
     }
@@ -80,10 +73,7 @@ public class MemberEntityFactory {
         );
         member.setPassword("password");
         memberInfo.setMember(member);
-        List<MemberPortfolioUrl> memberPortfolioUrls = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            memberPortfolioUrls.add(new MemberPortfolioUrl(memberInfo));
-        }
+
 
         return member;
     }

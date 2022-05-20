@@ -20,6 +20,7 @@ public class PostEntityFactory {
         post.setCategory(category);
         //post.setUploadDate(LocalDateTime.now());
         post.setBlocked(false);
+        post.setView(0);
         return post;
     }
     public static Post falseBlockTrueTmpStorePostEntity(Member member , Category category) {
@@ -32,7 +33,7 @@ public class PostEntityFactory {
         post.setCategory(category);
         post.setUploadDate(LocalDateTime.now());
         post.setBlocked(false);
-
+        post.setView(0);
         return post;
     }
 
@@ -46,6 +47,7 @@ public class PostEntityFactory {
         post.setCategory(category);
         post.setUploadDate(LocalDateTime.now());
         post.setBlocked(true);
+        post.setView(0);
         return post;
     }
 }
