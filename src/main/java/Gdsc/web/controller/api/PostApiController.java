@@ -144,7 +144,7 @@ public class PostApiController {
         return ApiResponse.success("data", post);
     }*/
     @GetMapping("/api/v1/post/search/title/{title}")
-    public ApiResponse findPostAllWithTitle(@PathVariable String title) throws InterruptedException {
+    public ApiResponse findPostAllWithTitle(@PathVariable String title)  {
 
         List<?> post = postService.findFullTextSearch(title,10,10);
         return ApiResponse.success("data", post);

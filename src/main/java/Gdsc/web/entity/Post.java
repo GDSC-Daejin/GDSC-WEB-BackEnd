@@ -23,7 +23,7 @@ import java.util.List;
 @Data
 @Builder
 @Entity
-@Indexed
+@Indexed(index = "FullText_Post_idx")
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)

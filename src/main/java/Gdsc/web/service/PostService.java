@@ -246,7 +246,7 @@ public class PostService {
     }
     // fulltext Search 검색
     @Transactional
-    public List<?> findFullTextSearch(String terms, int limit, int offset) throws InterruptedException {
+    public List<?> findFullTextSearch(String terms, int limit, int offset) {
         return postRepository.fullTextSearch(terms,limit,offset);
     }
 }

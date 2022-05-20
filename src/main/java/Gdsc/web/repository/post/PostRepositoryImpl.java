@@ -20,11 +20,11 @@ import java.util.List;
 
 @Repository
 public class PostRepositoryImpl implements CustomizePostRepository{
-    @PersistenceContext(type = PersistenceContextType.EXTENDED)
+    @PersistenceContext
     private EntityManager em;
 
 
-    //@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     @Override
     public  List<Post> fullTextSearch(String terms, int limit, int offset)  {
         System.out.println("test!!$@!$@!@");
@@ -34,18 +34,18 @@ public class PostRepositoryImpl implements CustomizePostRepository{
                 .buildQueryBuilder().forEntity(Post.class).get();
         org.apache.lucene.search.Query luceneQuery = queryBuilder
                 .keyword()
-                .wildcard()
                 .onFields("title","content","postHashTags")
-                .matching("*"+terms+"*")
+                .matching(terms)
                 .createQuery();
         System.out.println(luceneQuery.toString());
         // wrap Lucene query in a javax.persistence.Query
-        FullTextQuery fullTextQuery =
+        FullTextQuery fullTextQuery  =
                 fullTextEntityManager.createFullTextQuery(luceneQuery, Post.class);
-
+        fullTextQuery.setMaxResults(limit);
+        fullTextQuery.setFirstResult(offset);
 
         // execute search
-        return (List<Post>)fullTextQuery.getResultList();
+        return fullTextQuery.getResultList();
 
     }
 }
