@@ -11,6 +11,7 @@ import Gdsc.web.repository.scrap.JpaScrapRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.junit.After;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -54,7 +55,7 @@ class ScrapApiControllerTest {
     @Autowired
     private JpaCategoryRepository categoryRepository;
 
-    private Member memberMember;
+    private Member member;
 
     @BeforeEach
     void setUp() {
@@ -64,12 +65,17 @@ class ScrapApiControllerTest {
         mvc = MockMvcBuilders.webAppContextSetup(context).addFilters(new CharacterEncodingFilter("UTF-8", true))  // 필터 추가
                 .alwaysDo(print())
                 .build();
-        memberMember = MemberEntityFactory.memberEntity();
+        member = MemberEntityFactory.adminMemberEntity();
+        memberRepository.saveAndFlush(member);
+        // 영속화가 안되서 나오는 문제 , save  후에 영속화를 해줘야함
+        member = memberRepository.findByEmail(member.getEmail());
+    }
 
-        MemberInfo memberInfoMember = memberMember.getMemberInfo();
-        memberInfoMember.setPhoneNumber("010-1234-5678");
-        memberMember.setMemberInfo(memberInfoMember);
-        memberRepository.saveAndFlush(memberMember);
+    @After
+    public void tearDown() throws Exception {
+        postRepository.deleteAll();
+        memberRepository.deleteAll();
+        categoryRepository.deleteAll();
     }
 
     @Test
@@ -78,13 +84,13 @@ class ScrapApiControllerTest {
         // given
         Category category = CategoryEntityFactory.categoryBackendEntity();
         categoryRepository.save(category);
-        Post post = PostEntityFactory.falseBlockFalseTmpStorePostEntity(memberMember , category);
+        Post post = PostEntityFactory.falseBlockFalseTmpStorePostEntity(member , category);
         postRepository.save(post);
         Long postId = post.getPostId();
-        MemberScrapPost memberScrapPost = scrapRepository.findByMemberInfo_Member_UserIdAndPost_PostId(memberMember.getUserId(), postId);
+        MemberScrapPost memberScrapPost = scrapRepository.findByMemberInfo_Member_UserIdAndPost_PostId(member.getUserId(), postId);
         if(memberScrapPost == null){
             MemberScrapPost newMemberScrapPost = new MemberScrapPost();
-            newMemberScrapPost.setMemberInfo(memberMember.getMemberInfo());
+            newMemberScrapPost.setMemberInfo(member.getMemberInfo());
             newMemberScrapPost.setPost(post);
             scrapRepository.save(newMemberScrapPost);
         } else{
