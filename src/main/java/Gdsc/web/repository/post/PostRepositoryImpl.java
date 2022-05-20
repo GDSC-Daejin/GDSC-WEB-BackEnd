@@ -1,6 +1,7 @@
 package Gdsc.web.repository.post;
 
 import Gdsc.web.entity.Post;
+import lombok.val;
 import org.hibernate.Session;
 import org.hibernate.search.exception.SearchException;
 import org.hibernate.search.jpa.FullTextEntityManager;
@@ -9,6 +10,7 @@ import org.hibernate.search.jpa.Search;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -24,6 +26,11 @@ public class PostRepositoryImpl implements CustomizePostRepository{
     private EntityManager em;
 
 
+
+    public void initiateIndexing() throws InterruptedException {
+        FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(em);
+        fullTextEntityManager.createIndexer().startAndWait();
+    }
     @SuppressWarnings("unchecked")
     @Override
     public  List<Post> fullTextSearch(String terms, int limit, int offset)  {
@@ -45,7 +52,7 @@ public class PostRepositoryImpl implements CustomizePostRepository{
         fullTextQuery.setFirstResult(offset);
 
         // execute search
-        return fullTextQuery.getResultList();
+        return (List<Post>)fullTextQuery.getResultList();
 
     }
 }

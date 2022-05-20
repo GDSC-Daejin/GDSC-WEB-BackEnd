@@ -8,4 +8,6 @@ import java.util.List;
 @Repository
 public interface CustomizePostRepository {
     List<Post> fullTextSearch(String terms, int limit, int offset);
+
+    void initiateIndexing() throws InterruptedException;
 }
