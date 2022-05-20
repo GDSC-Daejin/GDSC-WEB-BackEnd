@@ -18,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -135,11 +136,17 @@ public class PostApiController {
         Page<?> post = postService.findPostAllWithPostHashTag(word, pageable);
         return ApiResponse.success("data", post);
     }
-    @ApiOperation(value = "제목 검색", notes = "해시태그 별 모든 게시글을 조회합니다.")
+    /*@ApiOperation(value = "제목 검색", notes = "해시태그 별 모든 게시글을 조회합니다.")
     @GetMapping("/api/v1/post/search/title/{title}")
     public ApiResponse findPostAllWithTitle(@PathVariable String title, @PageableDefault
             (size = 16, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable){
         Page<?> post = postService.findPostAllByTitle(title, pageable);
+        return ApiResponse.success("data", post);
+    }*/
+    @GetMapping("/api/v1/post/search/title/{title}")
+    public ApiResponse findPostAllWithTitle(@PathVariable String title) throws InterruptedException {
+
+        List<?> post = postService.findFullTextSearch(title,10,10);
         return ApiResponse.success("data", post);
     }
     @ApiOperation(value ="내가 작성한 게시글 불러오기", notes = "내가 작성한 게시글을 조회")
@@ -179,5 +186,7 @@ public class PostApiController {
                                   @PathVariable Long postId){
         return ApiResponse.success("data",  postService.findMyTmpPost(principal.getUsername(), postId));
     }
+
+    
 
 }

@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -17,13 +19,15 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
 @Data
 @Builder
 @Entity
+@Indexed
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "postId")
 public class Post {
     @Id
     @Column(name = "POST_ID")
@@ -35,9 +39,11 @@ public class Post {
     String imagePath; // 썸네일
     @Column
     @ApiModelProperty(example = "제목")
+    @Field
     String title; // 제목
     @Lob
     @ApiModelProperty(example = "내용")
+    @Field
     String content; // 내용
     @Column(columnDefinition = "integer default 0", nullable = false)
     private int view; //조회수
@@ -66,6 +72,7 @@ public class Post {
     // ex PostHashTag postHashtag = new postHashtags();
     // postHashtag.setPost(post) 처럼
     @Column(name = "POST_HASH_TAGS")
+    @Field
     private String postHashTags;
 
 
