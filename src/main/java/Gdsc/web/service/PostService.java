@@ -5,32 +5,34 @@ import Gdsc.web.dto.requestDto.PostRequestDto;
 import Gdsc.web.entity.*;
 import Gdsc.web.repository.category.JpaCategoryRepository;
 import Gdsc.web.repository.member.JpaMemberRepository;
-import Gdsc.web.repository.post.JpaPostRepository;
+import Gdsc.web.repository.post.PostRepository;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.search.jpa.FullTextEntityManager;
+import org.hibernate.search.jpa.Search;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Base64;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+
 public class PostService {
-    private final JpaPostRepository jpaPostRepository;
+    private final PostRepository postRepository;
     private final JpaMemberRepository jpaMemberRepository;
     private final JpaCategoryRepository jpaCategoryRepository;
     private final AmazonS3Client amazonS3Client;
@@ -58,13 +60,13 @@ public class PostService {
             }
         }
 
-        jpaPostRepository.save(post);
+        postRepository.save(post);
     }
     //수정
     @Transactional
     public void update(PostRequestDto requestDto, Long postId , String userId) throws IOException {
         MemberInfo memberInfo = findMemberInfo(userId);
-        Post post = jpaPostRepository.findByPostIdAndMemberInfo(postId, memberInfo) //ㅣinteger가 아니라 long 타입이라 오류? jpa Long을 integer로 바꿔야 할까?
+        Post post = postRepository.findByPostIdAndMemberInfo(postId, memberInfo) //ㅣinteger가 아니라 long 타입이라 오류? jpa Long을 integer로 바꿔야 할까?
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
         Category category = jpaCategoryRepository.findByCategoryName(requestDto.getCategory().getCategoryName()).get();
         post.setCategory(category);
@@ -86,11 +88,11 @@ public class PostService {
     @Transactional
     public void deletePost(Long postId, String userId){
         MemberInfo memberInfo = findMemberInfo(userId);
-        Optional<Post> post = jpaPostRepository.findByPostIdAndMemberInfo(postId, memberInfo);
+        Optional<Post> post = postRepository.findByPostIdAndMemberInfo(postId, memberInfo);
         if(post.get().getImagePath() != null){
             fileDelete(post.get().getImagePath());
         }
-        jpaPostRepository.delete(post.get());
+        postRepository.delete(post.get());
     }
 
 
@@ -98,7 +100,7 @@ public class PostService {
     @Transactional(readOnly = true)
     public PostResponseMapping findByPostIdAndBlockIsFalse(Long postId){
 
-        return jpaPostRepository.findByPostIdAndBlockedIsFalseAndTmpStoreIsFalse(postId,PostResponseMapping.class)
+        return postRepository.findByPostIdAndBlockedIsFalseAndTmpStoreIsFalse(postId,PostResponseMapping.class)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
     }
 
@@ -173,6 +175,7 @@ public class PostService {
         }
     }
 
+    @Transactional
     public MemberInfo findMemberInfo(String userId){
         Member member = jpaMemberRepository.findByUserId(userId);
         if(member == null) throw new IllegalArgumentException("없는 사용자 입니다.");
@@ -183,7 +186,7 @@ public class PostService {
     @Transactional(readOnly = true)
     public Page<?> findMyPost(String userId, final Pageable pageable){
         MemberInfo memberInfo = findMemberInfo(userId);
-        return jpaPostRepository.findByMemberInfoAndTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,memberInfo, pageable);
+        return postRepository.findByMemberInfoAndTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,memberInfo, pageable);
     }
     // 내 게시글 카테고리 별 조회
     @Transactional(readOnly = true)
@@ -191,55 +194,68 @@ public class PostService {
         MemberInfo memberInfo = findMemberInfo(userId);
         Optional<Category> category = Optional.of(jpaCategoryRepository.findByCategoryName(categoryName).orElseThrow(
                 ()-> new IllegalArgumentException("찾을 수 없는 카테고리 입니다.")));
-        return jpaPostRepository.findByMemberInfoAndCategoryAndTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,memberInfo, category, pageable);
+        return postRepository.findByMemberInfoAndCategoryAndTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,memberInfo, category, pageable);
     }
     // 모든 게시글 카테고리 별 조회
     @Transactional(readOnly = true)
     public Page<?> findPostAllWithCategory(String categoryName, final Pageable pageable){
         Optional<Category> category = Optional.of(jpaCategoryRepository.findByCategoryName(categoryName).orElseThrow(
                 () -> new IllegalArgumentException("찾을 수 없는 카테고리 입니다.")));
-        return jpaPostRepository.findByCategoryAndTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,category, pageable);
+        return postRepository.findByCategoryAndTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,category, pageable);
     }
     // 모든 게시글 해시태그 별 조회
     @Transactional(readOnly = true)
     public Page<?> findPostAllWithPostHashTag(String tagName, final Pageable pageable){
-        return jpaPostRepository.findByPostHashTagsIsContainingOrContentIsContainingAndTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,tagName ,tagName, pageable);
+        return postRepository.findByPostHashTagsIsContainingOrContentIsContainingAndTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,tagName ,tagName, pageable);
     }
 
     //post 글 목록 불러오기
     @Transactional(readOnly = true)
     public Page<?> findPostAll(final Pageable pageable){
 
-        return jpaPostRepository.findAllByTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,pageable);
+        return postRepository.findAllByTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,pageable);
     }
     @Transactional
     public Page<?> findPostAllByTitle(String title, final Pageable pageable){
-        return jpaPostRepository.findAllByTitleContainingAndTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,title, pageable);
+        return postRepository.findAllByTitleContainingAndTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,title, pageable);
     }
 
+    @Transactional
     public Page<?> findBockedPostAll(final Pageable pageable){
 
-        return jpaPostRepository.findAllByTmpStoreIsFalseAndBlockedIsTrue(PostResponseMapping.class,pageable);
+        return postRepository.findAllByTmpStoreIsFalseAndBlockedIsTrue(PostResponseMapping.class,pageable);
     }
+    @Transactional
     public Page<?> findAllMyTmpPost(String userId, final Pageable pageable){
         MemberInfo memberInfo = findMemberInfo(userId);
-        return jpaPostRepository.findAllByTmpStoreIsTrueAndMemberInfo(PostResponseMapping.class,memberInfo, pageable);
+        return postRepository.findAllByTmpStoreIsTrueAndMemberInfo(PostResponseMapping.class,memberInfo, pageable);
     }
+    @Transactional
     public PostResponseMapping findMyTmpPost(String userId, Long postId){
         MemberInfo memberInfo = findMemberInfo(userId);
-        return jpaPostRepository.findByMemberInfoAndTmpStoreIsTrueAndPostId(PostResponseMapping.class,memberInfo, postId);
+        return postRepository.findByMemberInfoAndTmpStoreIsTrueAndPostId(PostResponseMapping.class,memberInfo, postId);
 
     }
     @Transactional
     public void updateView(Long postId){
-        Optional<Post> post = jpaPostRepository.findByPostId(postId);
+        Optional<Post> post = postRepository.findByPostId(postId);
         post.get().setView(post.get().getView()+1);
     }
 
+    @Transactional
     public Page<?> findAllMyTmpPostWithCategory(String username, String categoryName,Pageable pageable){
         MemberInfo memberInfo = findMemberInfo(username);
         Optional<Category> category = Optional.of(jpaCategoryRepository.findByCategoryName(categoryName).orElseThrow(
                 ()-> new IllegalArgumentException("찾을 수 없는 카테고리 입니다.")));
-        return jpaPostRepository.findAllByTmpStoreIsTrueAndMemberInfoAndCategory(PostResponseMapping.class,memberInfo, category, pageable);
+        return postRepository.findAllByTmpStoreIsTrueAndMemberInfoAndCategory(PostResponseMapping.class,memberInfo, category, pageable);
+    }
+    // fulltext Search 검색
+    @Transactional
+    public List<Post> findFullTextSearch(String terms) {
+        return postRepository.fullTextSearch(terms);
+    }
+    @Transactional
+    public void initialIndexing() throws InterruptedException {
+        postRepository.initiateIndexing();
     }
 }

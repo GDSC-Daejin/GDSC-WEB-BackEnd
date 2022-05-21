@@ -36,12 +36,6 @@ public class MemberApiController {
         return new ResponseDto<>(HttpStatus.OK, memberService.멤버리스트(), "성공");
     }*/
 
-    @GetMapping("/user/me")
-    @ApiOperation(value = "삭제예정 멤버정보", notes = "삭제 예정 api/guest/v1/me 또는 /info api 를 이용하시길 ")
-    public Member getUser(@AuthenticationPrincipal User principal) {
-        Member member =memberService.getUserId(principal.getUsername());
-        return member;
-    }
 
 
     @ApiOperation(value = "Member 내용 보기" , notes = "Member 내용 값 보기")

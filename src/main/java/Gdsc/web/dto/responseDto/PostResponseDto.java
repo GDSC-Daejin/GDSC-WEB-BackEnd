@@ -1,30 +1,29 @@
-package Gdsc.web.dto.requestDto;
+package Gdsc.web.dto.responseDto;
 
 import Gdsc.web.dto.mapping.PostResponseMapping;
 import Gdsc.web.entity.Category;
 import Gdsc.web.entity.Likes;
+import Gdsc.web.entity.MemberInfo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 public class PostResponseDto {
-    @ApiModelProperty(example = "제목")
+    private Long postId;
     private String title;
-    @ApiModelProperty(example = "내용")
     private String content;
-    @ApiModelProperty(example = "false")
     private boolean tmpStore;
-    @ApiModelProperty(example = "false")
     private boolean blocked;
-    @ApiModelProperty(example = "Backend")
+    private String imagePath;
     private Category category;
-    @ApiModelProperty(example = "HashtagContent")
     private String postHashTags;
-
-    private List<Likes> likes;
+    private MemberInfo memberInfo;
     private LocalDateTime modifiedAt;
     private LocalDateTime uploadDate;
 }
