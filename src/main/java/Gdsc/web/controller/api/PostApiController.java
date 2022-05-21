@@ -19,6 +19,7 @@ import springfox.documentation.swagger2.mappers.ModelMapper;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -114,9 +115,12 @@ public class PostApiController {
         return ApiResponse.success("data", post);
     }
 
-    @ApiOperation(value = "제목 , 내용 , 해쉬태그로 검색 기능", notes = "Full text search 기능 아직 한국어 미지원")
+    @ApiOperation(value = "제목 , 내용 , 해쉬태그로 검색 기능",
+            notes = "Full text search 기능 아직 한국어 미지원\n" +
+                    "api/v1/post/search/{word}\n" +
+                    "= 검색어어어 근데 Null 또는 공백이면 오류 남! 기본 검색어 넣어주는게 좋을 것 같음")
     @GetMapping("/api/v1/post/search/{word}")
-    public ApiResponse findPostAllWithTitle(@PathVariable String word)  {
+    public ApiResponse findPostAllWithTitle(@PathVariable String word){
         List<Post> post = postService.findFullTextSearch(word);
         return ApiResponse.success("data", post);
     }
