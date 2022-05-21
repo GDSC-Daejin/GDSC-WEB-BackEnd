@@ -33,7 +33,7 @@ public class PostRepositoryImpl implements CustomizePostRepository{
     }
     @SuppressWarnings("unchecked")
     @Override
-    public  List<Post> fullTextSearch(String terms, int limit, int offset)  {
+    public  List<Post> fullTextSearch(String terms)  {
         System.out.println("test!!$@!$@!@");
         FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(em);
 
@@ -48,8 +48,8 @@ public class PostRepositoryImpl implements CustomizePostRepository{
         // wrap Lucene query in a javax.persistence.Query
         FullTextQuery fullTextQuery  =
                 fullTextEntityManager.createFullTextQuery(luceneQuery, Post.class);
-        fullTextQuery.setMaxResults(limit);
-        fullTextQuery.setFirstResult(offset);
+        //fullTextQuery.setMaxResults(limit);
+        //fullTextQuery.setFirstResult(offset);
 
         // execute search
         return (List<Post>)fullTextQuery.getResultList();

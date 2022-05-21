@@ -7,7 +7,7 @@ import java.util.List;
 
 @Repository
 public interface CustomizePostRepository {
-    List<Post> fullTextSearch(String terms, int limit, int offset);
+    List<Post> fullTextSearch(String terms);
 
     void initiateIndexing() throws InterruptedException;
 }

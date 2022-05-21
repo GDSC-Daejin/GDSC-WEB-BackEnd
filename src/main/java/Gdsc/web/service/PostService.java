@@ -17,6 +17,8 @@ import org.hibernate.search.jpa.Search;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +30,7 @@ import java.util.*;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+
 public class PostService {
     private final PostRepository postRepository;
     private final JpaMemberRepository jpaMemberRepository;
@@ -248,8 +251,8 @@ public class PostService {
     }
     // fulltext Search 검색
     @Transactional
-    public List<Post> findFullTextSearch(String terms, int limit, int offset) {
-        return postRepository.fullTextSearch(terms,limit,offset);
+    public List<Post> findFullTextSearch(String terms) {
+        return postRepository.fullTextSearch(terms);
     }
     @Transactional
     public void initialIndexing() throws InterruptedException {

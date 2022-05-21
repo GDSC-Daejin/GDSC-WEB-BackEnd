@@ -117,7 +117,7 @@ public class PostApiController {
     @ApiOperation(value = "제목 , 내용 , 해쉬태그로 검색 기능", notes = "Full text search 기능 아직 한국어 미지원")
     @GetMapping("/api/v1/post/search/{word}")
     public ApiResponse findPostAllWithTitle(@PathVariable String word)  {
-        List<Post> post = postService.findFullTextSearch(word,10,10);
+        List<Post> post = postService.findFullTextSearch(word);
         return ApiResponse.success("data", post);
     }
     @ApiOperation(value ="내가 작성한 게시글 불러오기", notes = "내가 작성한 게시글을 조회")
