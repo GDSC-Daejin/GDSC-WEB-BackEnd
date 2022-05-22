@@ -1,5 +1,6 @@
 package Gdsc.web.entity;
 
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.swagger.annotations.ApiModelProperty;
@@ -8,11 +9,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 import org.apache.lucene.analysis.ko.KoreanFilterFactory;
 import org.apache.lucene.analysis.ko.KoreanTokenizerFactory;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.search.annotations.*;
+import org.hibernate.search.annotations.Analyzer;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -29,7 +32,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "postId")
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "id")
 @AnalyzerDef(name = "koreanAnalyzer"
         , tokenizer = @TokenizerDef(factory = KoreanTokenizerFactory.class)
         , filters = { @TokenFilterDef(factory = KoreanFilterFactory.class)})
