@@ -14,5 +14,6 @@ src/test/resources/application.properties
 /out/production/resources/application.properties
 /out/production/resources/application-oauth.properties
 /out/production/resources/application-dev.properties
+/out
 ./FullText_Post_idx
 /FullText_Post_idx
