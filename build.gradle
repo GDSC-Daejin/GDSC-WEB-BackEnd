@@ -75,7 +75,7 @@ dependencies {
     implementation('org.hibernate:hibernate-search-orm:5.11.10.Final')
     // entity to dto 를 쉽게 해주는 라이브러리
     //implementation('org.modelmappe:modelmapper:2.4.0')arirang-morph-1.1.0
-    implementation files('libs/arirang.lucene-analyzer-5.0-1.0.0.jar')
+    implementation files('libs/arirang-analyzer.jar')
     // 아래 dependency 필요없었다는 ...
     //implementation files('libs/arirang-morph-1.0.0.jar')
 
