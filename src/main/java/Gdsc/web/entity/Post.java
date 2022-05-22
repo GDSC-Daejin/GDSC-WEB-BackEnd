@@ -10,12 +10,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
-import org.apache.lucene.analysis.ko.KoreanFilterFactory;
-import org.apache.lucene.analysis.ko.KoreanTokenizerFactory;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.search.annotations.*;
-import org.hibernate.search.annotations.Analyzer;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -33,9 +31,6 @@ import java.util.List;
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "id")
-@AnalyzerDef(name = "koreanAnalyzer"
-        , tokenizer = @TokenizerDef(factory = KoreanTokenizerFactory.class)
-        , filters = { @TokenFilterDef(factory = KoreanFilterFactory.class)})
 public class Post {
     @Id
     @Column(name = "POST_ID")
@@ -47,13 +42,12 @@ public class Post {
     String imagePath; // 썸네일
     @Column
     @ApiModelProperty(example = "제목")
-    @Field
-    @Analyzer(definition = "koreanAnalyzer")
+
+    @FullTextField(analyzer ="koreanAnalyzer" )
     String title; // 제목
     @Lob
     @ApiModelProperty(example = "내용")
-    @Field
-    @Analyzer(definition = "koreanAnalyzer")
+    @FullTextField(analyzer ="koreanAnalyzer" )
     String content; // 내용
     @Column(columnDefinition = "integer default 0", nullable = false)
     private int view; //조회수
@@ -82,8 +76,7 @@ public class Post {
     // ex PostHashTag postHashtag = new postHashtags();
     // postHashtag.setPost(post) 처럼
     @Column(name = "POST_HASH_TAGS")
-    @Field
-    @Analyzer(definition = "koreanAnalyzer")
+    @FullTextField(analyzer ="koreanAnalyzer" )
     private String postHashTags;
 
 

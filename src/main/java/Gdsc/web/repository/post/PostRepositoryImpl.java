@@ -3,11 +3,12 @@ package Gdsc.web.repository.post;
 import Gdsc.web.entity.Post;
 import lombok.val;
 import org.hibernate.Session;
-import org.hibernate.search.exception.SearchException;
-import org.hibernate.search.jpa.FullTextEntityManager;
-import org.hibernate.search.jpa.FullTextQuery;
-import org.hibernate.search.jpa.Search;
-import org.hibernate.search.query.dsl.QueryBuilder;
+import org.hibernate.search.engine.search.query.SearchResult;
+
+import org.hibernate.search.mapper.orm.Search;
+import org.hibernate.search.mapper.orm.massindexing.MassIndexer;
+import org.hibernate.search.mapper.orm.session.SearchSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,32 +28,37 @@ public class PostRepositoryImpl implements CustomizePostRepository{
 
 
 
-    public void initiateIndexing() throws InterruptedException {
-        FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(em);
-        fullTextEntityManager.createIndexer().startAndWait();
+    public void initiateIndexing() {
+
+        SearchSession searchSession = Search.session(em);
+        MassIndexer indexer = searchSession.massIndexer().idFetchSize(150).batchSizeToLoadObjects(25)
+                .threadsToLoadObjects(12);
+
+        try {
+
+            indexer.startAndWait();
+
+        } catch (InterruptedException e) {
+
+
+            Thread.currentThread().interrupt();
+
+        }
+
     }
     @SuppressWarnings("unchecked")
     @Override
     public  List<Post> fullTextSearch(String terms)  {
         System.out.println("test!!$@!$@!@");
-        FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(em);
-
-        QueryBuilder queryBuilder = fullTextEntityManager.getSearchFactory()
-                .buildQueryBuilder().forEntity(Post.class).get();
-        org.apache.lucene.search.Query luceneQuery = queryBuilder
-                .keyword()
-                .onFields("title","content","postHashTags")
-                .matching(terms)
-                .createQuery();
-        System.out.println(luceneQuery.toString());
-        // wrap Lucene query in a javax.persistence.Query
-        FullTextQuery fullTextQuery  =
-                fullTextEntityManager.createFullTextQuery(luceneQuery, Post.class);
-        //fullTextQuery.setMaxResults(limit);
-        //fullTextQuery.setFirstResult(offset);
-
-        // execute search
-        return (List<Post>)fullTextQuery.getResultList();
+        SearchResult<Post> result = Search.session(em)
+                .search(Post.class)
+                .where(f ->f.match()
+                        .fields("title","content","postHashTags")
+                        .matching(terms))
+                .fetch(20);
+        List<Post> hits = result.hits();
+        long totalHitCount = result.total().hitCount();
+        return hits;
 
     }
 }
