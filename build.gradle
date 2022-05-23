@@ -80,7 +80,7 @@ dependencies {
     //implementation files('libs/arirang.lucene-analyzer-5.0-1.0.0.jar')
     //implementation files('libs/arirang-morph-1.0.0.jar')
     implementation fileTree(dir: "webapp/WEB-INF/lib", include: '*.jar')
-    
+
     implementation files("src/main/webapp/WEB-INF/lib/arirang-analyzer.jar")
 }
 
