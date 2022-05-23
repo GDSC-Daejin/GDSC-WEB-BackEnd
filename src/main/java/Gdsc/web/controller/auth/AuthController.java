@@ -34,7 +34,7 @@ import java.util.Date;
 @RestController
 @RequestMapping("")
 @RequiredArgsConstructor
-@Profile("real")
+@Profile("!real")
 public class AuthController {
 
     private final AppProperties appProperties;
