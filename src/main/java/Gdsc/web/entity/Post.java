@@ -36,12 +36,12 @@ import java.util.List;
 @AnalyzerDef(name = "koreanAnalyzer"
         , tokenizer = @TokenizerDef(factory = KoreanTokenizerFactory.class)
         , filters = { @TokenFilterDef(factory = KoreanFilterFactory.class)})
+
 public class Post {
     @Id
     @Column(name = "POST_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;
-
     @Column
     @ApiModelProperty(example = "/ec2-south/~~~/")
     String imagePath; // 썸네일
