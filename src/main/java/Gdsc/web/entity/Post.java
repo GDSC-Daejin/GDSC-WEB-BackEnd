@@ -16,6 +16,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.search.annotations.*;
 import org.hibernate.search.annotations.Analyzer;
+import org.hibernate.search.annotations.Index;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -23,7 +24,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
-
 
 @Data
 @Builder
@@ -47,12 +47,12 @@ public class Post {
     String imagePath; // 썸네일
     @Column
     @ApiModelProperty(example = "제목")
-    @Field
+    @Field(index = Index.YES, store = Store.YES)
     @Analyzer(definition = "koreanAnalyzer")
     String title; // 제목
     @Lob
     @ApiModelProperty(example = "내용")
-    @Field
+    @Field(index = Index.YES, store = Store.YES)
     @Analyzer(definition = "koreanAnalyzer")
     String content; // 내용
     @Column(columnDefinition = "integer default 0", nullable = false)
@@ -82,7 +82,7 @@ public class Post {
     // ex PostHashTag postHashtag = new postHashtags();
     // postHashtag.setPost(post) 처럼
     @Column(name = "POST_HASH_TAGS")
-    @Field
+    @Field(index = Index.YES, store = Store.YES)
     @Analyzer(definition = "koreanAnalyzer")
     private String postHashTags;
 
