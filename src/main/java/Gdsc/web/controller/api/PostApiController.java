@@ -116,7 +116,7 @@ public class PostApiController {
         return ApiResponse.success("data", post);
     }
 
-    @ApiOperation(value = "제목 , 내용 , 해쉬태그로 검색 기능",
+    /*@ApiOperation(value = "제목 , 내용 , 해쉬태그로 검색 기능",
             notes = "Full text search 기능 아직 한국어 미지원\n" +
                     "api/v1/post/search/{word}\n" +
                     "= 검색어어어 근데 Null 또는 공백이면 오류 남! 기본 검색어 넣어주는게 좋을 것 같음")
@@ -124,7 +124,7 @@ public class PostApiController {
     public ApiResponse findPostAllWithTitle(@PathVariable String word){
         List<Post> post = postService.findFullTextSearch(word);
         return ApiResponse.success("data", post);
-    }
+    }*/
     @ApiOperation(value ="내가 작성한 게시글 불러오기", notes = "내가 작성한 게시글을 조회")
     @GetMapping("/api/member/v1/myPost")
     public ApiResponse myPost(@AuthenticationPrincipal User principal,

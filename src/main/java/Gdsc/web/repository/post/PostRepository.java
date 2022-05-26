@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface PostRepository extends JpaRepository<Post,Integer> , CustomizePostRepository {
+public interface PostRepository extends JpaRepository<Post,Integer> , CustomizePostRepository{
 
     Optional<Post> findByPostId(Long postId);
     <T> Optional<T> findByPostIdAndBlockedIsFalseAndTmpStoreIsFalse(Long postId, Class<T> type);

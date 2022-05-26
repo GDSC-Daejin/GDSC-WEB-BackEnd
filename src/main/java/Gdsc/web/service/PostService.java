@@ -12,8 +12,6 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.search.jpa.FullTextEntityManager;
-import org.hibernate.search.jpa.Search;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -249,13 +247,5 @@ public class PostService {
                 ()-> new IllegalArgumentException("찾을 수 없는 카테고리 입니다.")));
         return postRepository.findAllByTmpStoreIsTrueAndMemberInfoAndCategory(PostResponseMapping.class,memberInfo, category, pageable);
     }
-    // fulltext Search 검색
-    @Transactional
-    public List<Post> findFullTextSearch(String terms) {
-        return postRepository.fullTextSearch(terms);
-    }
-    @Transactional
-    public void initialIndexing() throws InterruptedException {
-        postRepository.initiateIndexing();
-    }
+
 }
