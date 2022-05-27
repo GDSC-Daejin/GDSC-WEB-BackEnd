@@ -123,7 +123,7 @@ public class PostApiController {
     @GetMapping("/api/v1/post/search/{word}")
     public ApiResponse findPostAllWithTitle(@PathVariable String word,@PageableDefault
             (size = 16, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable){
-        Page<Post> post = postService.findFullTextSearch(word,pageable);
+        Page<?> post = postService.findFullTextSearch(word,pageable);
         return ApiResponse.success("data", post);
     }
     @ApiOperation(value ="내가 작성한 게시글 불러오기", notes = "내가 작성한 게시글을 조회")

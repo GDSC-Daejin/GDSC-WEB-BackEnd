@@ -10,8 +10,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
-import org.apache.lucene.analysis.ko.KoreanFilterFactory;
-import org.apache.lucene.analysis.ko.KoreanTokenizerFactory;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.search.annotations.*;
