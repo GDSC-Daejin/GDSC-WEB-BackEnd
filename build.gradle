@@ -72,7 +72,6 @@ dependencies {
     // test 관련 database
     testCompileOnly('com.h2database:h2')
     // full text seach를 위한 hibernate seach
-    implementation('org.hibernate:hibernate-search-orm:5.11.10.Final')
 
 }
 

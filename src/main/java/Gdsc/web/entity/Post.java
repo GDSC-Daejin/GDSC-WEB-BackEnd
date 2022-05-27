@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.search.annotations.*;
-import org.hibernate.search.annotations.Analyzer;
+
+
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -26,7 +26,6 @@ import java.util.List;
 @Data
 @Builder
 @Entity
-@Indexed(index = "FullText_Post_idx")
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
@@ -41,8 +40,6 @@ public class Post {
     String imagePath; // 썸네일
     @Column
     @ApiModelProperty(example = "제목")
-    @Field
-    @Analyzer(definition = "koreanAnalyzer")
     String title; // 제목
     @Lob
     @ApiModelProperty(example = "내용")
