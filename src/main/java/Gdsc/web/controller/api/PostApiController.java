@@ -121,8 +121,9 @@ public class PostApiController {
                     "api/v1/post/search/{word}\n" +
                     "= 검색어어어 근데 Null 또는 공백이면 오류 남! 기본 검색어 넣어주는게 좋을 것 같음")
     @GetMapping("/api/v1/post/search/{word}")
-    public ApiResponse findPostAllWithTitle(@PathVariable String word){
-        List<Post> post = postService.findFullTextSearch(word);
+    public ApiResponse findPostAllWithTitle(@PathVariable String word,@PageableDefault
+            (size = 16, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable){
+        Page<Post> post = postService.findFullTextSearch(word,pageable);
         return ApiResponse.success("data", post);
     }
     @ApiOperation(value ="내가 작성한 게시글 불러오기", notes = "내가 작성한 게시글을 조회")

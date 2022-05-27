@@ -33,10 +33,6 @@ import java.util.List;
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "id")
-@AnalyzerDef(name = "koreanAnalyzer"
-        , tokenizer = @TokenizerDef(factory = KoreanTokenizerFactory.class)
-        , filters = { @TokenFilterDef(factory = KoreanFilterFactory.class)})
-
 public class Post {
     @Id
     @Column(name = "POST_ID")
@@ -52,8 +48,6 @@ public class Post {
     String title; // 제목
     @Lob
     @ApiModelProperty(example = "내용")
-    @Field
-    @Analyzer(definition = "koreanAnalyzer")
     String content; // 내용
     @Column(columnDefinition = "integer default 0", nullable = false)
     private int view; //조회수
@@ -82,8 +76,6 @@ public class Post {
     // ex PostHashTag postHashtag = new postHashtags();
     // postHashtag.setPost(post) 처럼
     @Column(name = "POST_HASH_TAGS")
-    @Field
-    @Analyzer(definition = "koreanAnalyzer")
     private String postHashTags;
 
 

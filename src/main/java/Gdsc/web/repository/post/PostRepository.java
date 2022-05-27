@@ -27,5 +27,5 @@ public interface PostRepository extends JpaRepository<Post,Integer> , CustomizeP
     void deleteByPostIdAndAndMemberInfo(Long postId , MemberInfo memberInfo);
     void deleteByPostId(Long postId);
     <T> Page<T> findAllByTmpStoreIsTrueAndMemberInfoAndCategory(Class<T> tClass, MemberInfo memberInfo, Optional<Category> category , Pageable pageable);
-
+    <T> Page<T> findAllByTitleLikeOrContentLikeOrPostHashTagsLikeAndBlockedIsFalseAndTmpStoreIsFalse(Class<T> tClass ,String word , Pageable pageable);
 }

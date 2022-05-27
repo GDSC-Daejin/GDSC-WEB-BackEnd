@@ -251,11 +251,9 @@ public class PostService {
     }
     // fulltext Search 검색
     @Transactional
-    public List<Post> findFullTextSearch(String terms) {
-        return postRepository.fullTextSearch(terms);
+    public Page<Post> findFullTextSearch(String terms,Pageable pageable) {
+        return postRepository.findAllByTitleLikeOrContentLikeOrPostHashTagsLikeAndBlockedIsFalseAndTmpStoreIsFalse(
+                PostResponseMapping.class,terms,pageable);
     }
-    @Transactional
-    public void initialIndexing() throws InterruptedException {
-        postRepository.initiateIndexing();
-    }
+
 }

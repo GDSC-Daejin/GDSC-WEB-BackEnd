@@ -27,32 +27,5 @@ public class PostRepositoryImpl implements CustomizePostRepository{
 
 
 
-    public void initiateIndexing() throws InterruptedException {
-        FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(em);
-        fullTextEntityManager.createIndexer().startAndWait();
-    }
-    @SuppressWarnings("unchecked")
-    @Override
-    public  List<Post> fullTextSearch(String terms)  {
-        System.out.println("test!!$@!$@!@");
-        FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(em);
 
-        QueryBuilder queryBuilder = fullTextEntityManager.getSearchFactory()
-                .buildQueryBuilder().forEntity(Post.class).get();
-        org.apache.lucene.search.Query luceneQuery = queryBuilder
-                .keyword()
-                .onFields("title","content","postHashTags")
-                .matching(terms)
-                .createQuery();
-        System.out.println(luceneQuery.toString());
-        // wrap Lucene query in a javax.persistence.Query
-        FullTextQuery fullTextQuery  =
-                fullTextEntityManager.createFullTextQuery(luceneQuery, Post.class);
-        //fullTextQuery.setMaxResults(limit);
-        //fullTextQuery.setFirstResult(offset);
-
-        // execute search
-        return (List<Post>)fullTextQuery.getResultList();
-
-    }
 }
