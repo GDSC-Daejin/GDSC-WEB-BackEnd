@@ -2,6 +2,7 @@ package Gdsc.web.service;
 
 import Gdsc.web.dto.mapping.PostResponseMapping;
 import Gdsc.web.dto.requestDto.PostRequestDto;
+import Gdsc.web.dto.responseDto.PostResponseDto;
 import Gdsc.web.entity.*;
 import Gdsc.web.repository.category.JpaCategoryRepository;
 import Gdsc.web.repository.member.JpaMemberRepository;
@@ -12,13 +13,9 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.search.jpa.FullTextEntityManager;
-import org.hibernate.search.jpa.Search;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -98,10 +95,10 @@ public class PostService {
 
     //조회
     @Transactional(readOnly = true)
-    public PostResponseMapping findByPostIdAndBlockIsFalse(Long postId){
-
-        return postRepository.findByPostIdAndBlockedIsFalseAndTmpStoreIsFalse(postId,PostResponseMapping.class)
+    public PostResponseDto findByPostIdAndBlockIsFalse(Long postId){
+        Post post = postRepository.findByPostIdAndBlockedIsFalseAndTmpStoreIsFalse(postId,Post.class)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
+        return post.toPostResponseDto();
     }
 
 
@@ -251,11 +248,9 @@ public class PostService {
     }
     // fulltext Search 검색
     @Transactional
-    public List<Post> findFullTextSearch(String terms) {
-        return postRepository.fullTextSearch(terms);
+    public Page<?> findFullTextSearch(String terms,Pageable pageable) {
+        return postRepository.findAllByTitleLikeOrContentLikeOrPostHashTagsLikeAndTmpStoreIsFalseAndBlockedIsFalse(
+                terms,pageable);
     }
-    @Transactional
-    public void initialIndexing() throws InterruptedException {
-        postRepository.initiateIndexing();
-    }
+
 }

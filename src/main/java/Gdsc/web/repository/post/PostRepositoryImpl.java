@@ -1,23 +1,16 @@
 package Gdsc.web.repository.post;
 
-import Gdsc.web.entity.Post;
-import lombok.val;
-import org.hibernate.Session;
-import org.hibernate.search.exception.SearchException;
-import org.hibernate.search.jpa.FullTextEntityManager;
-import org.hibernate.search.jpa.FullTextQuery;
-import org.hibernate.search.jpa.Search;
-import org.hibernate.search.query.dsl.QueryBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
+import Gdsc.web.dto.mapping.PostResponseMapping;
+import Gdsc.web.entity.Post;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
-import javax.persistence.PersistenceException;
+import javax.persistence.TypedQuery;
 import java.util.List;
-
 
 
 @Repository
@@ -26,33 +19,17 @@ public class PostRepositoryImpl implements CustomizePostRepository{
     private EntityManager em;
 
 
-
-    public void initiateIndexing() throws InterruptedException {
-        FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(em);
-        fullTextEntityManager.createIndexer().startAndWait();
-    }
-    @SuppressWarnings("unchecked")
     @Override
-    public  List<Post> fullTextSearch(String terms)  {
-        System.out.println("test!!$@!$@!@");
-        FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(em);
-
-        QueryBuilder queryBuilder = fullTextEntityManager.getSearchFactory()
-                .buildQueryBuilder().forEntity(Post.class).get();
-        org.apache.lucene.search.Query luceneQuery = queryBuilder
-                .keyword()
-                .onFields("title","content","postHashTags")
-                .matching(terms)
-                .createQuery();
-        System.out.println(luceneQuery.toString());
-        // wrap Lucene query in a javax.persistence.Query
-        FullTextQuery fullTextQuery  =
-                fullTextEntityManager.createFullTextQuery(luceneQuery, Post.class);
-        //fullTextQuery.setMaxResults(limit);
-        //fullTextQuery.setFirstResult(offset);
-
-        // execute search
-        return (List<Post>)fullTextQuery.getResultList();
-
+    public  Page<Post> findAllByTitleLikeOrContentLikeOrPostHashTagsLikeAndTmpStoreIsFalseAndBlockedIsFalse(String word, Pageable pageable) {
+        String jpql = "SELECT p FROM Post p WHERE (p.postHashTags LIKE :word " +
+                "Or p.title LIKE :word " +
+                "OR p.content LIKE :word )" +
+                "AND p.blocked IS FALSE " +
+                "AND p.tmpStore IS FALSE ";
+        TypedQuery<Post> typedQuery = em.createQuery(jpql, Post.class);
+        typedQuery.setParameter("word" , "%"+word+"%");
+        List resultList =typedQuery.getResultList();
+        // Dto 변환 필요
+        return new PageImpl<>(resultList,pageable, resultList.size());
     }
 }

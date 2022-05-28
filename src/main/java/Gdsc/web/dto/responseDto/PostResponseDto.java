@@ -14,6 +14,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@Data
 public class PostResponseDto {
     private Long postId;
     private String title;
@@ -23,7 +24,22 @@ public class PostResponseDto {
     private String imagePath;
     private Category category;
     private String postHashTags;
-    private MemberInfo memberInfo;
+    private MemberInfoResponseDto memberInfo;
     private LocalDateTime modifiedAt;
     private LocalDateTime uploadDate;
+
+
+    public PostResponseDto(Long postId, String title, String content, boolean tmpStore, boolean blocked, String imagePath, Category category, String postHashTags, MemberInfoResponseDto toMemberInfoResponseDto, LocalDateTime modifiedAt, LocalDateTime uploadDate) {
+        this.postId = postId;
+        this.title = title;
+        this.content = content;
+        this.tmpStore = tmpStore;
+        this.blocked = blocked;
+        this.imagePath = imagePath;
+        this.category = category;
+        this.postHashTags = postHashTags;
+        this.memberInfo = toMemberInfoResponseDto;
+        this.modifiedAt = modifiedAt;
+        this.uploadDate = uploadDate;
+    }
 }

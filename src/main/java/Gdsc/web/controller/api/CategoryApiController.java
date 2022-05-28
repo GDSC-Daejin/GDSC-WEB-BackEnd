@@ -1,6 +1,7 @@
 package Gdsc.web.controller.api;
 
 import Gdsc.web.dto.ApiResponse;
+import Gdsc.web.dto.requestDto.CategoryRequestDto;
 import Gdsc.web.dto.requestDto.CategoryUpdateDto;
 import Gdsc.web.entity.Category;
 import Gdsc.web.service.CategoryService;
@@ -23,9 +24,9 @@ public class CategoryApiController {
 
     @ApiOperation(value = "카테고리 추가" , notes = "카테고리 넣기 ")
     @PostMapping("api/admin/v1/category/add")
-    public ApiResponse addCategory(@RequestBody Category category) {
+    public ApiResponse addCategory(@RequestBody CategoryRequestDto categoryRequestDto){
 
-        categoryService.카테고리추가(category);
+        categoryService.카테고리추가(categoryRequestDto);
 
         return ApiResponse.success("message", "Success");
     }
