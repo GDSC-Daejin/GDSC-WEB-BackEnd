@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post,Integer> , CustomizePostRepository {
@@ -18,7 +19,7 @@ public interface PostRepository extends JpaRepository<Post,Integer> , CustomizeP
     Optional<Post> findByPostIdAndMemberInfo(Long postId , MemberInfo memberInfo);
     <T> Page <T> findByMemberInfo(Class<T> tClass,MemberInfo memberInfo, Pageable pageable);
     <T> Page<T> findByMemberInfoAndCategoryAndTmpStoreIsFalseAndBlockedIsFalse(Class<T> tClass,MemberInfo memberInfo, Optional<Category> category, Pageable pageable);
-    <T> Page<T> findByMemberInfoAndTmpStoreIsFalseAndBlockedIsFalse(Class<T> tClass,MemberInfo memberInfo, Pageable pageable);
+    <T> List<T> findByMemberInfoAndTmpStoreIsFalseAndBlockedIsFalse(Class<T> tClass, MemberInfo memberInfo, Pageable pageable);
     <T> Page<T> findByCategoryAndTmpStoreIsFalseAndBlockedIsFalse(Class<T> tClass,Optional<Category> category, Pageable pageable);
     <T> Page<T> findAllByTmpStoreIsFalseAndBlockedIsFalse(Class<T> tClass,Pageable pageable);
     <T> Page<T> findByPostHashTagsIsContainingOrContentIsContainingAndTmpStoreIsFalseAndBlockedIsFalse(Class<T> tClass, String postHashTags,String content,Pageable pageable);

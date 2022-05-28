@@ -42,4 +42,5 @@ public class PostResponseDto {
         this.modifiedAt = modifiedAt;
         this.uploadDate = uploadDate;
     }
+
 }

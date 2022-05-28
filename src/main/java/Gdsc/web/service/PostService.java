@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -171,7 +173,9 @@ public class PostService {
             log.error(e.getErrorCode() + " : 버킷 이미지 삭제 실패 ");
         }
     }
-
+    public List<PostResponseDto> toPostResponseDto(List<Post> posts){
+        return posts.stream().map(Post::toPostResponseDto).collect(Collectors.toList());
+    }
     @Transactional
     public MemberInfo findMemberInfo(String userId){
         Member member = jpaMemberRepository.findByUserId(userId);
@@ -181,10 +185,12 @@ public class PostService {
     }
     // 내 게시글 조회
     @Transactional(readOnly = true)
-    public Page<?> findMyPost(String userId, final Pageable pageable){
+    public Page<PostResponseDto> findMyPost(String userId, final Pageable pageable){
         MemberInfo memberInfo = findMemberInfo(userId);
-        return postRepository.findByMemberInfoAndTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,memberInfo, pageable);
+        List<Post> posts =  postRepository.findByMemberInfoAndTmpStoreIsFalseAndBlockedIsFalse(Post.class,memberInfo, pageable);
+        return new PageImpl<>(toPostResponseDto(posts), pageable, posts.size());
     }
+
     // 내 게시글 카테고리 별 조회
     @Transactional(readOnly = true)
     public Page<?> findMyPostWIthCategory(String userId, String categoryName, final Pageable pageable){
