@@ -2,6 +2,7 @@ package Gdsc.web.service;
 
 import Gdsc.web.dto.mapping.PostResponseMapping;
 import Gdsc.web.dto.requestDto.PostRequestDto;
+import Gdsc.web.dto.responseDto.PostResponseDto;
 import Gdsc.web.entity.*;
 import Gdsc.web.repository.category.JpaCategoryRepository;
 import Gdsc.web.repository.member.JpaMemberRepository;
@@ -94,10 +95,10 @@ public class PostService {
 
     //조회
     @Transactional(readOnly = true)
-    public PostResponseMapping findByPostIdAndBlockIsFalse(Long postId){
-
-        return postRepository.findByPostIdAndBlockedIsFalseAndTmpStoreIsFalse(postId,PostResponseMapping.class)
+    public PostResponseDto findByPostIdAndBlockIsFalse(Long postId){
+        Post post = postRepository.findByPostIdAndBlockedIsFalseAndTmpStoreIsFalse(postId,Post.class)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
+        return post.toPostResponseDto();
     }
 
 

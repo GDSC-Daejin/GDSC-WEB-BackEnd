@@ -2,6 +2,7 @@ package Gdsc.web.controller.api;
 
 import Gdsc.web.dto.ApiResponse;
 import Gdsc.web.dto.ResponseDto;
+import Gdsc.web.dto.requestDto.MemberInfoRequestDto;
 import Gdsc.web.entity.Member;
 import Gdsc.web.entity.MemberInfo;
 import Gdsc.web.entity.MemberScrapPost;
@@ -30,11 +31,7 @@ public class MemberApiController {
 
     private final MemberService memberService;
 
-   /* @ApiOperation(value = "관리자 권한 멤버 리스트 확인 // 수정 필요", notes = "온보딩 , 멤버 데이터 전체 봄")
-    @GetMapping("/api/core/memberList")
-    public ResponseDto<List<Member>> memberList() {
-        return new ResponseDto<>(HttpStatus.OK, memberService.멤버리스트(), "성공");
-    }*/
+
 
 
 
@@ -56,7 +53,7 @@ public class MemberApiController {
 
     @ApiOperation(value = "유저 자기 정보 업데이트" , notes = "JWT 토큰값이 들어가야 사용자를 인식 가능함")
     @PutMapping("/api/guest/v1/me")
-    public ApiResponse Update(@AuthenticationPrincipal User principal , @RequestBody MemberInfo memberInfo){
+    public ApiResponse Update(@AuthenticationPrincipal User principal , @RequestBody MemberInfoRequestDto memberInfo){
         if(principal == null) return ApiResponse.fail("message" , "Token is null");
         memberService.정보업데이트(principal.getUsername(),memberInfo);
         return ApiResponse.success("message" , "SUCCESS");

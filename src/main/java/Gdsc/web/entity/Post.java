@@ -1,6 +1,8 @@
 package Gdsc.web.entity;
 
 
+import Gdsc.web.dto.responseDto.MemberInfoResponseDto;
+import Gdsc.web.dto.responseDto.PostResponseDto;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.swagger.annotations.ApiModelProperty;
@@ -100,6 +102,12 @@ public class Post {
         this.category =category;
         this.postHashTags = postHashTags;
     }
+    public PostResponseDto toPostResponseDto(){
+        return new PostResponseDto(postId, title, content, tmpStore,
+                blocked, imagePath, category, postHashTags,
+                memberInfo.toMemberInfoResponseDto(), modifiedAt, uploadDate);
+    }
+
 
 
 }
