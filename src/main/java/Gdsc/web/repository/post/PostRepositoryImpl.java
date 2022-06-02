@@ -1,7 +1,6 @@
 package Gdsc.web.repository.post;
 
 
-import Gdsc.web.dto.mapping.PostResponseMapping;
 import Gdsc.web.entity.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

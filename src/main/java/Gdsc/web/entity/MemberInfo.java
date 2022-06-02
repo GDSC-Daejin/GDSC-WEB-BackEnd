@@ -94,7 +94,7 @@ public class MemberInfo {
 
 
     public MemberInfoResponseDto toMemberInfoResponseDto() {
-        return new MemberInfoResponseDto(nickname);
+        return new MemberInfoResponseDto(nickname , member.toResponseDto());
     }
 
 }

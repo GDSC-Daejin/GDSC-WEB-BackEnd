@@ -1,10 +1,7 @@
 package Gdsc.web.dto.responseDto;
 
-import Gdsc.web.dto.mapping.PostResponseMapping;
+
 import Gdsc.web.entity.Category;
-import Gdsc.web.entity.Likes;
-import Gdsc.web.entity.MemberInfo;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;

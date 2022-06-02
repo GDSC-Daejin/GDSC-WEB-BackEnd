@@ -1,5 +1,6 @@
 package Gdsc.web.entity;
 
+import Gdsc.web.dto.responseDto.ScrapPostResponseDto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,4 +32,6 @@ public class MemberScrapPost {
     @CreationTimestamp
     @ApiModelProperty(example = "2022-01-06 14:57:42.777000")
     private LocalDateTime uploadDate;
+
+
 }
