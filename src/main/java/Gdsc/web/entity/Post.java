@@ -1,7 +1,6 @@
 package Gdsc.web.entity;
 
 
-import Gdsc.web.dto.responseDto.MemberInfoResponseDto;
 import Gdsc.web.dto.responseDto.PostResponseDto;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -23,6 +22,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Data
@@ -107,6 +107,7 @@ public class Post {
                 blocked, imagePath, category, postHashTags,
                 memberInfo.toMemberInfoResponseDto(), modifiedAt, uploadDate);
     }
+
 
 
 
