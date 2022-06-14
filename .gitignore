@@ -5,7 +5,7 @@
 /.idea/
 /src/main/resources/application.properties
 
-/src/test/resources/application.properties
+
 /src/main/resources/application-oauth.properties
 /src/main/resources/application-dev.properties
 ~/app/step1/loglog.log
