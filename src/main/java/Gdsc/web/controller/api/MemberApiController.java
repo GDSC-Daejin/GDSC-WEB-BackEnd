@@ -1,29 +1,15 @@
 package Gdsc.web.controller.api;
 
 import Gdsc.web.dto.ApiResponse;
-import Gdsc.web.dto.ResponseDto;
 import Gdsc.web.dto.requestDto.MemberInfoRequestDto;
 import Gdsc.web.entity.Member;
 import Gdsc.web.entity.MemberInfo;
-import Gdsc.web.entity.MemberScrapPost;
-import Gdsc.web.entity.Post;
-import Gdsc.web.repository.member.JpaMemberRepository;
 import Gdsc.web.service.MemberService;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
-import Gdsc.web.service.PostService;
-import Gdsc.web.service.ScrapService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
