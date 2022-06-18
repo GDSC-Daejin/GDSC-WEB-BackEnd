@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -41,6 +42,7 @@ class AuthControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("개발 환경 로그인 테스트")
     void join() throws Exception {
         Member member = MemberEntityFactory.memberEntity();
         mvc.perform(post("/test/auth/join")
@@ -60,6 +62,7 @@ class AuthControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @DisplayName("개발 환경 로그인 테스트")
     void login() throws Exception {
         // given
         Member saveModel = MemberEntityFactory.memberEntity();
