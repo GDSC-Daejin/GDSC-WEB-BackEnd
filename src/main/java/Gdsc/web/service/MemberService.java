@@ -1,5 +1,6 @@
 package Gdsc.web.service;
 
+import Gdsc.web.dto.requestDto.MemberInfoRequestDto;
 import Gdsc.web.entity.Member;
 import Gdsc.web.entity.MemberInfo;
 import Gdsc.web.model.RoleType;
@@ -7,17 +8,16 @@ import Gdsc.web.repository.memberinfo.JpaMemberInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import Gdsc.web.repository.member.JpaMemberRepository;
+import Gdsc.web.repository.member.MemberRepository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class MemberService {
 
-    private final JpaMemberRepository memberRepository;
+    private final MemberRepository memberRepository;
     private final JpaMemberInfoRepository jpaMemberInfoRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -50,13 +50,9 @@ public class MemberService {
         return memberRepository.findByUserId(userId);
     }
     @Transactional
-    public void 정보업데이트(String userId , MemberInfo requestMemberInfo){
+    public void 정보업데이트(String userId , MemberInfoRequestDto requestMemberInfo){
         Member member = memberRepository.findByUserId(userId);
         if(member==null) throw new IllegalArgumentException("없는 사용자 입니다. ");
-        // if requestMemberInfo's element is null, it means that user didn't change element.
-        // stream.filter(element -> element != null)
-        // Call all setter functions of MemberInfo class. And set the value to memberInfo. And requestMemberInfo is the value that user inputted. requestMemberInfo's element is null, it means that user didn't change element.
-
 
         if(requestMemberInfo.getIntroduce() != null) member.getMemberInfo().setIntroduce(requestMemberInfo.getIntroduce());
         if(requestMemberInfo.getBirthday() != null)  member.getMemberInfo().setBirthday(requestMemberInfo.getBirthday());
@@ -71,27 +67,6 @@ public class MemberService {
         if(requestMemberInfo.getBlogUrl() != null) member.getMemberInfo().setBlogUrl(requestMemberInfo.getBlogUrl());
         if(requestMemberInfo.getEtcUrl() != null) member.getMemberInfo().setEtcUrl(requestMemberInfo.getEtcUrl());
         if(requestMemberInfo.getGitHubUrl() != null) member.getMemberInfo().setGitHubUrl(requestMemberInfo.getGitHubUrl());
-        /*if(requestMemberInfo.getMemberPortfolioUrls() != null) {
-            List<MemberPortfolioUrl> memberPortfolioUrls = member.getMemberInfo().getMemberPortfolioUrls();
-            if(requestMemberInfo.getMemberPortfolioUrls().size() > memberPortfolioUrls.size()) {
-                for(int i = memberPortfolioUrls.size(); i < requestMemberInfo.getMemberPortfolioUrls().size(); i++) {
-                    memberPortfolioUrls.add(new MemberPortfolioUrl(member.getMemberInfo()));
-                }
-            } else if (requestMemberInfo.getMemberPortfolioUrls().size() < memberPortfolioUrls.size()) {
-                for(int i = memberPortfolioUrls.size() - 1; i >= requestMemberInfo.getMemberPortfolioUrls().size(); i--) {
-                    memberPortfolioUrls.remove(i);
-                }
-            } else {
-                for (int i = 0; i < memberPortfolioUrls.size(); i++) {
-                    if(requestMemberInfo.getMemberPortfolioUrls().get(i).getWebUrl() != null) {
-                        memberPortfolioUrls.get(i).setWebUrl(requestMemberInfo.getMemberPortfolioUrls().get(i).getWebUrl());
-                    }
-                }
-            }
-
-        }*/
-
-
 
     }
    /* public <T> boolean elementNullCheck(T requestMemberInfo) {
