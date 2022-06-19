@@ -4,7 +4,7 @@ import Gdsc.web.dto.WarningDto;
 import Gdsc.web.entity.Member;
 import Gdsc.web.entity.WarnDescription;
 import Gdsc.web.model.RoleType;
-import Gdsc.web.repository.member.MemberRepository;
+import Gdsc.web.repository.member.JpaMemberRepository;
 import Gdsc.web.repository.warnDescription.JpaWarnDescription;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminService {
 
-    private final MemberRepository repository;
+    private final JpaMemberRepository repository;
     private final JpaWarnDescription jpaWarnDescription;
     @Transactional
     public void 맴버권한수정(String userId, RoleType role){

@@ -9,7 +9,7 @@ import Gdsc.web.oauth.exception.OAuthProviderMissMatchException;
 import Gdsc.web.oauth.info.OAuth2UserInfo;
 import Gdsc.web.oauth.info.OAuth2UserInfoFactory;
 import Gdsc.web.repository.memberinfo.JpaMemberInfoRepository;
-import Gdsc.web.repository.member.MemberRepository;
+import Gdsc.web.repository.member.JpaMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -21,12 +21,14 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     @Autowired
-    private MemberRepository memberRepository;
+    private JpaMemberRepository jpaMemberRepository;
     @Autowired
     private JpaMemberInfoRepository memberInfoRepository;
 
@@ -48,7 +50,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         ProviderType providerType = ProviderType.valueOf(userRequest.getClientRegistration().getRegistrationId().toUpperCase());
 
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
-        Member savedUser = memberRepository.findByUserId(userInfo.getId());
+        Member savedUser = jpaMemberRepository.findByUserId(userInfo.getId());
 
         if (savedUser != null) {
             if (providerType != savedUser.getProviderType()) {
@@ -83,7 +85,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         memberInfo.setMember(user);
 
         // 멤버 info 도 같이 만들기
-        return memberRepository.saveAndFlush(user);
+        return jpaMemberRepository.saveAndFlush(user);
     }
 
     private Member updateUser(Member user, OAuth2UserInfo userInfo) {

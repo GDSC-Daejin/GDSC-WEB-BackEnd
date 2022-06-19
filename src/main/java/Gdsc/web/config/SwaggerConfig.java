@@ -1,15 +1,10 @@
 package Gdsc.web.config;
 
 
-import lombok.RequiredArgsConstructor;
 import org.apache.catalina.Server;
 
-import org.apiguardian.api.API;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import org.springframework.core.env.Environment;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -19,18 +14,12 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import springfox.documentation.service.Contact;
 
-import java.util.Arrays;
 
 
 @Configuration
 @EnableSwagger2
-@RequiredArgsConstructor
-@Profile("!prod")
 public class SwaggerConfig {
-
-
-    private final Environment ev;
-    private static String API_NAME = "GDSC-WEB-Backend API";
+    private static final String API_NAME = "GDSC-WEB-Backend API";
     private static final String API_VERSION = "0.0.1";
     private static final String API_DESCRIPTION = "GDSC-WEB-Backend 명세서";
     @Bean
@@ -42,7 +31,6 @@ public class SwaggerConfig {
                 .build().apiInfo(apiInfo());
     }
     public ApiInfo apiInfo() {
-        API_NAME = "GDSC-WEB-Backend API" + Arrays.toString(ev.getActiveProfiles());
         return new ApiInfoBuilder()
                 .title(API_NAME)
                 .version(API_VERSION)

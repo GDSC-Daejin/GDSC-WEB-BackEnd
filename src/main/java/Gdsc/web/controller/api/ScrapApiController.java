@@ -1,6 +1,7 @@
 package Gdsc.web.controller.api;
 
 import Gdsc.web.dto.ApiResponse;
+import Gdsc.web.dto.mapping.MemberScrapPostResponseMapping;
 import Gdsc.web.entity.MemberScrapPost;
 import Gdsc.web.entity.Post;
 import Gdsc.web.service.ScrapService;
@@ -33,7 +34,7 @@ public class ScrapApiController {
     @GetMapping("/api/member/v1/myScrap")
     public ApiResponse myScrap(@AuthenticationPrincipal User principal,
                                @PageableDefault(size = 16 ,sort = "id",direction = Sort.Direction.DESC ) Pageable pageable){
-        Page<?> scrap = scrapService.findMyScrapPost(principal.getUsername(), pageable);
+        Page<MemberScrapPostResponseMapping> scrap = scrapService.findMyScrapPost(principal.getUsername(), pageable);
         return ApiResponse.success("data", scrap);
     }
 }

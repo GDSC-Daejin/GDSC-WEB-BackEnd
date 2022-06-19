@@ -1,7 +1,6 @@
 package Gdsc.web.entity;
 
 
-import Gdsc.web.dto.responseDto.MemberResponseDto;
 import Gdsc.web.model.RoleType;
 import Gdsc.web.oauth.entity.ProviderType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -108,9 +107,6 @@ public class Member {
         this.uploadDate = uploadDate;
         this.modifiedAt = modifiedAt;
         this.memberInfo = memberInfo;
-    }
-    public MemberResponseDto toResponseDto(){
-        return new MemberResponseDto(this.profileImageUrl);
     }
 
 }

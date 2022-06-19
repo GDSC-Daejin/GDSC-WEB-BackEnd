@@ -2,7 +2,10 @@ package Gdsc.web.oauth.entity;
 
 import Gdsc.web.entity.Member;
 import Gdsc.web.model.RoleType;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +18,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
@@ -25,9 +29,6 @@ public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
     private final RoleType roleType;
     private final Collection<GrantedAuthority> authorities;
     private Map<String, Object> attributes;
-
-
-
 
     @Override
     public Map<String, Object> getAttributes() {

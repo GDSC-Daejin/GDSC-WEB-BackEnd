@@ -1,24 +1,29 @@
 package Gdsc.web.controller.api;
 
 import Gdsc.web.common.MemberEntityFactory;
-import Gdsc.web.controller.AbstractControllerTest;
 import Gdsc.web.dto.requestDto.MemberRoleUpdateDto;
 import Gdsc.web.entity.Member;
 import Gdsc.web.entity.MemberInfo;
 import Gdsc.web.model.RoleType;
-import Gdsc.web.repository.member.MemberRepository;
+import Gdsc.web.repository.member.JpaMemberRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
+
+import javax.transaction.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +34,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
-class AdminApiControllerTest extends AbstractControllerTest {
+@Transactional
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@AutoConfigureMockMvc
+class AdminApiControllerTest {
     @Autowired
     private WebApplicationContext context;
     private MockMvc mvc;
@@ -39,7 +47,7 @@ class AdminApiControllerTest extends AbstractControllerTest {
     private Member memberAdmin;
     private Member memberMember;
     @Autowired
-    private MemberRepository memberRepository;
+    private JpaMemberRepository memberRepository;
 
     @BeforeEach
     void setUp() {

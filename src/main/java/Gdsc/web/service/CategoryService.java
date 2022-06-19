@@ -1,6 +1,5 @@
 package Gdsc.web.service;
 
-import Gdsc.web.dto.requestDto.CategoryRequestDto;
 import Gdsc.web.dto.requestDto.CategoryUpdateDto;
 import Gdsc.web.entity.Category;
 import Gdsc.web.repository.category.JpaCategoryRepository;
@@ -21,10 +20,8 @@ public class CategoryService {
     }
 
     @Transactional
-    public void 카테고리추가(CategoryRequestDto CategoryRequestDto) {
-        validateDuplicateCategoryName(CategoryRequestDto.getCategoryName());
-        Category category = new Category();
-        category.setCategoryName(CategoryRequestDto.getCategoryName());
+    public void 카테고리추가(Category category) {
+        validateDuplicateCategoryName(category.getCategoryName());
         jpaCategoryRepository.save(category);
     }
     @Transactional

@@ -1,15 +1,28 @@
 package Gdsc.web.controller.api;
 
 import Gdsc.web.dto.ApiResponse;
-import Gdsc.web.dto.requestDto.MemberInfoRequestDto;
+import Gdsc.web.dto.ResponseDto;
 import Gdsc.web.entity.Member;
 import Gdsc.web.entity.MemberInfo;
+import Gdsc.web.entity.MemberScrapPost;
+import Gdsc.web.entity.Post;
+import Gdsc.web.repository.member.JpaMemberRepository;
 import Gdsc.web.service.MemberService;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import Gdsc.web.service.PostService;
+import Gdsc.web.service.ScrapService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,8 +30,18 @@ public class MemberApiController {
 
     private final MemberService memberService;
 
+   /* @ApiOperation(value = "관리자 권한 멤버 리스트 확인 // 수정 필요", notes = "온보딩 , 멤버 데이터 전체 봄")
+    @GetMapping("/api/core/memberList")
+    public ResponseDto<List<Member>> memberList() {
+        return new ResponseDto<>(HttpStatus.OK, memberService.멤버리스트(), "성공");
+    }*/
 
-
+    @GetMapping("/user/me")
+    @ApiOperation(value = "삭제예정 멤버정보", notes = "삭제 예정 api/guest/v1/me 또는 /info api 를 이용하시길 ")
+    public Member getUser(@AuthenticationPrincipal User principal) {
+        Member member =memberService.getUserId(principal.getUsername());
+        return member;
+    }
 
 
     @ApiOperation(value = "Member 내용 보기" , notes = "Member 내용 값 보기")
@@ -39,7 +62,7 @@ public class MemberApiController {
 
     @ApiOperation(value = "유저 자기 정보 업데이트" , notes = "JWT 토큰값이 들어가야 사용자를 인식 가능함")
     @PutMapping("/api/guest/v1/me")
-    public ApiResponse Update(@AuthenticationPrincipal User principal , @RequestBody MemberInfoRequestDto memberInfo){
+    public ApiResponse Update(@AuthenticationPrincipal User principal , @RequestBody MemberInfo memberInfo){
         if(principal == null) return ApiResponse.fail("message" , "Token is null");
         memberService.정보업데이트(principal.getUsername(),memberInfo);
         return ApiResponse.success("message" , "SUCCESS");

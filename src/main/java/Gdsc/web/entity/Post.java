@@ -1,7 +1,5 @@
 package Gdsc.web.entity;
 
-
-import Gdsc.web.dto.responseDto.PostResponseDto;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.swagger.annotations.ApiModelProperty;
@@ -9,12 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
-
-
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -22,8 +16,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
-
 
 @Data
 @Builder
@@ -37,6 +29,7 @@ public class Post {
     @Column(name = "POST_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;
+
     @Column
     @ApiModelProperty(example = "/ec2-south/~~~/")
     String imagePath; // 썸네일
@@ -46,7 +39,7 @@ public class Post {
     @Lob
     @ApiModelProperty(example = "내용")
     String content; // 내용
-    @Column(columnDefinition = "integer default 0", nullable = false , name = "VIEW_COUNT")
+    @Column(columnDefinition = "integer default 0", nullable = false)
     private int view; //조회수
 
 
@@ -56,7 +49,7 @@ public class Post {
     private MemberInfo memberInfo;
 
     //임시 저장 여부
-
+    @Column(columnDefinition = "boolean default false")
     @ApiModelProperty(example = "false")
     @NotNull
     @ColumnDefault("false")
@@ -102,13 +95,6 @@ public class Post {
         this.category =category;
         this.postHashTags = postHashTags;
     }
-    public PostResponseDto toPostResponseDto(){
-        return new PostResponseDto(postId, title, content, tmpStore,
-                blocked, imagePath, category, postHashTags,
-                memberInfo.toMemberInfoResponseDto(), modifiedAt, uploadDate);
-    }
-
-
 
 
 }
