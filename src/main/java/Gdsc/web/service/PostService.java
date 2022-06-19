@@ -28,12 +28,12 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-
 public class PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
     private final JpaCategoryRepository jpaCategoryRepository;
-    private final AmazonS3Client amazonS3Client;
+
+    private final AwsS3FileUploadService awsS3FileUploadService;
 
     @Value("${cloud.aws.s3.bucket}")
     public String bucket;  // S3 버킷 이름
@@ -54,7 +54,7 @@ public class PostService {
         //json 형식 이미지나 , form-data 형식 이미지 둘중 하나만 들어왔을때!!
         if(requestDto.getThumbnail() != null ^ requestDto.getBase64Thumbnail() != null){
             if(!Objects.equals(requestDto.getBase64Thumbnail(), "")){
-                post.setImagePath(upload(requestDto, "static"));
+                post.setImagePath(awsS3FileUploadService.upload(requestDto, "static"));
             }
         }
 
@@ -75,8 +75,8 @@ public class PostService {
         //json 형식 이미지나 , form-data 형식 이미지 둘중 하나만 들어왔을때!!
         if(requestDto.getThumbnail() != null ^ requestDto.getBase64Thumbnail() != null){
             if(!Objects.equals(requestDto.getBase64Thumbnail(), "")){
-                fileDelete(post.getImagePath());
-                post.setImagePath(upload(requestDto, "static"));
+                awsS3FileUploadService.fileDelete(post.getImagePath());
+                post.setImagePath(awsS3FileUploadService.upload(requestDto, "static"));
             }
 
         }
@@ -88,7 +88,7 @@ public class PostService {
         MemberInfo memberInfo = findMemberInfo(userId);
         Optional<Post> post = postRepository.findByPostIdAndMemberInfo(postId, memberInfo);
         if(post.get().getImagePath() != null){
-            fileDelete(post.get().getImagePath());
+            awsS3FileUploadService.fileDelete(post.get().getImagePath());
         }
         postRepository.delete(post.get());
     }
@@ -103,75 +103,10 @@ public class PostService {
     }
 
 
-    public String upload(PostRequestDto postRequestDto, String dirName) throws IOException {
-        File uploadFile = convert(postRequestDto)  // 파일 변환할 수 없으면 에러
-                .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
-        return upload(uploadFile, dirName);
-    }
-
-    // S3로 파일 업로드하기
-    private String upload(File uploadFile, String dirName) {
-        String fileName = dirName + "/" + UUID.randomUUID() + uploadFile.getName();   // S3에 저장된 파일 이름
-        String uploadImageUrl = putS3(uploadFile, fileName); // s3로 업로드
-        removeNewFile(uploadFile);
-        return uploadImageUrl;
-    }
-
-    // S3로 업로드
-    private String putS3(File uploadFile, String fileName) {
-        amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
-        return amazonS3Client.getUrl(bucket, fileName).toString();
-    }
-
-    // 로컬에 저장된 이미지 지우기
-    private void removeNewFile(File targetFile) {
-        if (targetFile.delete()) {
-            log.info("File delete success");
-            return;
-        }
-        log.info("File delete fail");
-    }
 
 
-    private Optional<File> convert(PostRequestDto postRequestDto) throws IOException {
-        String serverPath = "tmp/";
-        File convertFile;
-        if(postRequestDto.getThumbnail() != null){
-            convertFile = new File(serverPath + UUID.randomUUID()+postRequestDto.getThumbnail().getOriginalFilename());
-        } else{
-            convertFile = new File(serverPath + UUID.randomUUID()+postRequestDto.getFileName());
-        }
-        // grant write permission on linux
-        Runtime.getRuntime().exec("chmod 777 " + convertFile.getAbsolutePath());
-        if (convertFile.createNewFile()) { // 바로 위에서 지정한 경로에 File이 생성됨 (경로가 잘못되었다면 생성 불가능)
-            if(postRequestDto.getThumbnail() != null){ // form-data 형식으로 왔을 때
-                try (FileOutputStream fos = new FileOutputStream(convertFile)) { // FileOutputStream 데이터를 파일에 바이트 스트림으로 저장하기 위함
-                    fos.write(postRequestDto.getBase64Thumbnail().getBytes());
-                }
-            }
-            else if(postRequestDto.getBase64Thumbnail() != null){ // json 으로 왔을 때
-                try (FileOutputStream fos = new FileOutputStream(convertFile)) { // FileOutputStream 데이터를 파일에 바이트 스트림으로 저장하기 위함
-                    Base64.Decoder decoder = Base64.getDecoder();
-                    byte[] decodedBytes = decoder.decode(postRequestDto.getBase64Thumbnail().getBytes());
-                    fos.write(decodedBytes);
-                }
-            }
 
-            return Optional.of(convertFile);
-        }
-        return Optional.empty();
-    }
 
-    // delete s3에 올려진 사진
-    public void fileDelete(String imageUrl) {
-        imageUrl= imageUrl.replace(bucketUrl , "");
-        try {
-            log.info("imageUrl: " + (imageUrl).replace(File.separatorChar, '/'));
-            amazonS3Client.deleteObject(bucket, (imageUrl).replace(File.separatorChar, '/'));
-        } catch (AmazonServiceException e) {
-            log.error(e.getErrorCode() + " : 버킷 이미지 삭제 실패 ");
-        }
-    }
     public List<PostResponseDto> toPostResponseDto(List<Post> posts){
         return posts.stream().map(Post::toPostResponseDto).collect(Collectors.toList());
     }
@@ -183,19 +118,19 @@ public class PostService {
     }
     // 내 게시글 조회
     @Transactional(readOnly = true)
-    public Page<PostResponseDto> findMyPost(String userId, final Pageable pageable){
+    public Page<PostResponseDto> findAllMyPost(String userId, final Pageable pageable){
         MemberInfo memberInfo = findMemberInfo(userId);
-        List<Post> posts =  postRepository.findByMemberInfoAndTmpStoreIsFalseAndBlockedIsFalse(Post.class,memberInfo, pageable);
+        List<Post> posts =  postRepository.findByMemberInfoAndBlockedIsFalse(Post.class,memberInfo, pageable);
         return new PageImpl<>(toPostResponseDto(posts), pageable, posts.size());
     }
 
     // 내 게시글 카테고리 별 조회
     @Transactional(readOnly = true)
-    public Page<?> findMyPostWIthCategory(String userId, String categoryName, final Pageable pageable){
+    public Page<?> findAllMyPostWIthCategory(String userId, String categoryName, final Pageable pageable){
         MemberInfo memberInfo = findMemberInfo(userId);
         Optional<Category> category = Optional.of(jpaCategoryRepository.findByCategoryName(categoryName).orElseThrow(
                 ()-> new IllegalArgumentException("찾을 수 없는 카테고리 입니다.")));
-        List<Post> posts = postRepository.findByMemberInfoAndCategoryAndTmpStoreIsFalseAndBlockedIsFalse(Post.class,memberInfo, category, pageable);
+        List<Post> posts = postRepository.findByMemberInfoAndCategoryAndBlockedIsFalse(Post.class,memberInfo, category, pageable);
         return new PageImpl<>(toPostResponseDto(posts), pageable, posts.size());
     }
     // 모든 게시글 카테고리 별 조회
@@ -231,15 +166,15 @@ public class PostService {
         return new PageImpl<>(toPostResponseDto(posts), pageable, posts.size());
     }
     @Transactional
-    public Page<?> findAllMyTmpPost(String userId, final Pageable pageable){
+    public Page<?> findAllMyTmpPosts(String userId, final Pageable pageable){
         MemberInfo memberInfo = findMemberInfo(userId);
         List<Post> posts = postRepository.findAllByTmpStoreIsTrueAndMemberInfo(Post.class, memberInfo, pageable);
         return new PageImpl<>(toPostResponseDto(posts), pageable, posts.size());
     }
     @Transactional
-    public PostResponseDto findMyTmpPost(String userId, Long postId){
+    public PostResponseDto findMyPost(String userId, Long postId){
         MemberInfo memberInfo = findMemberInfo(userId);
-        return postRepository.findByMemberInfoAndTmpStoreIsTrueAndPostId(Post.class,memberInfo, postId).toPostResponseDto();
+        return postRepository.findByMemberInfoAndPostId(Post.class,memberInfo, postId).toPostResponseDto();
 
     }
     @Transactional
