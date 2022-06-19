@@ -34,7 +34,6 @@ import java.util.Date;
 @RestController
 @RequestMapping("")
 @RequiredArgsConstructor
-@Profile("!real")
 public class AuthController {
 
     private final AppProperties appProperties;
@@ -44,6 +43,7 @@ public class AuthController {
     private  final MemberService memberService;
     private final static long THREE_DAYS_MSEC = 259200000;
     private final static String REFRESH_TOKEN = "refresh_token";
+    @Profile("!real")
     @ApiOperation(value = "회원가입 테스트용", notes = "회원가입 할때 쓰는 놈 Api 테스트 용으로 삭제 예정")
     @PostMapping("/test/auth/join")
     public ResponseDto<Integer> join(@RequestBody Member member) {
@@ -55,6 +55,7 @@ public class AuthController {
 
     @ApiOperation(value = "로그인 테스트", notes = "로그인 할때 쓰는 놈 Api 테스트 용으로 삭제 예정")
     @PostMapping("/test/auth/login")
+    @Profile("!real")
     public ApiResponse login(
             HttpServletRequest request,
             HttpServletResponse response,

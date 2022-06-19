@@ -8,17 +8,16 @@ import Gdsc.web.repository.memberinfo.JpaMemberInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import Gdsc.web.repository.member.JpaMemberRepository;
+import Gdsc.web.repository.member.MemberRepository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class MemberService {
 
-    private final JpaMemberRepository memberRepository;
+    private final MemberRepository memberRepository;
     private final JpaMemberInfoRepository jpaMemberInfoRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 

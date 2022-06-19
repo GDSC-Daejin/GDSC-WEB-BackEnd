@@ -46,7 +46,7 @@ public class Post {
     @Lob
     @ApiModelProperty(example = "내용")
     String content; // 내용
-    @Column(columnDefinition = "integer default 0", nullable = false)
+    @Column(columnDefinition = "integer default 0", nullable = false , name = "VIEW_COUNT")
     private int view; //조회수
 
 
@@ -56,7 +56,7 @@ public class Post {
     private MemberInfo memberInfo;
 
     //임시 저장 여부
-    @Column(columnDefinition = "boolean default false")
+
     @ApiModelProperty(example = "false")
     @NotNull
     @ColumnDefault("false")

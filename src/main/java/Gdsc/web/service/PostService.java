@@ -4,7 +4,7 @@ import Gdsc.web.dto.requestDto.PostRequestDto;
 import Gdsc.web.dto.responseDto.PostResponseDto;
 import Gdsc.web.entity.*;
 import Gdsc.web.repository.category.JpaCategoryRepository;
-import Gdsc.web.repository.member.JpaMemberRepository;
+import Gdsc.web.repository.member.MemberRepository;
 import Gdsc.web.repository.post.PostRepository;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 
 public class PostService {
     private final PostRepository postRepository;
-    private final JpaMemberRepository jpaMemberRepository;
+    private final MemberRepository memberRepository;
     private final JpaCategoryRepository jpaCategoryRepository;
     private final AmazonS3Client amazonS3Client;
 
@@ -177,7 +177,7 @@ public class PostService {
     }
     @Transactional
     public MemberInfo findMemberInfo(String userId){
-        Member member = jpaMemberRepository.findByUserId(userId);
+        Member member = memberRepository.findByUserId(userId);
         if(member == null) throw new IllegalArgumentException("없는 사용자 입니다.");
         return member.getMemberInfo();
     }

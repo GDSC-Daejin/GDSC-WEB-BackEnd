@@ -8,6 +8,7 @@ import org.apiguardian.api.API;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -24,6 +25,7 @@ import java.util.Arrays;
 @Configuration
 @EnableSwagger2
 @RequiredArgsConstructor
+@Profile("!prod")
 public class SwaggerConfig {
 
 

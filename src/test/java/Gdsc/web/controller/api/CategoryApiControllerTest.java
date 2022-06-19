@@ -1,6 +1,7 @@
 package Gdsc.web.controller.api;
 
 import Gdsc.web.common.CategoryEntityFactory;
+import Gdsc.web.controller.AbstractControllerTest;
 import Gdsc.web.dto.requestDto.CategoryUpdateDto;
 import Gdsc.web.entity.Category;
 import Gdsc.web.repository.category.JpaCategoryRepository;
@@ -33,14 +34,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Transactional
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@AutoConfigureMockMvc
-class CategoryApiControllerTest {
+
+class CategoryApiControllerTest extends AbstractControllerTest {
     @Autowired
     private WebApplicationContext context;
-    private MockMvc mvc;
+
     private ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
