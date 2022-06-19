@@ -2,7 +2,6 @@ package Gdsc.web.controller.api;
 
 import Gdsc.web.dto.ApiResponse;
 import Gdsc.web.dto.requestDto.PostRequestDto;
-import Gdsc.web.dto.requestDto.PostResponseDto;
 import Gdsc.web.entity.Post;
 import Gdsc.web.service.PostService;
 import io.swagger.annotations.ApiOperation;
@@ -15,9 +14,12 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.swagger2.mappers.ModelMapper;
+
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,13 +32,6 @@ public class PostApiController {
     private final PostService postService;
 
 
-    //등록
-    /*@ApiOperation(value = "포스트 글쓰기", notes = "Json 아니고 form type으로 보내야함")
-    @PostMapping("/api/member/v1/post")
-    public ApiResponse saveFormData(@ModelAttribute @Valid PostRequestDto requestDto  , @AuthenticationPrincipal User principal) throws IOException {
-        postService.save(requestDto , principal.getUsername());
-        return ApiResponse.success("message", "SUCCESS");
-    }*/
     @ApiOperation(value = "포스트 글쓰기", notes = "Json base64인코딩 한 내용!")
     @PostMapping("/api/member/v2/post")
     public ApiResponse saveJsonPost(@RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal User principal) throws IOException {
@@ -44,16 +39,7 @@ public class PostApiController {
         postService.save(postRequestDto , principal.getUsername());
         return ApiResponse.success("message", "SUCCESS");
     }
-    //수정
-    /*@ApiOperation(value = "post 업데이트", notes = "JWT 토큰으로 user정보 읽고 변한값 Json 아니고 form type으로 보내야함")
-    @PutMapping("/api/member/v1/post/{postId}")
-    public ApiResponse updateFormData(@PathVariable Long postId,
-                              @ModelAttribute @Valid PostRequestDto requestDto ,
-                              @AuthenticationPrincipal User principal) throws IOException {
 
-        postService.update(requestDto, postId , principal.getUsername());
-        return ApiResponse.success("message","SUCCESS");
-    }*/
 
     // 삭제
     @ApiOperation(value = "post 삭제" , notes = "현재 로그인한 사람과 일치해야 삭제 가능")
@@ -76,7 +62,8 @@ public class PostApiController {
     //조회
     @ApiOperation(value = "post 상세보기",
             notes = "PostId로 상세보기\n" +
-                    "api 주소에 PathVariable 주면 됩니다.")
+                    "api 주소에 PathVariable 주면 됩니다.\n" +
+                    "임시글, 블록된 글 안보임!")
     @GetMapping("/api/v1/post/{postId}")
     public ApiResponse findByPostId(@PathVariable Long postId, HttpServletRequest request, HttpServletResponse response){
         Cookie oldCookie = null;
@@ -128,18 +115,15 @@ public class PostApiController {
         Page<?> post = postService.findPostAllWithCategory(categoryName, pageable);
         return ApiResponse.success("data", post);
     }
-    @ApiOperation(value = "해시태그 별 글 목록 불러오기", notes = "해시태그 별 모든 게시글을 조회합니다.")
+
+    @ApiOperation(value = "제목 , 내용 , 해쉬태그로 검색 기능",
+            notes = "Full text search 기능 아직 한국어 미지원\n" +
+                    "api/v1/post/search/{word}\n" +
+                    "= 검색어어어 근데 Null 또는 공백이면 오류 남! 기본 검색어 넣어주는게 좋을 것 같음")
     @GetMapping("/api/v1/post/search/{word}")
-    public ApiResponse findPostAllWithPostHashTag(@PathVariable String word, @PageableDefault
+    public ApiResponse findPostSearch(@PathVariable String word,@PageableDefault
             (size = 16, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable){
-        Page<?> post = postService.findPostAllWithPostHashTag(word, pageable);
-        return ApiResponse.success("data", post);
-    }
-    @ApiOperation(value = "제목 검색", notes = "해시태그 별 모든 게시글을 조회합니다.")
-    @GetMapping("/api/v1/post/search/title/{title}")
-    public ApiResponse findPostAllWithTitle(@PathVariable String title, @PageableDefault
-            (size = 16, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable){
-        Page<?> post = postService.findPostAllByTitle(title, pageable);
+        Page<?> post = postService.findFullTextSearch(word,pageable);
         return ApiResponse.success("data", post);
     }
     @ApiOperation(value ="내가 작성한 게시글 불러오기", notes = "내가 작성한 게시글을 조회")
@@ -166,7 +150,7 @@ public class PostApiController {
         return ApiResponse.success("data", post);
     }
     @ApiOperation(value = "내 임시 저장글 카테고리별 불러오기", notes = "임시 저장글을 카테고리 별로 불러옵니다.")
-    @GetMapping("/api/member/v1/myPost/temp/categoryName/{categoryName}")
+    @GetMapping("/api/member/v1/myPost/temp/{categoryName}")
     public ApiResponse myPostTempWithCategory(@AuthenticationPrincipal User principal,
                                               @PathVariable String categoryName,
                                               @PageableDefault(size = 16 ,sort = "postId",direction = Sort.Direction.DESC)Pageable pageable){
@@ -174,10 +158,12 @@ public class PostApiController {
         return ApiResponse.success("data", post);
     }
     @ApiOperation(value = "내 임시 저장글 상세보기", notes = "임시 저장글을 불러옵니다.")
-    @GetMapping("/api/member/v1/myPost/temp/{postId}")
+    @GetMapping("/api/member/v1/myPost/temp/post/{postId}")
     public ApiResponse myPostTemp(@AuthenticationPrincipal User principal,
                                   @PathVariable Long postId){
         return ApiResponse.success("data",  postService.findMyTmpPost(principal.getUsername(), postId));
     }
+
+    
 
 }

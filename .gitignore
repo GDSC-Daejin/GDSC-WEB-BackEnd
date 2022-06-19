@@ -5,12 +5,14 @@
 /.idea/
 /src/main/resources/application.properties
 
-/src/test/resources/application.properties
+
 /src/main/resources/application-oauth.properties
 /src/main/resources/application-dev.properties
 ~/app/step1/loglog.log
-src/test/resources/application.properties
 /hi.uml
 /out/production/resources/application.properties
 /out/production/resources/application-oauth.properties
 /out/production/resources/application-dev.properties
+/out
+./FullText_Post_idx
+/FullText_Post_idx
