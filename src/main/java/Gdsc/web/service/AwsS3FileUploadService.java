@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -71,7 +72,7 @@ public class AwsS3FileUploadService {
         } else{
             convertFile = new File(serverPath + UUID.randomUUID()+postRequestDto.getFileName());
         }
-        System.out.println(convertFile.toURI().toString());
+
         // grant write permission on linux
         convertFile.setReadable(true, true);
         convertFile.setWritable(true, true);
@@ -95,11 +96,12 @@ public class AwsS3FileUploadService {
         return Optional.empty();
     }
 
+
     // delete s3에 올려진 사진
     public void fileDelete(String fileUrl) {
         fileUrl= fileUrl.replace(bucketUrl , "");
         try {
-            log.info("fileUrl: " + (fileUrl).replace(File.separatorChar, '/'));
+            log.info("file Url Delete: " + (fileUrl).replace(File.separatorChar, '/'));
             amazonS3Client.deleteObject(bucket, (fileUrl).replace(File.separatorChar, '/'));
         } catch (AmazonServiceException e) {
             log.error(e.getErrorCode() + " : 버킷 파일 삭제 실패 ");
