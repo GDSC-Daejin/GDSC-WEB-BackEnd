@@ -101,6 +101,7 @@ public class PostApiController {
     @GetMapping("/api/v1/post/list")
     public ApiResponse findPostAll( @PageableDefault(size = 16 ,sort = "postId",direction = Sort.Direction.DESC ) Pageable pageable){
         Page<?> post = postService.findPostAll(pageable);
+        
         return ApiResponse.success("data", post);
     }
 
