@@ -7,12 +7,10 @@ import Gdsc.web.dto.requestDto.PostRequestDto;
 import Gdsc.web.entity.Category;
 import Gdsc.web.entity.Member;
 import Gdsc.web.entity.Post;
-import Gdsc.web.oauth.entity.UserPrincipal;
 import Gdsc.web.repository.category.JpaCategoryRepository;
 import Gdsc.web.repository.member.JpaMemberRepository;
 import Gdsc.web.repository.memberinfo.JpaMemberInfoRepository;
-import Gdsc.web.repository.post.JpaPostRepository;
-import Gdsc.web.service.PostService;
+import Gdsc.web.repository.post.PostRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -24,7 +22,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -56,7 +53,7 @@ class PostApiControllerTest {
     @Autowired
     private JpaCategoryRepository categoryRepository;
     @Autowired
-    private JpaPostRepository postRepository;
+    private PostRepository postRepository;
     @Autowired
     private JpaMemberInfoRepository memberInfoRepository;
     private Member member;

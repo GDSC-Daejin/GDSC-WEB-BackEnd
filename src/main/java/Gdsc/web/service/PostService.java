@@ -1,11 +1,11 @@
 package Gdsc.web.service;
 
-import Gdsc.web.dto.mapping.PostResponseMapping;
 import Gdsc.web.dto.requestDto.PostRequestDto;
+import Gdsc.web.dto.responseDto.PostResponseDto;
 import Gdsc.web.entity.*;
 import Gdsc.web.repository.category.JpaCategoryRepository;
 import Gdsc.web.repository.member.JpaMemberRepository;
-import Gdsc.web.repository.post.JpaPostRepository;
+import Gdsc.web.repository.post.PostRepository;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,16 +22,15 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Base64;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+
 public class PostService {
-    private final JpaPostRepository jpaPostRepository;
+    private final PostRepository postRepository;
     private final JpaMemberRepository jpaMemberRepository;
     private final JpaCategoryRepository jpaCategoryRepository;
     private final AmazonS3Client amazonS3Client;
@@ -58,13 +58,13 @@ public class PostService {
             }
         }
 
-        jpaPostRepository.save(post);
+        postRepository.save(post);
     }
     //수정
     @Transactional
     public void update(PostRequestDto requestDto, Long postId , String userId) throws IOException {
         MemberInfo memberInfo = findMemberInfo(userId);
-        Post post = jpaPostRepository.findByPostIdAndMemberInfo(postId, memberInfo) //ㅣinteger가 아니라 long 타입이라 오류? jpa Long을 integer로 바꿔야 할까?
+        Post post = postRepository.findByPostIdAndMemberInfo(postId, memberInfo) //ㅣinteger가 아니라 long 타입이라 오류? jpa Long을 integer로 바꿔야 할까?
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
         Category category = jpaCategoryRepository.findByCategoryName(requestDto.getCategory().getCategoryName()).get();
         post.setCategory(category);
@@ -86,20 +86,20 @@ public class PostService {
     @Transactional
     public void deletePost(Long postId, String userId){
         MemberInfo memberInfo = findMemberInfo(userId);
-        Optional<Post> post = jpaPostRepository.findByPostIdAndMemberInfo(postId, memberInfo);
+        Optional<Post> post = postRepository.findByPostIdAndMemberInfo(postId, memberInfo);
         if(post.get().getImagePath() != null){
             fileDelete(post.get().getImagePath());
         }
-        jpaPostRepository.delete(post.get());
+        postRepository.delete(post.get());
     }
 
 
     //조회
     @Transactional(readOnly = true)
-    public PostResponseMapping findByPostIdAndBlockIsFalse(Long postId){
-
-        return jpaPostRepository.findByPostIdAndBlockedIsFalseAndTmpStoreIsFalse(postId,PostResponseMapping.class)
+    public PostResponseDto findByPostIdAndBlockIsFalse(Long postId){
+        Post post = postRepository.findByPostIdAndBlockedIsFalseAndTmpStoreIsFalse(postId,Post.class)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
+        return post.toPostResponseDto();
     }
 
 
@@ -172,74 +172,95 @@ public class PostService {
             log.error(e.getErrorCode() + " : 버킷 이미지 삭제 실패 ");
         }
     }
-
+    public List<PostResponseDto> toPostResponseDto(List<Post> posts){
+        return posts.stream().map(Post::toPostResponseDto).collect(Collectors.toList());
+    }
+    @Transactional
     public MemberInfo findMemberInfo(String userId){
         Member member = jpaMemberRepository.findByUserId(userId);
         if(member == null) throw new IllegalArgumentException("없는 사용자 입니다.");
-        MemberInfo memberInfo = member.getMemberInfo();
-        return memberInfo;
+        return member.getMemberInfo();
     }
     // 내 게시글 조회
     @Transactional(readOnly = true)
-    public Page<?> findMyPost(String userId, final Pageable pageable){
+    public Page<PostResponseDto> findMyPost(String userId, final Pageable pageable){
         MemberInfo memberInfo = findMemberInfo(userId);
-        return jpaPostRepository.findByMemberInfoAndTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,memberInfo, pageable);
+        List<Post> posts =  postRepository.findByMemberInfoAndTmpStoreIsFalseAndBlockedIsFalse(Post.class,memberInfo, pageable);
+        return new PageImpl<>(toPostResponseDto(posts), pageable, posts.size());
     }
+
     // 내 게시글 카테고리 별 조회
     @Transactional(readOnly = true)
     public Page<?> findMyPostWIthCategory(String userId, String categoryName, final Pageable pageable){
         MemberInfo memberInfo = findMemberInfo(userId);
         Optional<Category> category = Optional.of(jpaCategoryRepository.findByCategoryName(categoryName).orElseThrow(
                 ()-> new IllegalArgumentException("찾을 수 없는 카테고리 입니다.")));
-        return jpaPostRepository.findByMemberInfoAndCategoryAndTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,memberInfo, category, pageable);
+        List<Post> posts = postRepository.findByMemberInfoAndCategoryAndTmpStoreIsFalseAndBlockedIsFalse(Post.class,memberInfo, category, pageable);
+        return new PageImpl<>(toPostResponseDto(posts), pageable, posts.size());
     }
     // 모든 게시글 카테고리 별 조회
     @Transactional(readOnly = true)
     public Page<?> findPostAllWithCategory(String categoryName, final Pageable pageable){
         Optional<Category> category = Optional.of(jpaCategoryRepository.findByCategoryName(categoryName).orElseThrow(
                 () -> new IllegalArgumentException("찾을 수 없는 카테고리 입니다.")));
-        return jpaPostRepository.findByCategoryAndTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,category, pageable);
+        List<Post> posts = postRepository.findByCategoryAndTmpStoreIsFalseAndBlockedIsFalse(Post.class,category, pageable);
+        return new PageImpl<>(toPostResponseDto(posts), pageable, posts.size());
     }
     // 모든 게시글 해시태그 별 조회
     @Transactional(readOnly = true)
     public Page<?> findPostAllWithPostHashTag(String tagName, final Pageable pageable){
-        return jpaPostRepository.findByPostHashTagsIsContainingOrContentIsContainingAndTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,tagName ,tagName, pageable);
+        List<Post> posts = postRepository.findByPostHashTagsIsContainingOrContentIsContainingAndTmpStoreIsFalseAndBlockedIsFalse(Post.class,tagName ,tagName, pageable);
+        return new PageImpl<>(toPostResponseDto(posts), pageable, posts.size());
     }
 
     //post 글 목록 불러오기
     @Transactional(readOnly = true)
     public Page<?> findPostAll(final Pageable pageable){
-
-        return jpaPostRepository.findAllByTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,pageable);
+        List<Post> posts = postRepository.findAllByTmpStoreIsFalseAndBlockedIsFalse(Post.class, pageable);
+        return new PageImpl<>(toPostResponseDto(posts), pageable, posts.size());
     }
     @Transactional
     public Page<?> findPostAllByTitle(String title, final Pageable pageable){
-        return jpaPostRepository.findAllByTitleContainingAndTmpStoreIsFalseAndBlockedIsFalse(PostResponseMapping.class,title, pageable);
+        List<Post> posts = postRepository.findAllByTitleContainingAndTmpStoreIsFalseAndBlockedIsFalse(Post.class, title, pageable);
+        return new PageImpl<>(toPostResponseDto(posts), pageable, posts.size());
     }
 
+    @Transactional
     public Page<?> findBockedPostAll(final Pageable pageable){
-
-        return jpaPostRepository.findAllByTmpStoreIsFalseAndBlockedIsTrue(PostResponseMapping.class,pageable);
+        List<Post> posts = postRepository.findAllByTmpStoreIsFalseAndBlockedIsTrue(Post.class, pageable);
+        return new PageImpl<>(toPostResponseDto(posts), pageable, posts.size());
     }
+    @Transactional
     public Page<?> findAllMyTmpPost(String userId, final Pageable pageable){
         MemberInfo memberInfo = findMemberInfo(userId);
-        return jpaPostRepository.findAllByTmpStoreIsTrueAndMemberInfo(PostResponseMapping.class,memberInfo, pageable);
+        List<Post> posts = postRepository.findAllByTmpStoreIsTrueAndMemberInfo(Post.class, memberInfo, pageable);
+        return new PageImpl<>(toPostResponseDto(posts), pageable, posts.size());
     }
-    public PostResponseMapping findMyTmpPost(String userId, Long postId){
+    @Transactional
+    public PostResponseDto findMyTmpPost(String userId, Long postId){
         MemberInfo memberInfo = findMemberInfo(userId);
-        return jpaPostRepository.findByMemberInfoAndTmpStoreIsTrueAndPostId(PostResponseMapping.class,memberInfo, postId);
+        return postRepository.findByMemberInfoAndTmpStoreIsTrueAndPostId(Post.class,memberInfo, postId).toPostResponseDto();
 
     }
     @Transactional
     public void updateView(Long postId){
-        Optional<Post> post = jpaPostRepository.findByPostId(postId);
+        Optional<Post> post = postRepository.findByPostId(postId);
         post.get().setView(post.get().getView()+1);
     }
 
+    @Transactional
     public Page<?> findAllMyTmpPostWithCategory(String username, String categoryName,Pageable pageable){
         MemberInfo memberInfo = findMemberInfo(username);
         Optional<Category> category = Optional.of(jpaCategoryRepository.findByCategoryName(categoryName).orElseThrow(
                 ()-> new IllegalArgumentException("찾을 수 없는 카테고리 입니다.")));
-        return jpaPostRepository.findAllByTmpStoreIsTrueAndMemberInfoAndCategory(PostResponseMapping.class,memberInfo, category, pageable);
+        List<Post> posts = postRepository.findAllByTmpStoreIsTrueAndMemberInfoAndCategory(Post.class, memberInfo, category, pageable);
+        return new PageImpl<>(toPostResponseDto(posts), pageable, posts.size());
     }
+    // fulltext Search 검색
+    @Transactional
+    public Page<?> findFullTextSearch(String terms,Pageable pageable) {
+        return postRepository.findAllByTitleLikeOrContentLikeOrPostHashTagsLikeAndTmpStoreIsFalseAndBlockedIsFalse(
+                terms,pageable);
+    }
+
 }
