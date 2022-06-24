@@ -1,5 +1,6 @@
 package Gdsc.web.utils;
 
+import org.springframework.http.ResponseCookie;
 import org.springframework.util.SerializationUtils;
 
 import javax.servlet.http.Cookie;
@@ -24,11 +25,23 @@ public class CookieUtil {
     }
 
     public static void addCookie(HttpServletResponse response, String name, String value, int maxAge) {
+
         Cookie cookie = new Cookie(name, value);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
         cookie.setMaxAge(maxAge);
         response.addCookie(cookie);
+    }
+    public static void addCookie(HttpServletResponse response, String name, String value, int maxAge , String domain) {
+        ResponseCookie cookie = ResponseCookie.from(name, value)
+                .domain(domain)
+                .sameSite("None")
+                .secure(true)
+                .path("/")
+                .maxAge(maxAge)
+                .httpOnly(true)
+                .build();
+        response.addHeader("Set-Cookie", cookie.toString());
     }
 
     public static void deleteCookie(HttpServletRequest request, HttpServletResponse response, String name) {
