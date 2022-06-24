@@ -23,6 +23,9 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("")
 @RequiredArgsConstructor
@@ -97,7 +100,9 @@ public class RefreshController {
             CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
             CookieUtil.addCookie(response, REFRESH_TOKEN, authRefreshToken.getToken(), cookieMaxAge);
         }
-
-        return ApiResponse.success("token", newAccessToken.getToken());
+        Map<String,String>  tokenMap = new HashMap<>();
+        tokenMap.put("token", newAccessToken.getToken());
+        tokenMap.put("refreshToken", authRefreshToken.getToken());
+        return ApiResponse.success("data", tokenMap );
     }
 }
