@@ -94,7 +94,6 @@ public class RefreshController {
             // DB에 refresh 토큰 업데이트
             userRefreshToken.setRefreshToken(authRefreshToken.getToken());
             userRefreshTokenRepository.save(userRefreshToken);
-            response.addHeader(REFRESH_TOKEN, authRefreshToken.getToken());
         }
         Map<String,String>  tokenMap = new HashMap<>();
         tokenMap.put("token", newAccessToken.getToken());
