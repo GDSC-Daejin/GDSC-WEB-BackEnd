@@ -11,6 +11,8 @@ import Gdsc.web.service.MemberService;
 import Gdsc.web.utils.CookieUtil;
 import Gdsc.web.utils.HeaderUtil;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -39,7 +41,7 @@ public class RefleshController {
         // access token 확인
         String accessToken = HeaderUtil.getAccessToken(request);
         AuthToken authToken = tokenProvider.convertAuthToken(accessToken);
-        if (!authToken.validate()) {
+        if (!authToken.validateWithOutExpired()) {
             return ApiResponse.invalidAccessToken();
         }
 
@@ -57,8 +59,8 @@ public class RefleshController {
                 .map(Cookie::getValue)
                 .orElse((null));
         AuthToken authRefreshToken = tokenProvider.convertAuthToken(refreshToken);
-
-        if (authRefreshToken.validate()) {
+        System.out.println("refreshToken : " + refreshToken);
+        if (!authRefreshToken.validate()) {
             return ApiResponse.invalidRefreshToken();
         }
 
@@ -89,7 +91,7 @@ public class RefleshController {
 
             // DB에 refresh 토큰 업데이트
             userRefreshToken.setRefreshToken(authRefreshToken.getToken());
-
+            userRefreshTokenRepository.save(userRefreshToken);
             int cookieMaxAge = (int) refreshTokenExpiry / 60;
             CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
             CookieUtil.addCookie(response, REFRESH_TOKEN, authRefreshToken.getToken(), cookieMaxAge);

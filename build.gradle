@@ -72,6 +72,8 @@ dependencies {
     // test 관련 database
     runtimeOnly('com.h2database:h2:1.4.199')
 
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
 
 }
 

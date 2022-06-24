@@ -91,8 +91,10 @@ public class AuthController {
             userRefreshToken = new UserRefreshToken(userId, refreshToken.getToken());
             userRefreshTokenRepository.saveAndFlush(userRefreshToken);
         } else {
+            // 여기서 업데이트 쿼리가 안나옴
             // DB에 refresh 토큰 업데이트
             userRefreshToken.setRefreshToken(refreshToken.getToken());
+            userRefreshTokenRepository.saveAndFlush(userRefreshToken);
         }
 
         int cookieMaxAge = (int) refreshTokenExpiry / 60;
