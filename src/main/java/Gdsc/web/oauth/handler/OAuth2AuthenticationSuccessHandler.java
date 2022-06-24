@@ -108,7 +108,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         }
         userRefreshTokenRepository.saveAndFlush(userRefreshToken);
         int cookieMaxAge = (int) refreshTokenExpiry / 60;
-
+        response.addHeader("Set-Cookie", "refreshToken=" + refreshToken.getToken() + "; Max-Age=" + cookieMaxAge + "; Path=/" + "Secure; SameSite = None" );
         CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
         CookieUtil.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
 

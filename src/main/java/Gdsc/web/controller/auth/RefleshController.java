@@ -62,6 +62,7 @@ public class RefleshController {
                 .orElse((null));
         AuthToken authRefreshToken = tokenProvider.convertAuthToken(refreshToken);
         log.info("refreshToken: {}", refreshToken);
+
         if (!authRefreshToken.validate()) {
             return ApiResponse.invalidRefreshToken();
         }
