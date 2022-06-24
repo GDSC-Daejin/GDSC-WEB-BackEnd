@@ -58,9 +58,7 @@ public class RefreshController {
         RoleType roleType = RoleType.of(claims.get("role", String.class));
 
         // refresh token
-        String refreshToken = CookieUtil.getCookie(request, REFRESH_TOKEN)
-                .map(Cookie::getValue)
-                .orElse((null));
+        String refreshToken = HeaderUtil.getHeaderRefreshToken(request);
         AuthToken authRefreshToken = tokenProvider.convertAuthToken(refreshToken);
         log.info("refreshToken: {}", refreshToken);
 
@@ -96,9 +94,7 @@ public class RefreshController {
             // DB에 refresh 토큰 업데이트
             userRefreshToken.setRefreshToken(authRefreshToken.getToken());
             userRefreshTokenRepository.save(userRefreshToken);
-            int cookieMaxAge = (int) refreshTokenExpiry / 60;
-            CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
-            CookieUtil.addCookie(response, REFRESH_TOKEN, authRefreshToken.getToken(), cookieMaxAge);
+            response.addHeader(REFRESH_TOKEN, authRefreshToken.getToken());
         }
         Map<String,String>  tokenMap = new HashMap<>();
         tokenMap.put("token", newAccessToken.getToken());
