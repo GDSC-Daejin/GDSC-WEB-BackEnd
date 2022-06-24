@@ -11,8 +11,6 @@ import Gdsc.web.service.MemberService;
 import Gdsc.web.utils.CookieUtil;
 import Gdsc.web.utils.HeaderUtil;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,11 +23,14 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("")
 @RequiredArgsConstructor
 @Slf4j
-public class RefleshController {
+public class RefreshController {
     private final AppProperties appProperties;
     private final AuthTokenProvider tokenProvider;
     private final AuthenticationManager authenticationManager;
@@ -62,6 +63,7 @@ public class RefleshController {
                 .orElse((null));
         AuthToken authRefreshToken = tokenProvider.convertAuthToken(refreshToken);
         log.info("refreshToken: {}", refreshToken);
+
         if (!authRefreshToken.validate()) {
             return ApiResponse.invalidRefreshToken();
         }
@@ -98,7 +100,9 @@ public class RefleshController {
             CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
             CookieUtil.addCookie(response, REFRESH_TOKEN, authRefreshToken.getToken(), cookieMaxAge);
         }
-
-        return ApiResponse.success("token", newAccessToken.getToken());
+        Map<String,String>  tokenMap = new HashMap<>();
+        tokenMap.put("token", newAccessToken.getToken());
+        tokenMap.put("refreshToken", authRefreshToken.getToken());
+        return ApiResponse.success("data", tokenMap );
     }
 }
