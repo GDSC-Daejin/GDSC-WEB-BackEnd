@@ -1,12 +1,15 @@
 package Gdsc.web.controller.api;
 
 import Gdsc.web.dto.ApiResponse;
+import Gdsc.web.dto.ApiResponseHeader;
 import Gdsc.web.dto.requestDto.MemberInfoRequestDto;
 import Gdsc.web.entity.Member;
 import Gdsc.web.entity.MemberInfo;
 import Gdsc.web.service.MemberService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +27,9 @@ public class MemberApiController {
     @ApiOperation(value = "Member 내용 보기" , notes = "Member 내용 값 보기")
     @GetMapping("/api/guest/v1/me")
     public ApiResponse getUserV2(@AuthenticationPrincipal User principal) {
-
+        if(principal == null) {
+            return ApiResponse.unauthorized();
+        }
         Member member =memberService.getUserId(principal.getUsername());
         return ApiResponse.success("data" , member);
     }

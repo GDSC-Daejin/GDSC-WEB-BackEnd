@@ -47,4 +47,7 @@ public class ApiResponse<T> {
     public static <T> ApiResponse<T> notExpiredTokenYet() {
         return new ApiResponse(new ApiResponseHeader(FAILED, NOT_EXPIRED_TOKEN_YET), null);
     }
+    public static <T> ApiResponse<T> unauthorized() {
+        return new ApiResponse(new ApiResponseHeader(401, "Unauthorized"), null);
+    }
 }

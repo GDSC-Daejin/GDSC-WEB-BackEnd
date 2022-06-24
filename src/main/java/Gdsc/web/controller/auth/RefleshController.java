@@ -15,6 +15,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +28,7 @@ import java.util.Date;
 @RestController
 @RequestMapping("")
 @RequiredArgsConstructor
+@Slf4j
 public class RefleshController {
     private final AppProperties appProperties;
     private final AuthTokenProvider tokenProvider;
@@ -59,7 +61,7 @@ public class RefleshController {
                 .map(Cookie::getValue)
                 .orElse((null));
         AuthToken authRefreshToken = tokenProvider.convertAuthToken(refreshToken);
-        System.out.println("refreshToken : " + refreshToken);
+        log.info("refreshToken: {}", refreshToken);
         if (!authRefreshToken.validate()) {
             return ApiResponse.invalidRefreshToken();
         }
