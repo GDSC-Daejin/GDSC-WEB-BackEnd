@@ -12,8 +12,6 @@ import Gdsc.web.oauth.token.AuthTokenProvider;
 import Gdsc.web.repository.UserRefreshTokenRepository;
 import Gdsc.web.utils.CookieUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -38,8 +36,8 @@ import static org.springframework.security.oauth2.core.endpoint.OAuth2ParameterN
 @Component
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-    @Value("${app.url}")
-    private  String domain;
+
+
     private final AuthTokenProvider tokenProvider;
     private final AppProperties appProperties;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
@@ -110,12 +108,12 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         }
         userRefreshTokenRepository.saveAndFlush(userRefreshToken);
         int cookieMaxAge = (int) refreshTokenExpiry / 60;
-
         CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
-        CookieUtil.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge , domain);
+        CookieUtil.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
 
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("token", accessToken.getToken())
+                .queryParam("refreshToken", refreshToken.getToken())
                 .build().toUriString();
     }
 

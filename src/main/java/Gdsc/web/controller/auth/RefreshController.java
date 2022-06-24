@@ -11,8 +11,6 @@ import Gdsc.web.service.MemberService;
 import Gdsc.web.utils.CookieUtil;
 import Gdsc.web.utils.HeaderUtil;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +27,7 @@ import java.util.Date;
 @RequestMapping("")
 @RequiredArgsConstructor
 @Slf4j
-public class RefleshController {
+public class RefreshController {
     private final AppProperties appProperties;
     private final AuthTokenProvider tokenProvider;
     private final AuthenticationManager authenticationManager;
