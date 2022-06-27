@@ -2,7 +2,7 @@ package Gdsc.web.oauth.filter;
 
 import Gdsc.web.oauth.token.AuthToken;
 import Gdsc.web.oauth.token.AuthTokenProvider;
-import Gdsc.web.utils.HeaderUtil;
+import Gdsc.web.oauth.utils.HeaderUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;

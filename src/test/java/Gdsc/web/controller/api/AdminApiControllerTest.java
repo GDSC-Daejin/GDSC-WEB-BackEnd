@@ -2,11 +2,11 @@ package Gdsc.web.controller.api;
 
 import Gdsc.web.common.MemberEntityFactory;
 import Gdsc.web.controller.AbstractControllerTest;
-import Gdsc.web.dto.requestDto.MemberRoleUpdateDto;
-import Gdsc.web.entity.Member;
-import Gdsc.web.entity.MemberInfo;
-import Gdsc.web.model.RoleType;
-import Gdsc.web.repository.member.MemberRepository;
+import Gdsc.web.admin.dto.MemberRoleUpdateDto;
+import Gdsc.web.member.entity.Member;
+import Gdsc.web.member.entity.MemberInfo;
+import Gdsc.web.member.model.RoleType;
+import Gdsc.web.member.repository.MemberRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;

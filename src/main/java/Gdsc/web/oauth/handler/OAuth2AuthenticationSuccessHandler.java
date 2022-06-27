@@ -1,16 +1,16 @@
 package Gdsc.web.oauth.handler;
 
-import Gdsc.web.config.properties.AppProperties;
-import Gdsc.web.entity.UserRefreshToken;
-import Gdsc.web.model.RoleType;
+import Gdsc.web.common.config.properties.AppProperties;
+import Gdsc.web.oauth.entity.UserRefreshToken;
+import Gdsc.web.member.model.RoleType;
 import Gdsc.web.oauth.entity.ProviderType;
 import Gdsc.web.oauth.info.OAuth2UserInfo;
 import Gdsc.web.oauth.info.OAuth2UserInfoFactory;
 import Gdsc.web.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import Gdsc.web.oauth.token.AuthToken;
 import Gdsc.web.oauth.token.AuthTokenProvider;
-import Gdsc.web.repository.UserRefreshTokenRepository;
-import Gdsc.web.utils.CookieUtil;
+import Gdsc.web.oauth.repository.UserRefreshTokenRepository;
+import Gdsc.web.oauth.utils.CookieUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;

@@ -2,12 +2,9 @@ package Gdsc.web.controller.auth;
 
 import Gdsc.web.common.MemberEntityFactory;
 import Gdsc.web.controller.AbstractControllerTest;
-import Gdsc.web.dto.auth.AuthReqModel;
-import Gdsc.web.entity.Member;
-import Gdsc.web.repository.member.CustomMemberRepository;
-import Gdsc.web.repository.member.MemberRepository;
-import Gdsc.web.repository.member.MemberRepositoryImp;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import Gdsc.web.oauth.dto.AuthReqModel;
+import Gdsc.web.member.entity.Member;
+import Gdsc.web.member.repository.MemberRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
@@ -17,8 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import javax.swing.text.html.Option;
 
 import java.util.Optional;
 
