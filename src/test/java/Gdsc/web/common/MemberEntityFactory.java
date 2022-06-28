@@ -1,14 +1,12 @@
 package Gdsc.web.common;
 
-import Gdsc.web.entity.Member;
-import Gdsc.web.entity.MemberInfo;
-import Gdsc.web.model.RoleType;
+import Gdsc.web.member.entity.Member;
+import Gdsc.web.member.entity.MemberInfo;
+import Gdsc.web.member.model.RoleType;
 import Gdsc.web.oauth.entity.ProviderType;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 public class MemberEntityFactory {

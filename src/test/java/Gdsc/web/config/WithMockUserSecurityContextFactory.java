@@ -1,8 +1,8 @@
 package Gdsc.web.config;
 
 import Gdsc.web.annotation.WithMockUser;
-import Gdsc.web.entity.Member;
-import Gdsc.web.entity.MemberInfo;
+import Gdsc.web.member.entity.Member;
+import Gdsc.web.member.entity.MemberInfo;
 import Gdsc.web.oauth.entity.UserPrincipal;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

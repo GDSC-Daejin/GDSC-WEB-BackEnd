@@ -1,6 +1,6 @@
 package Gdsc.web.common;
 
-import Gdsc.web.entity.Category;
+import Gdsc.web.category.entity.Category;
 
 import java.time.LocalDateTime;
 
