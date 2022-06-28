@@ -57,9 +57,10 @@ public class PostApiController {
 
     //조회
     @ApiOperation(value = "post 상세보기",
-            notes = "PostId로 상세보기\n" +
-                    "api 주소에 PathVariable 주면 됩니다.\n" +
-                    "임시글, 블록된 글 안보임!")
+            notes = """
+                    PostId로 상세보기\s
+                    api 주소에 PathVariable 주면 됩니다.
+                    임시글, 블록된 글 안보임!""")
     @GetMapping("/api/v1/post/{postId}")
     public ApiResponse findByPostId(@PathVariable Long postId, HttpServletRequest request, HttpServletResponse response){
         Cookie oldCookie = null;
