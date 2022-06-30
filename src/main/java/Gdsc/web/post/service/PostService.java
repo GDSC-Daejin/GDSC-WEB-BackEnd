@@ -43,8 +43,9 @@ public class PostService {
         MemberInfo memberInfo = findMemberInfo(userId);
         Post post = new Post();
         post.setPostHashTags(requestDto.getPostHashTags());
-        Optional<Category> category = jpaCategoryRepository.findByCategoryName(requestDto.getCategory().getCategoryName());
-        post.setCategory(category.get());
+        Category category = jpaCategoryRepository.findByCategoryName(requestDto.getCategory().getCategoryName())
+                        .orElseThrow(()-> new IllegalArgumentException("찾을 수 없는 카테고리 입니다."));
+        post.setCategory(category);
         post.setContent(requestDto.getContent());
         post.setTitle(requestDto.getTitle());
         post.setMemberInfo(memberInfo);
@@ -64,7 +65,8 @@ public class PostService {
         MemberInfo memberInfo = findMemberInfo(userId);
         Post post = postRepository.findByPostIdAndMemberInfo(postId, memberInfo) //ㅣinteger가 아니라 long 타입이라 오류? jpa Long을 integer로 바꿔야 할까?
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
-        Category category = jpaCategoryRepository.findByCategoryName(requestDto.getCategory().getCategoryName()).get();
+        Category category = jpaCategoryRepository.findByCategoryName(requestDto.getCategory().getCategoryName())
+                .orElseThrow(()-> new IllegalArgumentException("찾을 수 없는 카테고리 입니다."));
         post.setCategory(category);
         post.setPostHashTags(requestDto.getPostHashTags());
         post.setContent(requestDto.getContent());
@@ -84,11 +86,12 @@ public class PostService {
     @Transactional
     public void deletePost(Long postId, String userId){
         MemberInfo memberInfo = findMemberInfo(userId);
-        Optional<Post> post = postRepository.findByPostIdAndMemberInfo(postId, memberInfo);
-        if(post.get().getImagePath() != null){
-            awsS3FileUploadService.fileDelete(post.get().getImagePath());
+        Post post = postRepository.findByPostIdAndMemberInfo(postId, memberInfo)
+                .orElseThrow(()-> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
+        if(post.getImagePath() != null){
+            awsS3FileUploadService.fileDelete(post.getImagePath());
         }
-        postRepository.delete(post.get());
+        postRepository.delete(post);
     }
 
 
@@ -115,22 +118,7 @@ public class PostService {
         return member.getMemberInfo();
     }
     // 내 게시글 조회
-    @Transactional(readOnly = true)
-    public Page<PostResponseDto> findAllMyPost(String userId, final Pageable pageable){
-        MemberInfo memberInfo = findMemberInfo(userId);
-        List<Post> posts =  postRepository.findByMemberInfoAndBlockedIsFalse(Post.class,memberInfo, pageable);
-        return new PageImpl<>(toPostResponseDto(posts), pageable, posts.size());
-    }
 
-    // 내 게시글 카테고리 별 조회
-    @Transactional(readOnly = true)
-    public Page<?> findAllMyPostWIthCategory(String userId, String categoryName, final Pageable pageable){
-        MemberInfo memberInfo = findMemberInfo(userId);
-        Optional<Category> category = Optional.of(jpaCategoryRepository.findByCategoryName(categoryName).orElseThrow(
-                ()-> new IllegalArgumentException("찾을 수 없는 카테고리 입니다.")));
-        List<Post> posts = postRepository.findByMemberInfoAndCategoryAndBlockedIsFalse(Post.class,memberInfo, category, pageable);
-        return new PageImpl<>(toPostResponseDto(posts), pageable, posts.size());
-    }
     // 모든 게시글 카테고리 별 조회
     @Transactional(readOnly = true)
     public Page<?> findPostAllWithCategory(String categoryName, final Pageable pageable){
@@ -164,31 +152,12 @@ public class PostService {
         return new PageImpl<>(toPostResponseDto(posts), pageable, posts.size());
     }
     @Transactional
-    public Page<?> findAllMyTmpPosts(String userId, final Pageable pageable){
-        MemberInfo memberInfo = findMemberInfo(userId);
-        List<Post> posts = postRepository.findAllByTmpStoreIsTrueAndMemberInfo(Post.class, memberInfo, pageable);
-        return new PageImpl<>(toPostResponseDto(posts), pageable, posts.size());
-    }
-    @Transactional
-    public PostResponseDto findMyPost(String userId, Long postId){
-        MemberInfo memberInfo = findMemberInfo(userId);
-        return postRepository.findByMemberInfoAndPostId(Post.class,memberInfo, postId).toPostResponseDto();
-
-    }
-    @Transactional
     public void updateView(Long postId){
         Optional<Post> post = postRepository.findByPostId(postId);
         post.get().setView(post.get().getView()+1);
     }
 
-    @Transactional
-    public Page<?> findAllMyTmpPostWithCategory(String username, String categoryName,Pageable pageable){
-        MemberInfo memberInfo = findMemberInfo(username);
-        Optional<Category> category = Optional.of(jpaCategoryRepository.findByCategoryName(categoryName).orElseThrow(
-                ()-> new IllegalArgumentException("찾을 수 없는 카테고리 입니다.")));
-        List<Post> posts = postRepository.findAllByTmpStoreIsTrueAndMemberInfoAndCategory(Post.class, memberInfo, category, pageable);
-        return new PageImpl<>(toPostResponseDto(posts), pageable, posts.size());
-    }
+
     // fulltext Search 검색
     @Transactional
     public Page<?> findFullTextSearch(String terms,Pageable pageable) {

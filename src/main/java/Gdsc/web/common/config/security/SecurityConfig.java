@@ -33,7 +33,6 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 
 @Configuration
 @RequiredArgsConstructor
-@AllArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CorsFilter corsFilter;
