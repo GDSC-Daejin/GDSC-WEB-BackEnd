@@ -16,6 +16,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -97,6 +99,8 @@ public class RefreshController {
             userRefreshToken.setRefreshToken(authRefreshToken.getToken());
             userRefreshTokenRepository.save(userRefreshToken);
         }
+        Authentication authentication = tokenProvider.getAuthentication(newAccessToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
         Map<String,String>  tokenMap = new HashMap<>();
         tokenMap.put("token", newAccessToken.getToken());
         return ApiResponse.success("data", tokenMap );
