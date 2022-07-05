@@ -72,8 +72,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/support/limit").permitAll()
                 .antMatchers("/api/guest/**").permitAll() // TokenValidateInterceptor 에서 어차피 걸러져서 권한 다 줌
-                .antMatchers("/api/member/**").hasAnyAuthority(RoleType.MEMBER.getCode() , RoleType.LEAD.getCode() , RoleType.CORE.getCode())
-                .antMatchers("/api/admin/**").hasAnyAuthority(RoleType.LEAD.getCode() , RoleType.CORE.getCode())
+                /*.antMatchers("/api/member/**").hasAnyAuthority(RoleType.MEMBER.getCode() , RoleType.LEAD.getCode() , RoleType.CORE.getCode())
+                .antMatchers("/api/admin/**").hasAnyAuthority(RoleType.LEAD.getCode() , RoleType.CORE.getCode())*/ // admin core api 는 interceptor 로 잡기 때문에 이렇게 안함
                 .anyRequest().permitAll()
                 .and()
                 .oauth2Login()
