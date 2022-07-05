@@ -93,7 +93,6 @@ public class RefreshController {
         }
         Map<String,String>  tokenMap = new HashMap<>();
         tokenMap.put("token", newAccessToken.getToken());
-        tokenMap.put("refreshToken", authRefreshToken.getToken());
         return ApiResponse.success("data", tokenMap );
     }
 }
