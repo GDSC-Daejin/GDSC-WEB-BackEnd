@@ -1,5 +1,6 @@
 package Gdsc.web.controller.api;
 
+import Gdsc.web.annotation.WithCustomMockUser;
 import Gdsc.web.common.CategoryEntityFactory;
 import Gdsc.web.controller.AbstractControllerTest;
 import Gdsc.web.category.dto.CategoryUpdateDto;
@@ -69,6 +70,7 @@ class CategoryApiControllerTest extends AbstractControllerTest {
 
     @Test
     @DisplayName("/api/v1/category 카테고리 삭제")
+    @WithCustomMockUser(role = "ADMIN")
     void deleteCategory() throws Exception {
         Category category = CategoryEntityFactory.categoryBackendEntity();
         categoryRepository.save(category);

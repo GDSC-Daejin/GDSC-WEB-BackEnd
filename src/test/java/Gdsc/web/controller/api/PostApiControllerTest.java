@@ -109,7 +109,7 @@ class PostApiControllerTest extends AbstractControllerTest {
 
     }
     @Test
-    @WithMockUser(roles="MEMBER" , username = "admin")
+    @WithMockUser(roles="MEMBER" , username = "user")
     @DisplayName("/api/member/v2/post/{postId} 포스트 업데이트 테스트")
     void updateJsonPost() throws Exception {
         //given

@@ -7,6 +7,7 @@ import Gdsc.web.oauth.utils.HeaderUtil;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 @RequiredArgsConstructor
 @Slf4j
+@Profile("!test") // 추후 테스트 코드에서 401 에러 구현 필요
 public class TokenValidateInterceptor implements HandlerInterceptor {
     private final AuthTokenProvider tokenProvider;
 

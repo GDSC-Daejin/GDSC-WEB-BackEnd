@@ -14,7 +14,7 @@ public class MemberEntityFactory {
         LocalDateTime now = LocalDateTime.now();
         MemberInfo memberInfo = new MemberInfo();
         Member member = new Member(
-                "guest",
+                "user",
                 "guestName",
                 "guestEmail@gmail.com",
                 "Y",
@@ -36,7 +36,7 @@ public class MemberEntityFactory {
         LocalDateTime now = LocalDateTime.now();
         MemberInfo memberInfo = new MemberInfo();
         Member member = new Member(
-                "member",
+                "user",
                 "memberName",
                 "memberEmail@gmail.com"
                 , "Y",
@@ -58,7 +58,7 @@ public class MemberEntityFactory {
         LocalDateTime now = LocalDateTime.now();
         MemberInfo memberInfo = new MemberInfo();
         Member member = new Member(
-                "admin",
+                "user",
                 "adminName",
                 "AdminEmail@gmail.com"
                 , "Y",
