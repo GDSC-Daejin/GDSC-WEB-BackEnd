@@ -1,15 +1,15 @@
 package Gdsc.web.oauth.service;
 
-import Gdsc.web.entity.Member;
-import Gdsc.web.entity.MemberInfo;
-import Gdsc.web.model.RoleType;
+import Gdsc.web.member.entity.Member;
+import Gdsc.web.member.entity.MemberInfo;
+import Gdsc.web.member.model.RoleType;
 import Gdsc.web.oauth.entity.ProviderType;
 import Gdsc.web.oauth.entity.UserPrincipal;
 import Gdsc.web.oauth.exception.OAuthProviderMissMatchException;
 import Gdsc.web.oauth.info.OAuth2UserInfo;
 import Gdsc.web.oauth.info.OAuth2UserInfoFactory;
-import Gdsc.web.repository.memberinfo.JpaMemberInfoRepository;
-import Gdsc.web.repository.member.JpaMemberRepository;
+import Gdsc.web.member.repository.JpaMemberInfoRepository;
+import Gdsc.web.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -21,16 +21,12 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
-    @Autowired
-    private JpaMemberRepository jpaMemberRepository;
-    @Autowired
-    private JpaMemberInfoRepository memberInfoRepository;
+
+    private final MemberRepository memberRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -50,7 +46,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         ProviderType providerType = ProviderType.valueOf(userRequest.getClientRegistration().getRegistrationId().toUpperCase());
 
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
-        Member savedUser = jpaMemberRepository.findByUserId(userInfo.getId());
+        Member savedUser = memberRepository.findByUserId(userInfo.getId());
 
         if (savedUser != null) {
             if (providerType != savedUser.getProviderType()) {
@@ -85,7 +81,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         memberInfo.setMember(user);
 
         // 멤버 info 도 같이 만들기
-        return jpaMemberRepository.saveAndFlush(user);
+        return memberRepository.saveAndFlush(user);
     }
 
     private Member updateUser(Member user, OAuth2UserInfo userInfo) {

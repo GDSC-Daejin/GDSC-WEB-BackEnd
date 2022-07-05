@@ -1,7 +1,7 @@
 package Gdsc.web.oauth.handler;
 
 import Gdsc.web.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
-import Gdsc.web.utils.CookieUtil;
+import Gdsc.web.oauth.utils.CookieUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;

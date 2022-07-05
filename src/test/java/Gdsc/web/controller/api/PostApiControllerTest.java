@@ -3,14 +3,15 @@ package Gdsc.web.controller.api;
 import Gdsc.web.common.CategoryEntityFactory;
 import Gdsc.web.common.MemberEntityFactory;
 import Gdsc.web.common.PostEntityFactory;
-import Gdsc.web.dto.requestDto.PostRequestDto;
-import Gdsc.web.entity.Category;
-import Gdsc.web.entity.Member;
-import Gdsc.web.entity.Post;
-import Gdsc.web.repository.category.JpaCategoryRepository;
-import Gdsc.web.repository.member.JpaMemberRepository;
-import Gdsc.web.repository.memberinfo.JpaMemberInfoRepository;
-import Gdsc.web.repository.post.PostRepository;
+import Gdsc.web.controller.AbstractControllerTest;
+import Gdsc.web.post.dto.PostRequestDto;
+import Gdsc.web.category.entity.Category;
+import Gdsc.web.member.entity.Member;
+import Gdsc.web.post.entity.Post;
+import Gdsc.web.category.repository.JpaCategoryRepository;
+import Gdsc.web.member.repository.MemberRepository;
+import Gdsc.web.member.repository.JpaMemberInfoRepository;
+import Gdsc.web.post.repository.PostRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -18,18 +19,13 @@ import org.junit.After;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
-import javax.transaction.Transactional;
+
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,19 +33,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Transactional
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@AutoConfigureMockMvc
-class PostApiControllerTest {
+
+class PostApiControllerTest extends AbstractControllerTest {
     @Autowired
     private WebApplicationContext context;
 
-    private MockMvc mvc;
 
 
     @Autowired
-    private JpaMemberRepository memberRepository;
+    private MemberRepository memberRepository;
     @Autowired
     private JpaCategoryRepository categoryRepository;
     @Autowired
@@ -117,7 +109,7 @@ class PostApiControllerTest {
 
     }
     @Test
-    @WithMockUser(roles="MEMBER" , username = "admin")
+    @WithMockUser(roles="MEMBER" , username = "user")
     @DisplayName("/api/member/v2/post/{postId} 포스트 업데이트 테스트")
     void updateJsonPost() throws Exception {
         //given

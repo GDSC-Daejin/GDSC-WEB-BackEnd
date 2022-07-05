@@ -1,14 +1,12 @@
 package Gdsc.web.common;
 
-import Gdsc.web.entity.Member;
-import Gdsc.web.entity.MemberInfo;
-import Gdsc.web.model.RoleType;
+import Gdsc.web.member.entity.Member;
+import Gdsc.web.member.entity.MemberInfo;
+import Gdsc.web.member.model.RoleType;
 import Gdsc.web.oauth.entity.ProviderType;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 public class MemberEntityFactory {
@@ -16,7 +14,7 @@ public class MemberEntityFactory {
         LocalDateTime now = LocalDateTime.now();
         MemberInfo memberInfo = new MemberInfo();
         Member member = new Member(
-                "guest",
+                "user",
                 "guestName",
                 "guestEmail@gmail.com",
                 "Y",
@@ -38,7 +36,7 @@ public class MemberEntityFactory {
         LocalDateTime now = LocalDateTime.now();
         MemberInfo memberInfo = new MemberInfo();
         Member member = new Member(
-                "member",
+                "user",
                 "memberName",
                 "memberEmail@gmail.com"
                 , "Y",
@@ -60,7 +58,7 @@ public class MemberEntityFactory {
         LocalDateTime now = LocalDateTime.now();
         MemberInfo memberInfo = new MemberInfo();
         Member member = new Member(
-                "admin",
+                "user",
                 "adminName",
                 "AdminEmail@gmail.com"
                 , "Y",

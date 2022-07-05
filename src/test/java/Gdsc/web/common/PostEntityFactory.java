@@ -1,8 +1,8 @@
 package Gdsc.web.common;
 
-import Gdsc.web.entity.Category;
-import Gdsc.web.entity.Member;
-import Gdsc.web.entity.Post;
+import Gdsc.web.category.entity.Category;
+import Gdsc.web.member.entity.Member;
+import Gdsc.web.post.entity.Post;
 import lombok.Data;
 
 import java.time.LocalDateTime;
