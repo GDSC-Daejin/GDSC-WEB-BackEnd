@@ -6,6 +6,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class WithMockCustomUserSecurityContextFactory implements WithSecurityCon
         final UsernamePasswordAuthenticationToken authenticationToken
                 = new UsernamePasswordAuthenticationToken(annotation.username(),
                 annotation.password(),
-                List.of(new SimpleGrantedAuthority(annotation.role())));
+                Arrays.asList(new SimpleGrantedAuthority(annotation.role())));
 
         securityContext.setAuthentication(authenticationToken);
         return securityContext;
