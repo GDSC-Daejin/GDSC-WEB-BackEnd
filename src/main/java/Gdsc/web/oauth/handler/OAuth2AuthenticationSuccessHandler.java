@@ -12,6 +12,7 @@ import Gdsc.web.oauth.token.AuthTokenProvider;
 import Gdsc.web.oauth.repository.UserRefreshTokenRepository;
 import Gdsc.web.oauth.utils.CookieUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -35,6 +36,7 @@ import static org.springframework.security.oauth2.core.endpoint.OAuth2ParameterN
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
 
@@ -89,7 +91,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 roleType.getCode(),
                 new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
         );
-
+        Date Date = new Date(now.getTime() + appProperties.getAuth().getTokenExpiry());
+        log.info(Date.toString());
         // refresh 토큰 설정
         long refreshTokenExpiry = appProperties.getAuth().getRefreshTokenExpiry();
 
