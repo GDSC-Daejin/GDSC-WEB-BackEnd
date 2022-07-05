@@ -24,9 +24,7 @@ public class MemberApiController {
     @ApiOperation(value = "Member 내용 보기" , notes = "Member 내용 값 보기")
     @GetMapping("/api/guest/v1/me")
     public ApiResponse getUserV2(@AuthenticationPrincipal User principal) {
-        if(principal == null) {
-            return ApiResponse.unauthorized();
-        }
+
         Member member =memberService.getUserId(principal.getUsername());
         return ApiResponse.success("data" , member);
     }

@@ -2,11 +2,13 @@ package Gdsc.web.common.config.security;
 
 
 import Gdsc.web.common.config.properties.AppProperties;
+import Gdsc.web.member.model.RoleType;
 import Gdsc.web.oauth.exception.RestAuthenticationEntryPoint;
 import Gdsc.web.oauth.filter.TokenAuthenticationFilter;
 import Gdsc.web.oauth.handler.OAuth2AuthenticationFailureHandler;
 import Gdsc.web.oauth.handler.OAuth2AuthenticationSuccessHandler;
 import Gdsc.web.oauth.handler.TokenAccessDeniedHandler;
+import Gdsc.web.oauth.handler.TokenValidateInterceptor;
 import Gdsc.web.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import Gdsc.web.oauth.service.CustomOAuth2UserService;
 import Gdsc.web.oauth.service.CustomUserDetailsService;
@@ -27,25 +29,21 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 
 @Configuration
 @RequiredArgsConstructor
-@AllArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private CorsFilter corsFilter;
-    @Autowired
-    private AppProperties appProperties;
-    @Autowired
-    private AuthTokenProvider tokenProvider;
-    @Autowired
-    private CustomUserDetailsService userDetailsService;
-    @Autowired
-    private CustomOAuth2UserService oAuth2UserService;
-    @Autowired
-    private TokenAccessDeniedHandler tokenAccessDeniedHandler;
-    @Autowired
-    private UserRefreshTokenRepository userRefreshTokenRepository;
+
+    private final CorsFilter corsFilter;
+
+    private final AppProperties appProperties;
+
+    private final AuthTokenProvider tokenProvider;
+    private final CustomUserDetailsService userDetailsService;
+    private final CustomOAuth2UserService oAuth2UserService;
+    private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
+    private final UserRefreshTokenRepository userRefreshTokenRepository;
     /*
      * UserDetailsService 설정
      * */
@@ -72,9 +70,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilter(corsFilter)
                 .authorizeRequests()
-                //.antMatchers("/api/support/limit").permitAll()
-                //.antMatchers("/api/member/**").hasAnyAuthority(RoleType.MEMBER.getCode())
-                //.antMatchers("/api/admin/**").hasAnyAuthority(RoleType.LEAD.getCode() , RoleType.CORE.getCode())
+                .antMatchers("/api/support/limit").permitAll()
+                .antMatchers("/api/guest/**").permitAll() // TokenValidateInterceptor 에서 어차피 걸러져서 권한 다 줌
+                /*.antMatchers("/api/member/**").hasAnyAuthority(RoleType.MEMBER.getCode() , RoleType.LEAD.getCode() , RoleType.CORE.getCode())
+                .antMatchers("/api/admin/**").hasAnyAuthority(RoleType.LEAD.getCode() , RoleType.CORE.getCode())*/ // admin core api 는 interceptor 로 잡기 때문에 이렇게 안함
                 .anyRequest().permitAll()
                 .and()
                 .oauth2Login()

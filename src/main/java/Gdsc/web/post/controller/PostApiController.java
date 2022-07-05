@@ -57,8 +57,8 @@ public class PostApiController {
 
     //조회
     @ApiOperation(value = "post 상세보기",
-            notes = "PostId로 상세보기\n" +
-                    "api 주소에 PathVariable 주면 됩니다.\n" +
+            notes = " PostId로 상세보기\n"+
+                    "api 주소에 PathVariable 주면 됩니다.\n"+
                     "임시글, 블록된 글 안보임!")
     @GetMapping("/api/v1/post/{postId}")
     public ApiResponse findByPostId(@PathVariable Long postId, HttpServletRequest request, HttpServletResponse response){
@@ -122,43 +122,7 @@ public class PostApiController {
         Page<?> post = postService.findFullTextSearch(word,pageable);
         return ApiResponse.success("data", post);
     }
-    @ApiOperation(value ="내가 작성한 게시글 불러오기", notes = "내가 작성한 게시글을 조회 임시저장글 포함하기")
-    @GetMapping("/api/member/v1/myPost")
-    public ApiResponse myPost(@AuthenticationPrincipal User principal,
-                              @PageableDefault(size = 16 ,sort = "postId",direction = Sort.Direction.DESC) Pageable pageable){
-        Page<?> post = postService.findAllMyPost(principal.getUsername(), pageable);
-        return ApiResponse.success("data", post);
-    }
-    @ApiOperation(value = "내 글 상세보기", notes = "내가 쓴 글을 불러옵니다. 임시저장글 포함 ")
-    @GetMapping("/api/member/v1/myPost/{postId}")
-    public ApiResponse myPostTemp(@AuthenticationPrincipal User principal,
-                                  @PathVariable Long postId){
-        return ApiResponse.success("data",  postService.findMyPost(principal.getUsername(), postId));
-    }
 
-    @ApiOperation(value ="카테고리별 작성 게시글 불러오기", notes = "내가 작성한 게시글을 카테고리 별로 조회")
-    @GetMapping("api/member/v1/myPost/category/{categoryName}")
-    public ApiResponse myPostWithCategory(@AuthenticationPrincipal User principal,
-                                          @PathVariable String categoryName,
-                                          @PageableDefault(size = 16 ,sort = "postId",direction = Sort.Direction.DESC)Pageable pageable){
-        Page<?> post = postService.findAllMyPostWIthCategory(principal.getUsername(), categoryName, pageable);
-        return ApiResponse.success("data", post);
-    }
-    @ApiOperation(value = "내 임시 저장글 전부 불러오기", notes = "임시 저장글을 불러옵니다.")
-    @GetMapping("/api/member/v1/myPost/temp")
-    public ApiResponse myPostTemp(@AuthenticationPrincipal User principal,
-                                  @PageableDefault(size = 16 ,sort = "postId",direction = Sort.Direction.DESC)Pageable pageable){
-        Page<?> post = postService.findAllMyTmpPosts(principal.getUsername(), pageable);
-        return ApiResponse.success("data", post);
-    }
-    @ApiOperation(value = "내 임시 저장글 카테고리별 불러오기", notes = "임시 저장글을 카테고리 별로 불러옵니다.")
-    @GetMapping("/api/member/v1/myPost/temp/{categoryName}")
-    public ApiResponse myPostTempWithCategory(@AuthenticationPrincipal User principal,
-                                              @PathVariable String categoryName,
-                                              @PageableDefault(size = 16 ,sort = "postId",direction = Sort.Direction.DESC)Pageable pageable){
-        Page<?> post = postService.findAllMyTmpPostWithCategory(principal.getUsername(), categoryName,pageable);
-        return ApiResponse.success("data", post);
-    }
 
 
     

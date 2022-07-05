@@ -31,9 +31,7 @@ import java.util.Map;
 public class RefreshController {
     private final AppProperties appProperties;
     private final AuthTokenProvider tokenProvider;
-    private final AuthenticationManager authenticationManager;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
-    private  final MemberService memberService;
     private final static long THREE_DAYS_MSEC = 259200000;
     private final static String REFRESH_TOKEN = "refresh_token";
     @GetMapping("/refresh")
