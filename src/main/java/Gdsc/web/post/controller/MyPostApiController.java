@@ -5,6 +5,7 @@ import Gdsc.web.post.service.MyPostService;
 import Gdsc.web.post.service.PostService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -50,6 +51,14 @@ public class MyPostApiController {
                                   @PageableDefault(size = 16 ,sort = "postId",direction = Sort.Direction.DESC)Pageable pageable){
         Page<?> post = postService.findAllMyNotTmpPosts(principal.getUsername(), pageable);
         return ApiResponse.success("data", post);
+    }
+    @GetMapping("/api/member/v1/myPost/notTemp/{categoryName}")
+    public ApiResponse myPostNotTempWithCategory(@AuthenticationPrincipal User principal,
+                                                 @PathVariable String categoryName,
+                                                 @PageableDefault(size = 16 ,sort = "postId",direction = Sort.Direction.DESC)Pageable pageable){
+        Page<?> post = postService.findAllMyNotTmpPostsWithCategory(principal.getUsername() , categoryName , pageable);
+        return ApiResponse.success("data" , post);
+
     }
     @ApiOperation(value = "내 임시 저장글 카테고리별 불러오기", notes = "임시 저장글을 카테고리 별로 불러옵니다.")
     @GetMapping("/api/member/v1/myPost/temp/{categoryName}")
