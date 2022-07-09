@@ -95,7 +95,10 @@ public class AwsS3FileUploadService {
 
     // delete s3에 올려진 사진
     public void fileDelete(String fileUrl) {
+        log.info("fileUrl: " + fileUrl);
+        log.info("bucketUrl: " + bucketUrl);
         fileUrl= fileUrl.replace(bucketUrl , "");
+        log.info("replace fileUrl: " + fileUrl);
         try {
             log.info("file Url Delete: " + (fileUrl).replace(File.separatorChar, '/'));
             amazonS3Client.deleteObject(bucket, (fileUrl).replace(File.separatorChar, '/'));
