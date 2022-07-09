@@ -53,7 +53,7 @@ public class PostService {
         //json 형식 이미지나 , form-data 형식 이미지 둘중 하나만 들어왔을때!!
         if(requestDto.getThumbnail() != null ^ requestDto.getBase64Thumbnail() != null){
             if(!Objects.equals(requestDto.getBase64Thumbnail(), "")){
-                post.setImagePath(awsS3FileUploadService.upload(requestDto, "static"));
+                post.setImagePath(awsS3FileUploadService.upload(requestDto, ev.getActiveProfiles()[0]));
             }
         }
 
