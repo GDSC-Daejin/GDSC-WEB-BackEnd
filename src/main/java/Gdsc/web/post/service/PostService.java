@@ -75,12 +75,18 @@ public class PostService {
         //json 형식 이미지나 , form-data 형식 이미지 둘중 하나만 들어왔을때!!
         if(requestDto.getThumbnail() != null ^ requestDto.getBase64Thumbnail() != null){
             if(!Objects.equals(requestDto.getBase64Thumbnail(), "")){
+                // 원래 이미지가 있었을 때
                 if(post.getImagePath() != null){
                     awsS3FileUploadService.fileDelete(post.getImagePath());
                 }
                 post.setImagePath(awsS3FileUploadService.upload(requestDto, "static"));
             }
-
+        }else {
+            // 원래 이미지가 있고 , 새로운 이미지가 없을 때
+            if(post.getImagePath() != null){
+                awsS3FileUploadService.fileDelete(post.getImagePath());
+                post.setImagePath(null);
+            }
         }
 
 
