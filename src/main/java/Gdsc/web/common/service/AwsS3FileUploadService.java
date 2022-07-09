@@ -8,6 +8,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -28,6 +29,7 @@ public class AwsS3FileUploadService {
 
     @Value("${cloud.aws.s3.Url}")
     private String bucketUrl;
+
 
 
     public String upload(PostRequestDto postRequestDto, String dirName) throws IOException {
