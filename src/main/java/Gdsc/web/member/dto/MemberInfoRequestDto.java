@@ -1,5 +1,6 @@
 package Gdsc.web.member.dto;
 
+import Gdsc.web.member.model.PositionType;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -26,10 +27,10 @@ public class MemberInfoRequestDto {
     private String gitEmail;
 
     @ApiModelProperty(example = "20177878")
-    private String StudentID;
+    private String studentID;
 
     @ApiModelProperty(example = "Backend")
-    private Gdsc.web.member.model.PositionType PositionType;
+    private PositionType positionType;
     private String hashTag;
     private String gitHubUrl;
     private String blogUrl;

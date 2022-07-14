@@ -112,4 +112,26 @@ public class MemberInfo {
     public int hashCode() {
         return getClass().hashCode();
     }
+    @Override
+    public String toString(){
+        return "MemberInfo{" +
+                "memberInfoId=" + memberInfoId +
+                "\n member=" + member +
+                "\n generation=" + generation +
+                "\n introduce='" + introduce + '\'' +
+                "\n nickname='" + nickname + '\'' +
+                "\n phoneNumber='" + phoneNumber + '\'' +
+                "\n major='" + major + '\'' +
+                "\n gitEmail='" + gitEmail + '\'' +
+                "\n StudentID='" + StudentID + '\'' +
+                "\n PositionType=" + PositionType +
+                "\n hashTag='" + hashTag + '\'' +
+                "\n gitHubUrl='" + gitHubUrl + '\'' +
+                "\n blogUrl='" + blogUrl + '\'' +
+                "\n etcUrl='" + etcUrl + '\'' +
+                "\n birthday=" + birthday +
+                "\n modifiedAt=" + modifiedAt +
+                "\n uploadDate=" + uploadDate +
+                '}';
+    }
 }

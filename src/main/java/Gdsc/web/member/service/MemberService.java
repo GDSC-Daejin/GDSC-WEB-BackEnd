@@ -6,6 +6,7 @@ import Gdsc.web.member.entity.MemberInfo;
 import Gdsc.web.member.model.RoleType;
 import Gdsc.web.member.repository.JpaMemberInfoRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import Gdsc.web.member.repository.MemberRepository;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MemberService {
 
     private final MemberRepository memberRepository;
@@ -92,16 +94,7 @@ public class MemberService {
     public boolean regularExpressionPhoneNumber(String phoneNumber){
         return phoneNumber.matches("^01(?:0|1|[6-9])[-]?(\\d{3}|\\d{4})[-]?(\\d{4})$");
     }
-   /* public <T> boolean elementNullCheck(T requestMemberInfo) {
-        if(requestMemberInfo == null) return true;
-        else return false;
-    }
-    public <T> void updateElement(T requestMemberInfo , Member member) {
-        Arrays.stream()
-        if (requestMemberInfo instanceof MemberInfo) {
-            MemberInfo memberInfo = (MemberInfo) requestMemberInfo;
-        }
-    }*/
+
     @Transactional
     public boolean 닉네임중복검사(String nickname){
         return memberRepository.existsByMemberInfo_Nickname(nickname);
