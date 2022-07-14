@@ -53,21 +53,44 @@ public class MemberService {
     public void 정보업데이트(String userId , MemberInfoRequestDto requestMemberInfo){
         Member member = memberRepository.findByUserId(userId);
         if(member==null) throw new IllegalArgumentException("없는 사용자 입니다. ");
+        MemberInfo memberInfo = member.getMemberInfo();
 
-        if(requestMemberInfo.getIntroduce() != null) member.getMemberInfo().setIntroduce(requestMemberInfo.getIntroduce());
-        if(requestMemberInfo.getBirthday() != null)  member.getMemberInfo().setBirthday(requestMemberInfo.getBirthday());
-        if(requestMemberInfo.getGitEmail() != null) member.getMemberInfo().setGitEmail(requestMemberInfo.getGitEmail());
-        if(requestMemberInfo.getGeneration() != null) member.getMemberInfo().setGeneration(requestMemberInfo.getGeneration());
-        if(requestMemberInfo.getHashTag() != null) member.getMemberInfo().setHashTag(requestMemberInfo.getHashTag());
-        if(requestMemberInfo.getPhoneNumber() != null) member.getMemberInfo().setPhoneNumber(requestMemberInfo.getPhoneNumber());
-        if(requestMemberInfo.getMajor() != null) member.getMemberInfo().setMajor(requestMemberInfo.getMajor());
-        if(requestMemberInfo.getStudentID() != null) member.getMemberInfo().setStudentID(requestMemberInfo.getStudentID());
-        if(requestMemberInfo.getPositionType() != null) member.getMemberInfo().setPositionType(requestMemberInfo.getPositionType());
-        if(requestMemberInfo.getNickname() != null && !닉네임중복검사(requestMemberInfo.getNickname())) member.getMemberInfo().setNickname(requestMemberInfo.getNickname());
-        if(requestMemberInfo.getBlogUrl() != null) member.getMemberInfo().setBlogUrl(requestMemberInfo.getBlogUrl());
-        if(requestMemberInfo.getEtcUrl() != null) member.getMemberInfo().setEtcUrl(requestMemberInfo.getEtcUrl());
-        if(requestMemberInfo.getGitHubUrl() != null) member.getMemberInfo().setGitHubUrl(requestMemberInfo.getGitHubUrl());
+        memberInfo.setIntroduce(requestMemberInfo.getIntroduce());
+        memberInfo.setBirthday(requestMemberInfo.getBirthday());
 
+        memberInfo.setGeneration(requestMemberInfo.getGeneration());
+        memberInfo.setHashTag(requestMemberInfo.getHashTag());
+        // 정규식 체크 데이터 유효성 검사
+        memberInfo.setGitEmail(regularExpressionEmail(requestMemberInfo.getGitEmail()) ?
+                requestMemberInfo.getGitEmail() : memberInfo.getGitEmail());
+        memberInfo.setPhoneNumber(regularExpressionPhoneNumber(requestMemberInfo.getPhoneNumber()) ?
+                requestMemberInfo.getPhoneNumber() : memberInfo.getPhoneNumber());
+        memberInfo.setNickname(regularExpressionNickname(requestMemberInfo.getNickname()) ?
+                requestMemberInfo.getNickname() : memberInfo.getNickname());
+        memberInfo.setMajor(requestMemberInfo.getMajor());
+        memberInfo.setStudentID(requestMemberInfo.getStudentID());
+        memberInfo.setPositionType(requestMemberInfo.getPositionType());
+        memberInfo.setBlogUrl(requestMemberInfo.getBlogUrl());
+        memberInfo.setEtcUrl(requestMemberInfo.getEtcUrl());
+        memberInfo.setGitHubUrl(requestMemberInfo.getGitHubUrl());
+        jpaMemberInfoRepository.save(memberInfo);
+
+
+    }
+    // url은 고려를 ...
+    public boolean regularExpressionUrl(String url){
+        return url.matches("^(https?://)?(www\\.)?([-a-z0-9]+\\.)*[-a-z0-9]+\\.[a-z]{2,}(/[-a-z0-9_\\s/?=]+)*$");
+    }
+    public boolean regularExpressionNickname(String nickname){
+        String regex = "^[a-zA-Z]{2,10}$";
+        return nickname.matches(regex);
+    }
+    private boolean regularExpressionEmail(String email){
+        String regex = "^[a-zA-Z0-9]{2,10}@[a-zA-Z0-9]{2,10}.[a-zA-Z0-9]{2,10}$";
+        return email.matches(regex);
+    }
+    public boolean regularExpressionPhoneNumber(String phoneNumber){
+        return phoneNumber.matches("^01(?:0|1|[6-9])[-]?(\\d{3}|\\d{4})[-]?(\\d{4})$");
     }
    /* public <T> boolean elementNullCheck(T requestMemberInfo) {
         if(requestMemberInfo == null) return true;
