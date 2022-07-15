@@ -2,11 +2,13 @@ package Gdsc.web.member.dto;
 
 import Gdsc.web.member.model.PositionType;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
+@Builder
 public class MemberInfoRequestDto {
 
 
@@ -39,5 +41,6 @@ public class MemberInfoRequestDto {
 
     @ApiModelProperty(example = "1998-07-09 00:00:00.000000")
     private LocalDateTime birthday;
+
 
 }

@@ -60,7 +60,7 @@ public class MemberInfo {
 
     @Column(length = 30)
     @ApiModelProperty(example = "20177878")
-    private String StudentID;
+    private String studentID;
 
     @ApiModelProperty(example = "Backend")
     @Column(name = "POSITION_TYPE")
@@ -123,7 +123,7 @@ public class MemberInfo {
                 "\n phoneNumber='" + phoneNumber + '\'' +
                 "\n major='" + major + '\'' +
                 "\n gitEmail='" + gitEmail + '\'' +
-                "\n StudentID='" + StudentID + '\'' +
+                "\n StudentID='" + studentID + '\'' +
                 "\n PositionType=" + PositionType +
                 "\n hashTag='" + hashTag + '\'' +
                 "\n gitHubUrl='" + gitHubUrl + '\'' +

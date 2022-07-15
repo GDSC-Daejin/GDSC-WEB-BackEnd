@@ -39,7 +39,6 @@ public class MemberApiController {
     @ApiOperation(value = "유저 자기 정보 업데이트" , notes = "JWT 토큰값이 들어가야 사용자를 인식 가능함")
     @PutMapping("/api/guest/v1/me")
     public ApiResponse Update(@AuthenticationPrincipal User principal , @RequestBody MemberInfoRequestDto memberInfo){
-        if(principal == null) return ApiResponse.fail("message" , "Token is null");
         memberService.정보업데이트(principal.getUsername(),memberInfo);
         return ApiResponse.success("message" , "SUCCESS");
     }
