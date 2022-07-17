@@ -24,9 +24,10 @@ public interface PostRepository extends JpaRepository<Post,Integer> , CustomizeP
     <T> List<T> findAllByTitleContainingAndTmpStoreIsFalseAndBlockedIsFalse(Class<T> tClass,String title,Pageable pageable);
      <T> List<T> findAllByTmpStoreIsTrueAndMemberInfo(Class<T> tClass,MemberInfo memberInfo, Pageable pageable);
     <T> T findByMemberInfoAndPostId(Class<T> tClass, MemberInfo memberInfo, Long postId);
-    void deleteByPostIdAndAndMemberInfo(Long postId , MemberInfo memberInfo);
+
     void deleteByPostId(Long postId);
     <T> List<T> findAllByTmpStoreIsTrueAndMemberInfoAndCategory(Class<T> tClass, MemberInfo memberInfo, Optional<Category> category , Pageable pageable);
 
     List<Post> findAllByMemberInfoAndTmpStoreIsFalseAndBlockedIsFalse(Class<Post> postClass, MemberInfo memberInfo, Pageable pageable);
+    List<Post> findAllByMemberInfoAndBlockedIsFalseAndTmpStoreIsFalseAndCategory(MemberInfo memberInfo , Category category , Pageable pageable);
 }

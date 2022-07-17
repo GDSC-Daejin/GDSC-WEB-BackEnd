@@ -38,7 +38,7 @@ public class Post {
     @Column(name = "POST_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;
-    @Column
+    @Column(length = 1000)
     @ApiModelProperty(example = "/ec2-south/~~~/")
     String imagePath; // 썸네일
     @Column

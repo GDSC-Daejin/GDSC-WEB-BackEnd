@@ -81,4 +81,13 @@ public class MyPostService {
         List<Post> posts = postRepository.findAllByMemberInfoAndTmpStoreIsFalseAndBlockedIsFalse(Post.class, memberInfo, pageable);
         return new PageImpl<>(toPostResponseDto(posts), pageable, posts.size());
     }
+
+    public Page<?> findAllMyNotTmpPostsWithCategory(String username, String categoryName, Pageable pageable) {
+        MemberInfo memberInfo = findMemberInfo(username);
+        Category category = jpaCategoryRepository.findByCategoryName(categoryName).orElseThrow(
+                ()-> new IllegalArgumentException("찾을 수 없는 카테고리 입니다."));
+        List<Post> posts = postRepository.findAllByMemberInfoAndBlockedIsFalseAndTmpStoreIsFalseAndCategory(memberInfo , category , pageable);
+        return new PageImpl<>(toPostResponseDto(posts), pageable, posts.size());
+    }
+
 }

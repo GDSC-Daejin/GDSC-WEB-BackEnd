@@ -13,6 +13,7 @@ import Gdsc.web.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +33,8 @@ public class PostService {
     private final JpaCategoryRepository jpaCategoryRepository;
 
     private final AwsS3FileUploadService awsS3FileUploadService;
+
+    private final Environment ev;
 
     @Value("${cloud.aws.s3.bucket}")
     public String bucket;  // S3 버킷 이름
@@ -53,7 +56,7 @@ public class PostService {
         //json 형식 이미지나 , form-data 형식 이미지 둘중 하나만 들어왔을때!!
         if(requestDto.getThumbnail() != null ^ requestDto.getBase64Thumbnail() != null){
             if(!Objects.equals(requestDto.getBase64Thumbnail(), "")){
-                post.setImagePath(awsS3FileUploadService.upload(requestDto, "static"));
+                post.setImagePath(awsS3FileUploadService.upload(requestDto, ev.getActiveProfiles()[0]));
             }
         }
 
@@ -75,10 +78,18 @@ public class PostService {
         //json 형식 이미지나 , form-data 형식 이미지 둘중 하나만 들어왔을때!!
         if(requestDto.getThumbnail() != null ^ requestDto.getBase64Thumbnail() != null){
             if(!Objects.equals(requestDto.getBase64Thumbnail(), "")){
-                awsS3FileUploadService.fileDelete(post.getImagePath());
-                post.setImagePath(awsS3FileUploadService.upload(requestDto, "static"));
+                // 원래 이미지가 있었을 때
+                if(post.getImagePath() != null){
+                    awsS3FileUploadService.fileDelete(post.getImagePath());
+                }
+                post.setImagePath(awsS3FileUploadService.upload(requestDto, ev.getActiveProfiles()[0]));
             }
-
+        }else {
+            // 원래 이미지가 있고 , 새로운 이미지가 없을 때
+            if(post.getImagePath() != null){
+                awsS3FileUploadService.fileDelete(post.getImagePath());
+                post.setImagePath(null);
+            }
         }
 
 
