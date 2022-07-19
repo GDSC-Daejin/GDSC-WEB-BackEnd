@@ -1,3 +1,4 @@
+/*
 package Gdsc.web.common.config.swagger;
 
 
@@ -80,3 +81,4 @@ public class SwaggerConfig {
     }
 }
 
+*/
