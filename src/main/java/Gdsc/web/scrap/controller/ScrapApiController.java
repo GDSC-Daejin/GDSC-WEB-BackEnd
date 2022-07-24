@@ -34,4 +34,5 @@ public class ScrapApiController {
         Page<?> scrap = scrapService.findMyScrapPost(principal.getUsername(), pageable);
         return ApiResponse.success("data", scrap);
     }
+   
 }

@@ -25,9 +25,7 @@ public class TokenValidateInterceptor implements HandlerInterceptor {
 
             String accessToken = HeaderUtil.getAccessToken(request);
             AuthToken authToken = tokenProvider.convertAuthToken(accessToken);
-            log.info(accessToken);
             if(!authToken.validate()){
-                log.info("Unauthorized" + accessToken + " "+ request.getRemoteUser());
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
                 return false;
             }
