@@ -1,6 +1,8 @@
 package Gdsc.web.member.service;
 
+import Gdsc.web.common.dto.ApiResponse;
 import Gdsc.web.member.dto.MemberInfoRequestDto;
+import Gdsc.web.member.dto.MemberInfoResponseServerDto;
 import Gdsc.web.member.entity.Member;
 import Gdsc.web.member.entity.MemberInfo;
 import Gdsc.web.member.model.RoleType;
@@ -11,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import Gdsc.web.member.repository.MemberRepository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -47,10 +50,12 @@ public class MemberService {
     }
 
 
-
+    @Transactional(readOnly = true)
     public Member getUserId(String userId) {
         return memberRepository.findByUserId(userId);
     }
+
+
     @Transactional
     public void 정보업데이트(String userId , MemberInfoRequestDto requestMemberInfo){
         Member member = memberRepository.findByUserId(userId);

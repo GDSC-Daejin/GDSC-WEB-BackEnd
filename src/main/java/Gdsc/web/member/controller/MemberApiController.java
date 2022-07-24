@@ -27,6 +27,7 @@ public class MemberApiController {
         Member member =memberService.getUserId(principal.getUsername());
         return ApiResponse.success("data" , member);
     }
+    
 
     @ApiOperation(value = "Member 내용 보기" , notes = "MemberInfo 내용 값 보기")
     @GetMapping("/api/guest/v1/info")
