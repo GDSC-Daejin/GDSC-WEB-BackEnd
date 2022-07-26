@@ -2,8 +2,6 @@ package Gdsc.web.post.entity;
 
 
 import Gdsc.web.category.entity.Category;
-import Gdsc.web.post.dto.PostResponseDto;
-import Gdsc.web.member.entity.MemberInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.swagger.annotations.ApiModelProperty;
@@ -38,6 +36,10 @@ public class Post {
     @Column(name = "POST_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;
+
+    @Column(name = "USER_ID")
+    private String userId; // 작성자 아이디
+
     @Column(length = 1000)
     @ApiModelProperty(example = "/ec2-south/~~~/")
     String imagePath; // 썸네일
@@ -52,9 +54,7 @@ public class Post {
 
 
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "USER_ID" , nullable = false)
-    private MemberInfo memberInfo;
+
 
     //임시 저장 여부
 
@@ -93,19 +93,15 @@ public class Post {
     private boolean blocked;
 
     @Builder
-    public Post(String title , String content , MemberInfo memberInfo , boolean tmpStore , Category category , String postHashTags){
+    public Post(String title , String content , String userId , boolean tmpStore , Category category , String postHashTags){
         this.title = title;
         this.content = content;
-        this.memberInfo = memberInfo;
+        this.userId = userId;
         this.tmpStore = tmpStore;
         this.category =category;
         this.postHashTags = postHashTags;
     }
-    public PostResponseDto toPostResponseDto(){
-        return new PostResponseDto(postId, title, content, tmpStore,
-                blocked, imagePath, category, postHashTags,
-                memberInfo.toMemberInfoResponseDto(), modifiedAt, uploadDate);
-    }
+
 
 
 

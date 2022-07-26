@@ -2,16 +2,16 @@ package Gdsc.web.post.service;
 
 import Gdsc.web.category.entity.Category;
 import Gdsc.web.common.service.AwsS3FileUploadService;
+import Gdsc.web.member.dto.MemberInfoResponseServerDto;
+import Gdsc.web.member.service.MemberService;
 import Gdsc.web.post.dto.PostRequestDto;
 import Gdsc.web.post.dto.PostResponseDto;
-import Gdsc.web.member.entity.Member;
-import Gdsc.web.member.entity.MemberInfo;
 import Gdsc.web.category.repository.JpaCategoryRepository;
-import Gdsc.web.member.repository.MemberRepository;
 import Gdsc.web.post.entity.Post;
 import Gdsc.web.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
     private final JpaCategoryRepository jpaCategoryRepository;
 
     private final AwsS3FileUploadService awsS3FileUploadService;
@@ -43,7 +43,6 @@ public class PostService {
     private String bucketUrl;
     @Transactional
     public void save(PostRequestDto requestDto , String userId) throws IOException {
-        MemberInfo memberInfo = findMemberInfo(userId);
         Post post = new Post();
         post.setPostHashTags(requestDto.getPostHashTags());
         Category category = jpaCategoryRepository.findByCategoryName(requestDto.getCategory().getCategoryName())
@@ -51,7 +50,7 @@ public class PostService {
         post.setCategory(category);
         post.setContent(requestDto.getContent());
         post.setTitle(requestDto.getTitle());
-        post.setMemberInfo(memberInfo);
+        post.setUserId(userId);
         post.setTmpStore(requestDto.getTmpStore());
         //json 형식 이미지나 , form-data 형식 이미지 둘중 하나만 들어왔을때!!
         if(requestDto.getThumbnail() != null ^ requestDto.getBase64Thumbnail() != null){
@@ -65,8 +64,7 @@ public class PostService {
     //수정
     @Transactional
     public void update(PostRequestDto requestDto, Long postId , String userId) throws IOException {
-        MemberInfo memberInfo = findMemberInfo(userId);
-        Post post = postRepository.findByPostIdAndMemberInfo(postId, memberInfo) //ㅣinteger가 아니라 long 타입이라 오류? jpa Long을 integer로 바꿔야 할까?
+        Post post = postRepository.findByPostIdAndUserId(postId, userId) //ㅣinteger가 아니라 long 타입이라 오류? jpa Long을 integer로 바꿔야 할까?
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
         Category category = jpaCategoryRepository.findByCategoryName(requestDto.getCategory().getCategoryName())
                 .orElseThrow(()-> new IllegalArgumentException("찾을 수 없는 카테고리 입니다."));
@@ -96,8 +94,7 @@ public class PostService {
     }
     @Transactional
     public void deletePost(Long postId, String userId){
-        MemberInfo memberInfo = findMemberInfo(userId);
-        Post post = postRepository.findByPostIdAndMemberInfo(postId, memberInfo)
+        Post post = postRepository.findByPostIdAndUserId(postId, userId)
                 .orElseThrow(()-> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
         if(post.getImagePath() != null){
             awsS3FileUploadService.fileDelete(post.getImagePath());
@@ -111,8 +108,22 @@ public class PostService {
     public PostResponseDto findByPostIdAndBlockIsFalse(Long postId){
         Post post = postRepository.findByPostIdAndBlockedIsFalseAndTmpStoreIsFalse(postId,Post.class)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
-        return post.toPostResponseDto();
+
+        return PostResponseDto.builder()
+                .postId(post.getPostId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .category(post.getCategory())
+                .userId(post.getUserId())
+                .memberInfo(memberService.getNicknameImage(post.getUserId()))
+                .blocked(post.isBlocked())
+                .postHashTags(post.getPostHashTags())
+                .imagePath(post.getImagePath())
+                .uploadDate(post.getUploadDate())
+                .modifiedAt(post.getModifiedAt())
+                .build();
     }
+
 
 
 
@@ -120,14 +131,29 @@ public class PostService {
 
 
     public List<PostResponseDto> toPostResponseDto(List<Post> posts){
-        return posts.stream().map(Post::toPostResponseDto).collect(Collectors.toList());
+        return getPostResponseDtos(posts, memberService);
     }
-    @Transactional
-    public MemberInfo findMemberInfo(String userId){
-        Member member = memberRepository.findByUserId(userId);
-        if(member == null) throw new IllegalArgumentException("없는 사용자 입니다.");
-        return member.getMemberInfo();
+
+    @NotNull
+    static List<PostResponseDto> getPostResponseDtos(List<Post> posts, MemberService memberService) {
+        return posts.stream()
+                .map(post ->
+                        PostResponseDto.builder()
+                        .postId(post.getPostId())
+                        .title(post.getTitle())
+                        .content(post.getContent())
+                        .category(post.getCategory())
+                        .userId(post.getUserId())
+                        .memberInfo(memberService.getNicknameImage(post.getUserId()))
+                        .blocked(post.isBlocked())
+                        .postHashTags(post.getPostHashTags())
+                        .imagePath(post.getImagePath())
+                        .uploadDate(post.getUploadDate())
+                        .modifiedAt(post.getModifiedAt())
+                        .build())
+                .collect(Collectors.toList());
     }
+
     // 내 게시글 조회
 
     // 모든 게시글 카테고리 별 조회
@@ -172,8 +198,7 @@ public class PostService {
     // fulltext Search 검색
     @Transactional
     public Page<?> findFullTextSearch(String terms,Pageable pageable) {
-        return postRepository.findAllByTitleLikeOrContentLikeOrPostHashTagsLikeAndTmpStoreIsFalseAndBlockedIsFalse(
-                terms,pageable);
+        return postRepository.findAllByTitleLikeOrContentLikeOrPostHashTagsLikeAndTmpStoreIsFalseAndBlockedIsFalse(terms,pageable);
     }
 
 }

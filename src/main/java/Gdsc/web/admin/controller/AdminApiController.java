@@ -1,9 +1,9 @@
+/*
 package Gdsc.web.admin.controller;
 
 import Gdsc.web.common.dto.ApiResponse;
 import Gdsc.web.admin.dto.WarningDto;
 import Gdsc.web.admin.dto.MemberRoleUpdateDto;
-import Gdsc.web.member.entity.Member;
 import Gdsc.web.member.model.RoleType;
 import Gdsc.web.admin.service.AdminService;
 import Gdsc.web.admin.service.PostBlockService;
@@ -28,16 +28,19 @@ public class AdminApiController {
     private final PostService postService;
     private final PostBlockService postBlockService;
 
-    @ApiOperation(value = "권한변경", notes = "권한 등급을 변경함.")
+    */
+/*@ApiOperation(value = "권한변경", notes = "권한 등급을 변경함.")
     @PutMapping("v1/update/role")
     public ApiResponse<?> updateRole(@RequestBody MemberRoleUpdateDto memberRoleUpdateDto){
         String userId = memberRoleUpdateDto.getUserId();
         RoleType role = memberRoleUpdateDto.getRole();
         adminService.맴버권한수정(userId, role);
         return ApiResponse.success("message", "Success");
-    }
+    }*//*
 
-    @ApiOperation(value = "전체회원목록", notes = "모든 회원을 조회합니다.")
+
+   */
+/* @ApiOperation(value = "전체회원목록", notes = "모든 회원을 조회합니다.")
     @GetMapping("v1/all/list")
     public ApiResponse<List<Member>> retrieveUserList(){
         return ApiResponse.success("data", adminService.전체회원목록());
@@ -53,7 +56,8 @@ public class AdminApiController {
     @GetMapping("v1/guest/list")
     public ApiResponse<List<Member>> retrieveGuestList(){
         return ApiResponse.success("data", adminService.게스트목록());
-    }
+    }*//*
+
 
     @ApiOperation(value = "관리자 경고 주기" , notes = "관리자들이 멤버에게 경고를 줍니다. 로그인이 되어 있어야 합니다. ")
     @PostMapping("/v1/warning")
@@ -76,3 +80,4 @@ public class AdminApiController {
         return ApiResponse.success("data", post);
     }
 }
+*/

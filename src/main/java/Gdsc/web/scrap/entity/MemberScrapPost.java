@@ -1,7 +1,6 @@
 package Gdsc.web.scrap.entity;
 
 import Gdsc.web.post.entity.Post;
-import Gdsc.web.member.entity.MemberInfo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,9 +21,8 @@ public class MemberScrapPost {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name="USER_ID")
-    private MemberInfo memberInfo;
+    @Column(name = "USER_ID")
+    private String userId;
 
     @ManyToOne
     @JoinColumn(name="POST_ID")

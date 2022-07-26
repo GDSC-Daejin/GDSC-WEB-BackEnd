@@ -1,3 +1,4 @@
+/*
 package Gdsc.web.admin.service;
 
 import Gdsc.web.admin.dto.WarningDto;
@@ -74,4 +75,4 @@ public class AdminService {
             throw new RuntimeException("없는 사용자 입니다.");
         }
     }
-}
+}*/

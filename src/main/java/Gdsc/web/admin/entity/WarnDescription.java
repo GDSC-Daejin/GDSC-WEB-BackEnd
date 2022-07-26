@@ -1,6 +1,5 @@
 package Gdsc.web.admin.entity;
 
-import Gdsc.web.member.entity.Member;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.swagger.annotations.ApiModelProperty;
@@ -33,13 +32,12 @@ public class WarnDescription {
     String content;
 
     @ApiModelProperty(example = "누가")
-    @ManyToOne
-    private Member fromUser;
+    @Column(name = "FROM_USER_ID")
+    private String fromUser;
 
     @ApiModelProperty(example = "누구한테")
-    @ManyToOne
-    @JoinColumn(name = "TO_USER")
-    private Member toUser;
+    @Column(name = "TO_USER_ID")
+    private String toUser;
 
 
 
