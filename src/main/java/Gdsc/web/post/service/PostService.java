@@ -41,6 +41,34 @@ public class PostService {
 
     @Value("${cloud.aws.s3.Url}")
     private String bucketUrl;
+
+    public List<PostResponseDto> toPostResponseDto(List<Post> posts){
+        return getPostResponseDtos(posts, memberService);
+    }
+
+    @NotNull
+    static List<PostResponseDto> getPostResponseDtos(List<Post> posts, MemberService memberService) {
+        List<MemberInfoResponseServerDto> memberInfoResponseServerDtos = memberService.getNicknameImages();
+        return posts.stream()
+                .map(post ->
+                        PostResponseDto.builder()
+                                .postId(post.getPostId())
+                                .title(post.getTitle())
+                                .content(post.getContent())
+                                .category(post.getCategory())
+                                .userId(post.getUserId())
+                                .memberInfo(memberInfoResponseServerDtos.stream()
+                                        .filter(memberInfoResponseServerDto -> memberInfoResponseServerDto.getUserId().equals(post.getUserId()))
+                                        .findFirst()
+                                        .orElse(null))
+                                .blocked(post.isBlocked())
+                                .postHashTags(post.getPostHashTags())
+                                .imagePath(post.getImagePath())
+                                .uploadDate(post.getUploadDate())
+                                .modifiedAt(post.getModifiedAt())
+                                .build())
+                .collect(Collectors.toList());
+    }
     @Transactional
     public void save(PostRequestDto requestDto , String userId) throws IOException {
         Post post = new Post();
@@ -130,29 +158,7 @@ public class PostService {
 
 
 
-    public List<PostResponseDto> toPostResponseDto(List<Post> posts){
-        return getPostResponseDtos(posts, memberService);
-    }
 
-    @NotNull
-    static List<PostResponseDto> getPostResponseDtos(List<Post> posts, MemberService memberService) {
-        return posts.stream()
-                .map(post ->
-                        PostResponseDto.builder()
-                        .postId(post.getPostId())
-                        .title(post.getTitle())
-                        .content(post.getContent())
-                        .category(post.getCategory())
-                        .userId(post.getUserId())
-                        .memberInfo(memberService.getNicknameImage(post.getUserId()))
-                        .blocked(post.isBlocked())
-                        .postHashTags(post.getPostHashTags())
-                        .imagePath(post.getImagePath())
-                        .uploadDate(post.getUploadDate())
-                        .modifiedAt(post.getModifiedAt())
-                        .build())
-                .collect(Collectors.toList());
-    }
 
     // 내 게시글 조회
 

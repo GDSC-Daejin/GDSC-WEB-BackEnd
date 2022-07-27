@@ -23,6 +23,14 @@ public class MemberService {
                 MemberInfoResponseServerDto.class, userId);
         return memberInfo;
     }
+    public List<MemberInfoResponseServerDto> getNicknameImages() {
+        RestTemplate restTemplate = new RestTemplate();
+        MemberInfoResponseServerDto[] memberInfos = restTemplate.getForObject(
+                AuthServerURL +"/internal/member/api/memberInfo",
+                MemberInfoResponseServerDto[].class);
+        assert memberInfos != null;
+        return List.of(memberInfos);
+    }
 
 
 
