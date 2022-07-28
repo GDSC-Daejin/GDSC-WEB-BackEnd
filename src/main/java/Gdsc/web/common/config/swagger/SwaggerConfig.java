@@ -1,4 +1,5 @@
 /*
+
 package Gdsc.web.common.config.swagger;
 
 
@@ -80,5 +81,6 @@ public class SwaggerConfig {
         return Arrays.asList(new SecurityReference("JWT", authorizationScopes));
     }
 }
+
 
 */

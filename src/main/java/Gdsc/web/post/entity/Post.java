@@ -4,7 +4,6 @@ package Gdsc.web.post.entity;
 import Gdsc.web.category.entity.Category;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -41,13 +40,10 @@ public class Post {
     private String userId; // 작성자 아이디
 
     @Column(length = 1000)
-    @ApiModelProperty(example = "/ec2-south/~~~/")
     String imagePath; // 썸네일
     @Column
-    @ApiModelProperty(example = "제목")
     String title; // 제목
     @Lob
-    @ApiModelProperty(example = "내용")
     String content; // 내용
     @Column(columnDefinition = "integer default 0", nullable = false , name = "VIEW_COUNT")
     private int view; //조회수
@@ -58,12 +54,10 @@ public class Post {
 
     //임시 저장 여부
 
-    @ApiModelProperty(example = "false")
     @NotNull
     @ColumnDefault("false")
     private boolean tmpStore;
 
-    @ApiModelProperty(example = "Backend")
     @OneToOne
     @JoinColumn
     private Category category;
@@ -83,12 +77,10 @@ public class Post {
     private LocalDateTime modifiedAt;
 
     @CreationTimestamp
-    @ApiModelProperty(example = "2022-01-06 14:57:42.777000 ---Insert 시 자동 삽입 넣지말아요")
     private LocalDateTime uploadDate;
 
 
     @Column(columnDefinition = "boolean default false")
-    @ApiModelProperty(example = "false")
     @NotNull
     private boolean blocked;
 

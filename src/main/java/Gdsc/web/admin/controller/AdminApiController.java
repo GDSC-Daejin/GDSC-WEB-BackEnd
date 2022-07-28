@@ -19,7 +19,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
-@RestController
+@RestController\
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
 public class AdminApiController {
