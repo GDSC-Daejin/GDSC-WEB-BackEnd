@@ -2,7 +2,6 @@ package Gdsc.web.post.dto;
 
 
 import Gdsc.web.category.entity.Category;
-import Gdsc.web.member.dto.MemberInfoResponseDto;
 import Gdsc.web.member.dto.MemberInfoResponseServerDto;
 import lombok.*;
 

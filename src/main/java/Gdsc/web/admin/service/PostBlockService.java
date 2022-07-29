@@ -4,6 +4,7 @@ import Gdsc.web.post.entity.Post;
 import Gdsc.web.admin.entity.PostBlock;
 import Gdsc.web.post.repository.PostRepository;
 import Gdsc.web.admin.repository.JpaPostBlockRepository;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

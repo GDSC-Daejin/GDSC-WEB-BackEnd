@@ -1,10 +1,8 @@
 package Gdsc.web.oauth.handler;
 
-import Gdsc.web.common.dto.ApiResponse;
 import Gdsc.web.oauth.token.AuthToken;
 import Gdsc.web.oauth.token.AuthTokenProvider;
 import Gdsc.web.oauth.utils.HeaderUtil;
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
