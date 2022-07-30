@@ -1,7 +1,7 @@
 package Gdsc.web.oauth.entity;
 
-import Gdsc.web.entity.Member;
-import Gdsc.web.model.RoleType;
+import Gdsc.web.member.entity.Member;
+import Gdsc.web.member.model.RoleType;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

@@ -1,8 +1,8 @@
 package Gdsc.web.config;
 
-import Gdsc.web.annotation.WithMockUser;
-import Gdsc.web.entity.Member;
-import Gdsc.web.entity.MemberInfo;
+import Gdsc.web.annotation.WithCustomMockUser;
+import Gdsc.web.member.entity.Member;
+import Gdsc.web.member.entity.MemberInfo;
 import Gdsc.web.oauth.entity.UserPrincipal;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,9 +13,9 @@ import org.springframework.security.test.context.support.WithSecurityContextFact
 
 import java.time.LocalDateTime;
 
-public class WithMockUserSecurityContextFactory implements WithSecurityContextFactory<WithMockUser> {
+public class WithMockUserSecurityContextFactory implements WithSecurityContextFactory<WithCustomMockUser> {
     @Override
-    public SecurityContext createSecurityContext(WithMockUser customUser) {
+    public SecurityContext createSecurityContext(WithCustomMockUser customUser) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         LocalDateTime now = LocalDateTime.now();
         Member member = Member.builder()

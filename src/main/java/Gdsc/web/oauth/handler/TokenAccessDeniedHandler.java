@@ -12,9 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
+@RequiredArgsConstructor
 public class TokenAccessDeniedHandler implements AccessDeniedHandler {
-    @Autowired(required = false)
-    private HandlerExceptionResolver handlerExceptionResolver;
+
+    private final HandlerExceptionResolver handlerExceptionResolver;
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {

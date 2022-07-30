@@ -9,7 +9,6 @@ import java.security.Key;
 import java.util.Date;
 
 @Slf4j
-@RequiredArgsConstructor
 public class AuthToken {
 
     @Getter
@@ -26,6 +25,11 @@ public class AuthToken {
     AuthToken(String id, String role, Date expiry, Key key) {
         this.key = key;
         this.token = createAuthToken(id, role, expiry);
+    }
+
+    public AuthToken(String token, Key key) {
+        this.key = key;
+        this.token = token;
     }
 
     private String createAuthToken(String id, Date expiry) {
@@ -48,7 +52,30 @@ public class AuthToken {
     public boolean validate() {
         return this.getTokenClaims() != null;
     }
-
+    public boolean validateWithOutExpired() {
+        return this.getTokenClaimsExceptExpired() != null;
+    }
+    public Claims getTokenClaimsExceptExpired() {
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (SecurityException e) {
+            log.info("Invalid JWT signature.");
+        } catch (MalformedJwtException e) {
+            log.info("Invalid JWT token.");
+        } catch (UnsupportedJwtException e) {
+            log.info("Unsupported JWT token.");
+        } catch (IllegalArgumentException e) {
+            log.info("JWT token compact of handler are invalid.");
+        } catch (ExpiredJwtException e) {
+            log.info("Expired JWT token.");
+            return e.getClaims();
+        }
+        return null;
+    }
     public Claims getTokenClaims() {
         try {
             return Jwts.parserBuilder()
@@ -65,7 +92,7 @@ public class AuthToken {
         } catch (UnsupportedJwtException e) {
             log.info("Unsupported JWT token.");
         } catch (IllegalArgumentException e) {
-            log.info("JWT token compact of handler are invalid.");
+            //log.info("JWT token compact of handler are invalid.");
         }
         return null;
     }

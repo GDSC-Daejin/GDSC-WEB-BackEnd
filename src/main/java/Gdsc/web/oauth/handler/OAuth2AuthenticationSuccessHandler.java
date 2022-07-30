@@ -1,17 +1,18 @@
 package Gdsc.web.oauth.handler;
 
-import Gdsc.web.config.properties.AppProperties;
-import Gdsc.web.entity.UserRefreshToken;
-import Gdsc.web.model.RoleType;
+import Gdsc.web.common.config.properties.AppProperties;
+import Gdsc.web.oauth.entity.UserRefreshToken;
+import Gdsc.web.member.model.RoleType;
 import Gdsc.web.oauth.entity.ProviderType;
 import Gdsc.web.oauth.info.OAuth2UserInfo;
 import Gdsc.web.oauth.info.OAuth2UserInfoFactory;
 import Gdsc.web.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import Gdsc.web.oauth.token.AuthToken;
 import Gdsc.web.oauth.token.AuthTokenProvider;
-import Gdsc.web.repository.UserRefreshTokenRepository;
-import Gdsc.web.utils.CookieUtil;
+import Gdsc.web.oauth.repository.UserRefreshTokenRepository;
+import Gdsc.web.oauth.utils.CookieUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -35,6 +36,7 @@ import static org.springframework.security.oauth2.core.endpoint.OAuth2ParameterN
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
 
@@ -89,7 +91,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 roleType.getCode(),
                 new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
         );
-
+        Date Date = new Date(now.getTime() + appProperties.getAuth().getTokenExpiry());
+        log.info(Date.toString());
         // refresh 토큰 설정
         long refreshTokenExpiry = appProperties.getAuth().getRefreshTokenExpiry();
 
@@ -104,16 +107,16 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             userRefreshToken.setRefreshToken(refreshToken.getToken());
         } else {
             userRefreshToken = new UserRefreshToken(userInfo.getId(), refreshToken.getToken());
-            userRefreshTokenRepository.saveAndFlush(userRefreshToken);
+
         }
-
+        userRefreshTokenRepository.saveAndFlush(userRefreshToken);
         int cookieMaxAge = (int) refreshTokenExpiry / 60;
-
         CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
         CookieUtil.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
 
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("token", accessToken.getToken())
+                .queryParam("refreshToken", refreshToken.getToken())
                 .build().toUriString();
     }
 

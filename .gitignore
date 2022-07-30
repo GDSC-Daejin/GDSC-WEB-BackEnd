@@ -13,6 +13,7 @@
 /out/production/resources/application.properties
 /out/production/resources/application-oauth.properties
 /out/production/resources/application-dev.properties
-/out
+/out/production
+/out/test
 ./FullText_Post_idx
 /FullText_Post_idx

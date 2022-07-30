@@ -2,11 +2,9 @@ package Gdsc.web.controller.auth;
 
 import Gdsc.web.common.MemberEntityFactory;
 import Gdsc.web.controller.AbstractControllerTest;
-import Gdsc.web.dto.auth.AuthReqModel;
-import Gdsc.web.entity.Member;
-import Gdsc.web.repository.member.CustomMemberRepository;
-import Gdsc.web.repository.member.MemberRepository;
-import Gdsc.web.repository.member.MemberRepositoryImp;
+import Gdsc.web.oauth.dto.AuthReqModel;
+import Gdsc.web.member.entity.Member;
+import Gdsc.web.member.repository.MemberRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Assert;
@@ -17,8 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import javax.swing.text.html.Option;
+import scala.util.control.Exception;
 
 import java.util.Optional;
 
@@ -43,7 +40,7 @@ class AuthControllerTest extends AbstractControllerTest {
 
     @Test
     @DisplayName("개발 환경 로그인 테스트")
-    void join() throws Exception {
+    void join() throws  java.lang.Exception {
         Member member = MemberEntityFactory.memberEntity();
         mvc.perform(post("/test/auth/join")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -63,7 +60,7 @@ class AuthControllerTest extends AbstractControllerTest {
 
     @Test
     @DisplayName("개발 환경 로그인 테스트")
-    void login() throws Exception {
+    void login() throws java.lang.Exception {
         // given
         Member saveModel = MemberEntityFactory.memberEntity();
         saveModel.setPassword(new BCryptPasswordEncoder().encode(saveModel.getPassword()));
