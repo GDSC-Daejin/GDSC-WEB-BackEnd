@@ -1,6 +1,5 @@
 package Gdsc.web.member.dto;
 
-import com.nimbusds.jose.shaded.json.annotate.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
