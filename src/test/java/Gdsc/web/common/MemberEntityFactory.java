@@ -5,18 +5,16 @@ import Gdsc.web.member.entity.MemberInfo;
 import Gdsc.web.member.model.RoleType;
 import Gdsc.web.oauth.entity.ProviderType;
 import lombok.Data;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDateTime;
 
 @Data
 public class MemberEntityFactory {
-    private static BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     public static Member guestMemberEntity() {
         LocalDateTime now = LocalDateTime.now();
         MemberInfo memberInfo = new MemberInfo();
         Member member = new Member(
-                "guest",
+                "user",
                 "guestName",
                 "guestEmail@gmail.com",
                 "Y",
@@ -27,7 +25,7 @@ public class MemberEntityFactory {
                 now,
                 memberInfo
         );
-        member.setPassword(passwordEncoder.encode("password"));
+        member.setPassword("password");
         memberInfo.setMember(member);
         memberInfo.setPhoneNumber("010-1234-5678");
 
@@ -38,7 +36,7 @@ public class MemberEntityFactory {
         LocalDateTime now = LocalDateTime.now();
         MemberInfo memberInfo = new MemberInfo();
         Member member = new Member(
-                "member",
+                "user",
                 "memberName",
                 "memberEmail@gmail.com"
                 , "Y",
@@ -49,7 +47,7 @@ public class MemberEntityFactory {
                 now,
                 memberInfo
         );
-        member.setPassword(passwordEncoder.encode("password"));
+        member.setPassword("password");
         memberInfo.setMember(member);
 
 
@@ -60,7 +58,7 @@ public class MemberEntityFactory {
         LocalDateTime now = LocalDateTime.now();
         MemberInfo memberInfo = new MemberInfo();
         Member member = new Member(
-                "admin",
+                "user",
                 "adminName",
                 "AdminEmail@gmail.com"
                 , "Y",
@@ -71,7 +69,7 @@ public class MemberEntityFactory {
                 now,
                 memberInfo
         );
-        member.setPassword(passwordEncoder.encode("password"));
+        member.setPassword("password");
         memberInfo.setMember(member);
 
 

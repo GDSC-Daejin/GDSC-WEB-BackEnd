@@ -1,6 +1,7 @@
 package Gdsc.web.post.repository;
 
 import Gdsc.web.category.entity.Category;
+import Gdsc.web.member.entity.MemberInfo;
 import Gdsc.web.post.entity.Post;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,21 +13,21 @@ public interface PostRepository extends JpaRepository<Post,Integer> , CustomizeP
 
     Optional<Post> findByPostId(Long postId);
     <T> Optional<T> findByPostIdAndBlockedIsFalseAndTmpStoreIsFalse(Long postId, Class<T> type);
-    Optional<Post> findByPostIdAndUserId(Long postId , String userId);
-    <T> List <T> findByUserId(Class<T> tClass, String userId, Pageable pageable);
-    <T> List<T> findByUserIdAndCategoryAndBlockedIsFalse(Class<T> tClass,String userId, Optional<Category> category, Pageable pageable);
-    <T> List<T> findByUserIdAndBlockedIsFalse(Class<T> tClass, String userId, Pageable pageable);
+    Optional<Post> findByPostIdAndMemberInfo(Long postId , MemberInfo memberInfo);
+    <T> List <T> findByMemberInfo(Class<T> tClass,MemberInfo memberInfo, Pageable pageable);
+    <T> List<T> findByMemberInfoAndCategoryAndBlockedIsFalse(Class<T> tClass, MemberInfo memberInfo, Optional<Category> category, Pageable pageable);
+    <T> List<T> findByMemberInfoAndBlockedIsFalse(Class<T> tClass, MemberInfo memberInfo, Pageable pageable);
     <T> List<T> findByCategoryAndTmpStoreIsFalseAndBlockedIsFalse(Class<T> tClass,Optional<Category> category, Pageable pageable);
     <T> List<T> findAllByTmpStoreIsFalseAndBlockedIsFalse(Class<T> tClass,Pageable pageable);
     <T> List<T> findByPostHashTagsIsContainingOrContentIsContainingAndTmpStoreIsFalseAndBlockedIsFalse(Class<T> tClass, String postHashTags,String content,Pageable pageable);
     <T> List<T> findAllByTmpStoreIsFalseAndBlockedIsTrue(Class<T> tClass, Pageable pageable);
     <T> List<T> findAllByTitleContainingAndTmpStoreIsFalseAndBlockedIsFalse(Class<T> tClass,String title,Pageable pageable);
-     <T> List<T> findAllByTmpStoreIsTrueAndUserId(Class<T> tClass, String userId, Pageable pageable);
-    <T> T findByUserIdAndPostId(Class<T> tClass, String userId, Long postId);
+     <T> List<T> findAllByTmpStoreIsTrueAndMemberInfo(Class<T> tClass,MemberInfo memberInfo, Pageable pageable);
+    <T> T findByMemberInfoAndPostId(Class<T> tClass, MemberInfo memberInfo, Long postId);
 
     void deleteByPostId(Long postId);
-    <T> List<T> findAllByTmpStoreIsTrueAndUserIdAndCategory(Class<T> tClass, String userId, Optional<Category> category , Pageable pageable);
+    <T> List<T> findAllByTmpStoreIsTrueAndMemberInfoAndCategory(Class<T> tClass, MemberInfo memberInfo, Optional<Category> category , Pageable pageable);
 
-    List<Post> findAllByUserIdAndTmpStoreIsFalseAndBlockedIsFalse(Class<Post> postClass, String userId, Pageable pageable);
-    List<Post> findAllByUserIdAndBlockedIsFalseAndTmpStoreIsFalseAndCategory(String userId , Category category , Pageable pageable);
+    List<Post> findAllByMemberInfoAndTmpStoreIsFalseAndBlockedIsFalse(Class<Post> postClass, MemberInfo memberInfo, Pageable pageable);
+    List<Post> findAllByMemberInfoAndBlockedIsFalseAndTmpStoreIsFalseAndCategory(MemberInfo memberInfo , Category category , Pageable pageable);
 }

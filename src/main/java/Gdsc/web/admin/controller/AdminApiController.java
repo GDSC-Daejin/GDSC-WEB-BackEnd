@@ -1,63 +1,78 @@
 package Gdsc.web.admin.controller;
 
-import Gdsc.web.common.dto.Response;
-
+import Gdsc.web.common.dto.ApiResponse;
+import Gdsc.web.admin.dto.WarningDto;
+import Gdsc.web.admin.dto.MemberRoleUpdateDto;
+import Gdsc.web.member.entity.Member;
+import Gdsc.web.member.model.RoleType;
+import Gdsc.web.admin.service.AdminService;
 import Gdsc.web.admin.service.PostBlockService;
-import Gdsc.web.post.dto.PostResponseDto;
-import Gdsc.web.post.entity.Post;
 import Gdsc.web.post.service.PostService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-
-import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
-@Tag(name = "AdminApiController", description = "블로그 관리자 API")
 public class AdminApiController {
 
+    private final AdminService adminService;
     private final PostService postService;
     private final PostBlockService postBlockService;
-    @Operation(summary = "블로그 관리자 포스트 블락", description = "블로그 관리자 포스트 막기")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "SUCCESS"),
-            @ApiResponse(responseCode = "400", description = "요청 오류"),
-            @ApiResponse(responseCode = "401", description = "인가 실패"),
-            @ApiResponse(responseCode = "403", description = "인가 실패"),
-            @ApiResponse(responseCode = "404", description = "요청 오류"),
-            @ApiResponse(responseCode = "500", description = "서버 오류")
-    })
-    @PostMapping("v1/block/{postId}")
-    public Response blockPost(@PathVariable Long postId){
-        postBlockService.block(postId);
-        return Response.success("message", "Success");
+
+    @ApiOperation(value = "권한변경", notes = "권한 등급을 변경함.")
+    @PutMapping("v1/update/role")
+    public ApiResponse<?> updateRole(@RequestBody MemberRoleUpdateDto memberRoleUpdateDto){
+        String userId = memberRoleUpdateDto.getUserId();
+        RoleType role = memberRoleUpdateDto.getRole();
+        adminService.맴버권한수정(userId, role);
+        return ApiResponse.success("message", "Success");
     }
 
-    @Operation(summary = "블로그 관리자 포스트 리스트", description = "블로그 관리자 포스트 리스트")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "successful operation",
-                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = PostResponseDto.class)))),
-            @ApiResponse(responseCode = "400", description = "요청 오류"),
-            @ApiResponse(responseCode = "401", description = "인가 실패"),
-            @ApiResponse(responseCode = "403", description = "인가 실패"),
-            @ApiResponse(responseCode = "404", description = "요청 오류"),
-            @ApiResponse(responseCode = "500", description = "서버 오류")
-    })
+    @ApiOperation(value = "전체회원목록", notes = "모든 회원을 조회합니다.")
+    @GetMapping("v1/all/list")
+    public ApiResponse<List<Member>> retrieveUserList(){
+        return ApiResponse.success("data", adminService.전체회원목록());
+    }
+
+    @ApiOperation(value = "멤버목록", notes = "게스트가 아닌 멤버를 조회합니다. 전화번호 Not null 인 회원만")
+    @GetMapping("v1/member/list")
+    public ApiResponse<List<Member>> retrieveMemberList(){
+        return ApiResponse.success("data", adminService.멤버목록());
+    }
+
+    @ApiOperation(value = "게스트목록", notes = "게스트를 조회합니다 Not null 인 회원만")
+    @GetMapping("v1/guest/list")
+    public ApiResponse<List<Member>> retrieveGuestList(){
+        return ApiResponse.success("data", adminService.게스트목록());
+    }
+
+    @ApiOperation(value = "관리자 경고 주기" , notes = "관리자들이 멤버에게 경고를 줍니다. 로그인이 되어 있어야 합니다. ")
+    @PostMapping("/v1/warning")
+    public ApiResponse giveWarning(@RequestBody WarningDto warningDto , @AuthenticationPrincipal User principal) {
+        adminService.경고주기(principal.getUsername() , warningDto);
+        return ApiResponse.success("message", "Success");
+    }
+
+    @ApiOperation(value = "관리자 포스트 블럭", notes = "관리자는 유해한 게시글을 블럭하거나 해제할 수 있습니다.")
+    @PostMapping("v1/block/{postId}")
+    public ApiResponse blockPost(@PathVariable Long postId){
+        postBlockService.block(postId);
+        return ApiResponse.success("message", "Success");
+    }
+
+    @ApiOperation(value = "관리자 블럭 포스트 불러오기", notes = "블럭된 포스트를 불러옵니다")
     @GetMapping("v1/block")
-    public Response blockPost(@PageableDefault(size = 16 ,sort = "postId",direction = Sort.Direction.DESC) Pageable pageable){
+    public ApiResponse blockPost(@PageableDefault(size = 16 ,sort = "postId",direction = Sort.Direction.DESC) Pageable pageable){
         Page<?> post = postService.findBockedPostAll(pageable);
-        return Response.success("data", post);
+        return ApiResponse.success("data", post);
     }
 }

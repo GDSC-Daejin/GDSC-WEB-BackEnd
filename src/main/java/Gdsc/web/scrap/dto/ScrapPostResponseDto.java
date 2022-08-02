@@ -10,7 +10,7 @@ import java.util.List;
 public class ScrapPostResponseDto {
     List<PostResponseDto> postList;
 
- /*   public ScrapPostResponseDto(List<Post> postList) {
+    public ScrapPostResponseDto(List<Post> postList) {
         this.postList = postList.stream().map(Post::toPostResponseDto).collect(java.util.stream.Collectors.toList());
-    }*/
+    }
 }

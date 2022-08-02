@@ -35,7 +35,7 @@ public class WithMockUserSecurityContextFactory implements WithSecurityContextFa
                 .major("컴퓨터공학")
                 .nickname("임시이름")
                 .phoneNumber("010-1234-5678")
-                .studentID("123456789")
+                .StudentID("123456789")
                 .introduce("임시소개")
                 .member(member)
                 .build();
