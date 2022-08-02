@@ -32,7 +32,8 @@ public class SwaggerConfig {
         Info info = new Info()
                 .title("Blog API")
                 .version("1.0.0")
-                .description("Blog API 명세서 Gateway를 이용할 경우 모든 Prefix는 /blog-route/ 를 추가 해야 합니다. ");
+                .description("Blog API 명세서 Gateway를 이용할 경우 모든 Prefix는 /blog-route/ 를 추가 해야 합니다." +
+                        "development 모드에서는 /blog-route-dev/");
 
         return new OpenAPI()
                 .components(new Components())
