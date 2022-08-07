@@ -1,9 +1,8 @@
 package Gdsc.web.admin.entity;
 
-import Gdsc.web.member.entity.Member;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,24 +25,20 @@ public class WarnDescription {
     private Long id;
 
     @Column
-    @ApiModelProperty(example = "제목")
+    @Schema(description = "경고제목" , example = "스터디 미참여")
     String title;
     @Lob
-    @ApiModelProperty(example = "내용")
+    @Schema(description = "경고내용" , example = "스터디 미참여로 인한 경고")
     String content;
 
-    @ApiModelProperty(example = "누가")
-    @ManyToOne
-    private Member fromUser;
+    @Column(name = "FROM_USER_ID")
+    private String fromUser;
 
-    @ApiModelProperty(example = "누구한테")
-    @ManyToOne
-    @JoinColumn(name = "TO_USER")
-    private Member toUser;
+    @Column(name = "TO_USER_ID")
+    private String toUser;
 
 
 
     @CreationTimestamp
-    @ApiModelProperty(example = "2022-01-06 14:57:42.777000")
     private LocalDateTime uploadDate;
 }
