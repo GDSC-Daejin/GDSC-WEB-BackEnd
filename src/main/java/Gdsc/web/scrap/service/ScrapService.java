@@ -1,6 +1,8 @@
 package Gdsc.web.scrap.service;
 
 import Gdsc.web.member.service.MemberService;
+import Gdsc.web.post.dto.PostResponseDto;
+import Gdsc.web.post.service.PostService;
 import Gdsc.web.scrap.mapper.MemberScrapPostResponseMapping;
 import Gdsc.web.scrap.entity.MemberScrapPost;
 import Gdsc.web.post.entity.Post;
@@ -8,11 +10,14 @@ import Gdsc.web.post.repository.PostRepository;
 import Gdsc.web.scrap.repository.JpaScrapRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +25,7 @@ public class ScrapService {
     private final JpaScrapRepository jpaScrapRepository;
     private final MemberService memberService;
     private final PostRepository postRepository;
+    private final PostService postService;
 
     public void scrap(String userId, Long postId){
         MemberScrapPost memberScrapPost = jpaScrapRepository.findByUserIdAndPost_PostId(userId, postId);
@@ -37,7 +43,8 @@ public class ScrapService {
 
 
     @Transactional(readOnly = true)
-    public Page<MemberScrapPostResponseMapping> findMyScrapPost(String userId, final Pageable pageable){
-        return jpaScrapRepository.findByUserId(userId , pageable);
+    public Page<PostResponseDto> findMyScrapPost(String userId, final Pageable pageable){
+        List<Post> scrap = jpaScrapRepository.findByUserId(userId).stream().map(MemberScrapPost::getPost).toList();
+        return new PageImpl<>(postService.toPostResponseDto(scrap), pageable, scrap.size());
     }
 }
