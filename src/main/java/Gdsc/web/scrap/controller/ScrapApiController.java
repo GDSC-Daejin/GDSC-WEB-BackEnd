@@ -21,13 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class ScrapApiController {
     private final ScrapService scrapService;
 
-    @PostMapping("/api/member/v1/scrap/{postId}")
+    @PostMapping("/api/guest/v1/scrap/{postId}")
     public Response scrap(@AuthenticationPrincipal User principal, @PathVariable Long postId){
         scrapService.scrap(principal.getUsername(), postId);
         return Response.success("message", "SUCCESS");
     }
 
-    @GetMapping("/api/member/v1/myScrap")
+    @GetMapping("/api/guest/v1/myScrap")
     public Response myScrap(@AuthenticationPrincipal User principal,
                             @PageableDefault(size = 16 ,sort = "id",direction = Sort.Direction.DESC ) Pageable pageable){
 
