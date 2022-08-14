@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class ScrapApiController {
@@ -29,6 +31,11 @@ public class ScrapApiController {
     public Response myScrap(@AuthenticationPrincipal User principal,
                             @PageableDefault(size = 16 ,sort = "id",direction = Sort.Direction.DESC ) Pageable pageable){
         Page<?> scrap = scrapService.findMyScrapPost(principal.getUsername(), pageable);
+        return Response.success("data", scrap);
+    }
+    @GetMapping("/api/guest/v1/myScrap/list")
+    public Response myScrapList(@AuthenticationPrincipal User principal){
+        List<Long> scrap =  scrapService.findMyScrapPostList(principal.getUsername());
         return Response.success("data", scrap);
     }
 }
