@@ -6,7 +6,6 @@ import Gdsc.web.category.dto.CategoryUpdateDto;
 import Gdsc.web.category.entity.Category;
 import Gdsc.web.category.repository.JpaCategoryRepository;
 import lombok.RequiredArgsConstructor;
-import okhttp3.internal.http2.ErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
