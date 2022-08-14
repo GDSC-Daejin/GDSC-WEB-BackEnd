@@ -1,9 +1,9 @@
 package Gdsc.web.scrap.mapper;
 
-import Gdsc.web.post.mapper.PostResponseMapping;
+import Gdsc.web.scrap.entity.MemberScrapPost;
 
 import java.util.List;
 
 public interface MemberScrapPostResponseMapping {
-    List<PostResponseMapping> getPost();
+    List<MemberScrapPost> getPost();
 }

@@ -19,7 +19,7 @@ public class PostRepositoryImpl implements CustomizePostRepository{
 
 
     @Override
-    public  Page<Post> findAllByTitleLikeOrContentLikeOrPostHashTagsLikeAndTmpStoreIsFalseAndBlockedIsFalse(String word, Pageable pageable) {
+    public  List<Post> findAllByTitleLikeOrContentLikeOrPostHashTagsLikeAndTmpStoreIsFalseAndBlockedIsFalse(String word) {
         String jpql = "SELECT p FROM Post p WHERE (p.postHashTags LIKE :word " +
                 "Or p.title LIKE :word " +
                 "OR p.content LIKE :word )" +
@@ -29,6 +29,6 @@ public class PostRepositoryImpl implements CustomizePostRepository{
         typedQuery.setParameter("word" , "%"+word+"%");
         List resultList =typedQuery.getResultList();
         // Dto 변환 필요
-        return new PageImpl<>(resultList,pageable, resultList.size());
+        return resultList;
     }
 }

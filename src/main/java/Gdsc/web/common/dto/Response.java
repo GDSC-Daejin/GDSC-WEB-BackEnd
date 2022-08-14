@@ -8,7 +8,7 @@ import java.util.Map;
 
 @Getter
 @RequiredArgsConstructor
-public class ApiResponse<T> {
+public class Response<T> {
 
     private final static int SUCCESS = 200;
     private final static int NOT_FOUND = 400;
@@ -23,31 +23,31 @@ public class ApiResponse<T> {
     private final ApiResponseHeader header;
     private final Map<String, T> body;
 
-    public static <T> ApiResponse<T> success(String name, T body) {
+    public static <T> Response<T> success(String name, T body) {
         Map<String, T> map = new HashMap<>();
         map.put(name, body);
 
-        return new ApiResponse(new ApiResponseHeader(SUCCESS, SUCCESS_MESSAGE), map);
+        return new Response(new ApiResponseHeader(SUCCESS, SUCCESS_MESSAGE), map);
     }
 
-    public static <T> ApiResponse<T> fail(String name, T body) {
+    public static <T> Response<T> fail(String name, T body) {
         Map<String, T> map = new HashMap<>();
         map.put(name, body);
-        return new ApiResponse(new ApiResponseHeader(FAILED, FAILED_MESSAGE), map);
+        return new Response(new ApiResponseHeader(FAILED, FAILED_MESSAGE), map);
     }
 
-    public static <T> ApiResponse<T> invalidAccessToken() {
-        return new ApiResponse(new ApiResponseHeader(FAILED, INVALID_ACCESS_TOKEN), null);
+    public static <T> Response<T> invalidAccessToken() {
+        return new Response(new ApiResponseHeader(FAILED, INVALID_ACCESS_TOKEN), null);
     }
 
-    public static <T> ApiResponse<T> invalidRefreshToken() {
-        return new ApiResponse(new ApiResponseHeader(FAILED, INVALID_REFRESH_TOKEN), null);
+    public static <T> Response<T> invalidRefreshToken() {
+        return new Response(new ApiResponseHeader(FAILED, INVALID_REFRESH_TOKEN), null);
     }
 
-    public static <T> ApiResponse<T> notExpiredTokenYet() {
-        return new ApiResponse(new ApiResponseHeader(FAILED, NOT_EXPIRED_TOKEN_YET), null);
+    public static <T> Response<T> notExpiredTokenYet() {
+        return new Response(new ApiResponseHeader(FAILED, NOT_EXPIRED_TOKEN_YET), null);
     }
-    public static <T> ApiResponse<T> unauthorized() {
-        return new ApiResponse(new ApiResponseHeader(401, "Unauthorized"), null);
+    public static <T> Response<T> unauthorized() {
+        return new Response(new ApiResponseHeader(401, "Unauthorized"), null);
     }
 }

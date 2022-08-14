@@ -18,6 +18,7 @@ public class CorsConfigNotReal implements CorsConfig {
         config.addAllowedOriginPattern("*");
         config.addAllowedHeader("*"); // 모든 헤더 응답허용
         config.addAllowedMethod("*"); // 모든 post get put delete 요청 허용
+        config.addExposedHeader("Authorization");
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }

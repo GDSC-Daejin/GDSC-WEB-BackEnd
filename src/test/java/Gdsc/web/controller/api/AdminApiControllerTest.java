@@ -25,7 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -87,7 +88,7 @@ class AdminApiControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @DisplayName("/api/admin/v1/all/list 모든 회원 조회")
+    @DisplayName("v1/all/list 모든 회원 조회")
     void retrieveUserList() throws Exception{
         // given
 
@@ -135,33 +136,5 @@ class AdminApiControllerTest extends AbstractControllerTest {
         List<Member> list = memberRepository.findMembersByRoleInAndMemberInfo_PhoneNumberIsNotNull(roleTypes);
         assertEquals(1, list.size());
         assertEquals(RoleType.GUEST, list.get(0).getRole());
-    }
-
-    @Test
-    @DisplayName("/api/admin/v1/warning 경고 주기")
-    void giveWarning() throws Exception{
-        // given
-        String expected = "경고";
-
-        WarningDto warningDto = new WarningDto();
-        warningDto.setTitle(expected);
-        warningDto.setContent(expected);
-        warningDto.setToUser(memberMember.getUserId());
-
-        // when
-
-        String url = "http://localhost:" + 8080 + "/api/admin/v1/warning";
-        mvc.perform(get(url)
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .content(mapper.writeValueAsString(warningDto)))
-                .andDo(print())
-                .andExpect(status().isOk());
-        // then
-
-        List<WarnDescription> list = jpaWarnDescription.findAll();
-        assertEquals(1, list.size());
-        assertEquals(expected, list.get(0).getContent());
-        assertEquals(expected, list.get(0).getTitle());
-        assertEquals(memberAdmin, list.get(0).getFromUser());
     }
 }
