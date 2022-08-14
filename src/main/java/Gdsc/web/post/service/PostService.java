@@ -204,7 +204,8 @@ public class PostService {
     // fulltext Search 검색
     @Transactional
     public Page<?> findFullTextSearch(String terms,Pageable pageable) {
-        return postRepository.findAllByTitleLikeOrContentLikeOrPostHashTagsLikeAndTmpStoreIsFalseAndBlockedIsFalse(terms,pageable);
+        List<Post> posts = postRepository.findAllByTitleLikeOrContentLikeOrPostHashTagsLikeAndTmpStoreIsFalseAndBlockedIsFalse(terms);
+        return new PageImpl<>(toPostResponseDto(posts), pageable, posts.size());
     }
 
 }
