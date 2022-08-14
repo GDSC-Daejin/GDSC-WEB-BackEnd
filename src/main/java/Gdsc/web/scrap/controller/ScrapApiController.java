@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -33,6 +35,11 @@ public class ScrapApiController {
 
         Page<?> scrap = scrapService.findMyScrapPost(principal.getUsername(), pageable);
         log.info("scrap : {}", scrap);
+        return Response.success("data", scrap);
+    }
+    @GetMapping("/api/guest/v1/myScrap/list")
+    public Response myScrapList(@AuthenticationPrincipal User principal){
+        List<Long> scrap =  scrapService.findMyScrapPostList(principal.getUsername());
         return Response.success("data", scrap);
     }
 }

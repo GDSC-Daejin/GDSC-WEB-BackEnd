@@ -3,6 +3,7 @@ package Gdsc.web.scrap.service;
 import Gdsc.web.member.service.MemberService;
 import Gdsc.web.post.dto.PostResponseDto;
 import Gdsc.web.post.service.PostService;
+import Gdsc.web.scrap.dto.ScrapPostList;
 import Gdsc.web.scrap.mapper.MemberScrapPostResponseMapping;
 import Gdsc.web.scrap.entity.MemberScrapPost;
 import Gdsc.web.post.entity.Post;
@@ -46,5 +47,10 @@ public class ScrapService {
     public Page<PostResponseDto> findMyScrapPost(String userId, final Pageable pageable){
         List<Post> scrap = jpaScrapRepository.findByUserId(userId).stream().map(MemberScrapPost::getPost).collect(Collectors.toList());
         return new PageImpl<>(postService.toPostResponseDto(scrap), pageable, scrap.size());
+    }
+    @Transactional(readOnly = true)
+    public List<Long> findMyScrapPostList(String userId){
+       return jpaScrapRepository.findByUserId(userId)
+                .stream().map(it-> it.getPost().getPostId()).collect(Collectors.toList());
     }
 }
