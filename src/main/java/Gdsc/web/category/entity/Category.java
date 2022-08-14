@@ -32,10 +32,10 @@ public class Category {
     @Id
     @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Category_ID")
+    @Column(name = "CATEGORY_ID")
     private int categoryId;
 
-    @Column(name = "Category_Name" , length = 30 , nullable = false, unique = true)
+    @Column(name = "CATEGORY_NAME" , length = 30 , nullable = false, unique = true)
     @Schema(description = "카테고리 이름" , example = "Backend")
     private String categoryName;
 
@@ -45,6 +45,7 @@ public class Category {
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime modifiedAt;
 
+    @Column(name = "UPLOAD_DATE")
     @CreationTimestamp
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)

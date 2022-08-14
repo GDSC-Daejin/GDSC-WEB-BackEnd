@@ -30,9 +30,7 @@ public class CategoryService {
     @Transactional
     public void 카테고리추가(CategoryRequestDto categoryRequestDto) {
         // 카테고리 이름이 중복되는지 확인합니다.
-        final Category result = jpaCategoryRepository.findByCategoryName(categoryRequestDto.getCategoryName()).orElse(null);
-
-        if (result != null) {
+        if (jpaCategoryRepository.existsByCategoryName(categoryRequestDto.getCategoryName())) {
             throw new IllegalArgumentException("이미 존재하는 카테고리 입니다.");
         }
 
@@ -43,10 +41,11 @@ public class CategoryService {
     @Transactional
     public void 카테고리삭제(CategoryRequestDto categoryRequestDto){
         // 삭제할 카테고리가 존재하는 지 확인합니다.
-        Category category = jpaCategoryRepository.findByCategoryName(categoryRequestDto.getCategoryName()).orElseThrow(
-                ()-> new IllegalArgumentException("찾을 수 없는 카테고리 입니다."));
+        if (!jpaCategoryRepository.existsByCategoryName(categoryRequestDto.getCategoryName())) {
+            throw new IllegalArgumentException("존재하지 않는 카테고리입니다.");
+        }
 
-        jpaCategoryRepository.deleteByCategoryName(category.getCategoryName());
+        jpaCategoryRepository.deleteByCategoryName(categoryRequestDto.getCategoryName());
     }
 
     @Transactional
