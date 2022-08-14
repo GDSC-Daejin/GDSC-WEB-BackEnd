@@ -101,6 +101,7 @@ public class PostApiController {
                 oldCookie.setPath("/");
                 oldCookie.setMaxAge(60 * 60 * 24);
                 response.addCookie(oldCookie);
+                response.addHeader("Set-Cookie", oldCookie.getName() + "=" + oldCookie.getValue() + "; Secure; SameSite=None");
             }
         } else {
             postService.updateView(postId);
@@ -108,6 +109,7 @@ public class PostApiController {
             newCookie.setPath("/");
             newCookie.setMaxAge(60 * 60 * 24);
             response.addCookie(newCookie);
+            response.setHeader("Set-Cookie", newCookie.getName() + "=" + newCookie.getValue() + "; Secure; SameSite=None");
         }
         return Response.success("data",postService.findByPostIdAndBlockIsFalse(postId));
     }
