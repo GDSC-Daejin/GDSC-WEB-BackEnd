@@ -81,17 +81,14 @@ class AdminApiControllerTest extends AbstractControllerTest {
                         .content(mapper.writeValueAsString(memberRoleUpdateDto)))
                 .andDo(print())
                 .andExpect(status().isOk());
-
         // then
         Member testMember = memberRepository.findByUserId(memberMember.getUserId());
         assertEquals(expected, testMember.getRole());
     }
-
     @Test
     @DisplayName("v1/all/list 모든 회원 조회")
     void retrieveUserList() throws Exception{
         // given
-
         // when
         String url = "http://localhost:" + 8080 + "/api/admin/v1/all/list";
         mvc.perform(get(url))
@@ -101,12 +98,10 @@ class AdminApiControllerTest extends AbstractControllerTest {
         List<Member> list = memberRepository.findAll();
         assertEquals(3, list.size());
     }
-
     @Test
     @DisplayName("v1/member/list 게스트 제외 멤버만 조회")
     @WithMockUser(roles = "LEAD")
     void retrieveMemberList() throws Exception{
-
         // when
         String url = "http://localhost:" + 8080 + "/api/admin/v1/member/list";
         mvc.perform(get(url))
