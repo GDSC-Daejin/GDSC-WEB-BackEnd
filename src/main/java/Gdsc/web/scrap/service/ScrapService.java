@@ -44,7 +44,7 @@ public class ScrapService {
 
     @Transactional(readOnly = true)
     public Page<PostResponseDto> findMyScrapPost(String userId, final Pageable pageable){
-        List<Post> scrap = jpaScrapRepository.findByUserId(userId).stream().map(MemberScrapPost::getPost).toList();
+        List<Post> scrap = jpaScrapRepository.findByUserId(userId).stream().map(MemberScrapPost::getPost).collect(Collectors.toList());
         return new PageImpl<>(postService.toPostResponseDto(scrap), pageable, scrap.size());
     }
 }
