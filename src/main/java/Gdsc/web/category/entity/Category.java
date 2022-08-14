@@ -1,6 +1,8 @@
 package Gdsc.web.category.entity;
 
 
+import Gdsc.web.category.dto.CategoryRequestDto;
+import Gdsc.web.category.dto.CategoryUpdateDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -47,4 +49,12 @@ public class Category {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime uploadDate;
+
+    public Category(CategoryRequestDto categoryRequestDto) {
+        this.categoryName = categoryRequestDto.getCategoryName();
+    }
+
+    public void update(CategoryUpdateDto categoryUpdateDto) {
+        this.categoryName = categoryUpdateDto.getCategoryName();
+    }
 }
