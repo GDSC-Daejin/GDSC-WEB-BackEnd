@@ -33,6 +33,13 @@ public class ScrapApiController {
         Page<?> scrap = scrapService.findMyScrapPost(principal.getUsername(), pageable);
         return Response.success("data", scrap);
     }
+    @GetMapping("/api/guest/v1/myScrap/{category}")
+    public Response myScrapByCategory(@AuthenticationPrincipal User principal,
+                                     @PathVariable String category,
+                                     @PageableDefault(size = 16 ,sort = "id",direction = Sort.Direction.DESC ) Pageable pageable){
+        Page<?> scrap = scrapService.findMyScrapPostByCategory(principal.getUsername(), category, pageable);
+        return Response.success("data", scrap);
+    }
     @GetMapping("/api/guest/v1/myScrap/list")
     public Response myScrapList(@AuthenticationPrincipal User principal){
         List<Long> scrap =  scrapService.findMyScrapPostList(principal.getUsername());
