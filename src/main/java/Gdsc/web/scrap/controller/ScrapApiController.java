@@ -3,6 +3,7 @@ package Gdsc.web.scrap.controller;
 import Gdsc.web.common.dto.Response;
 import Gdsc.web.scrap.service.ScrapService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -18,6 +19,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class ScrapApiController {
     private final ScrapService scrapService;
 
@@ -30,6 +32,7 @@ public class ScrapApiController {
     @GetMapping("/api/guest/v1/myScrap")
     public Response myScrap(@AuthenticationPrincipal User principal,
                             @PageableDefault(size = 16 ,sort = "id",direction = Sort.Direction.DESC ) Pageable pageable){
+
         Page<?> scrap = scrapService.findMyScrapPost(principal.getUsername(), pageable);
         return Response.success("data", scrap);
     }
