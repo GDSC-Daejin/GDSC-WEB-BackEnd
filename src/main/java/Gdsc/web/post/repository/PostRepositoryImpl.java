@@ -1,6 +1,7 @@
 package Gdsc.web.post.repository;
 
 
+import Gdsc.web.category.entity.Category;
 import Gdsc.web.post.entity.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -31,4 +32,21 @@ public class PostRepositoryImpl implements CustomizePostRepository{
         // Dto 변환 필요
         return resultList;
     }
+
+    @Override
+    public List<Post> findAllByTitleLikeOrContentLikeOrPostHashTagsLikeAndCategoryAndTmpStoreIsFalseAndBlockedIsFalse(String word, Category category) {
+        String jpql = "SELECT p FROM Post p WHERE (p.postHashTags LIKE :word " +
+                "OR p.title LIKE :word " +
+                "OR p.content LIKE :word )" +
+                "AND p.category = :category " +
+                "AND p.blocked IS FALSE " +
+                "AND p.tmpStore IS FALSE ";
+        TypedQuery<Post> typedQuery = em.createQuery(jpql, Post.class);
+        typedQuery.setParameter("word" , "%"+word+"%");
+        typedQuery.setParameter("category" , category);
+        List resultList =typedQuery.getResultList();
+        // Dto 변환 필요
+        return resultList;
+    }
+
 }
