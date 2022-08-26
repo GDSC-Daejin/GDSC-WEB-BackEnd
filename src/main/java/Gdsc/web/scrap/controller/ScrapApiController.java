@@ -34,7 +34,13 @@ public class ScrapApiController {
                             @PageableDefault(size = 16 ,sort = "id",direction = Sort.Direction.DESC ) Pageable pageable){
 
         Page<?> scrap = scrapService.findMyScrapPost(principal.getUsername(), pageable);
-        log.info("scrap : {}", scrap);
+        return Response.success("data", scrap);
+    }
+    @GetMapping("/api/guest/v1/myScrap/{category}")
+    public Response myScrapByCategory(@AuthenticationPrincipal User principal,
+                                     @PathVariable String category,
+                                     @PageableDefault(size = 16 ,sort = "id",direction = Sort.Direction.DESC ) Pageable pageable){
+        Page<?> scrap = scrapService.findMyScrapPostByCategory(principal.getUsername(), category, pageable);
         return Response.success("data", scrap);
     }
     @GetMapping("/api/guest/v1/myScrap/list")
