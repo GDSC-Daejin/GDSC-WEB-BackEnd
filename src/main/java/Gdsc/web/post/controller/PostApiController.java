@@ -144,6 +144,19 @@ public class PostApiController {
         Page<?> post = postService.findFullTextSearch(word,pageable);
         return Response.success("data", post);
     }
+    @Operation(summary ="게시물 검색" , description = "게시물을 검색합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회 성공" , content = @Content(array = @ArraySchema(schema = @Schema(implementation = PostResponseDto.class)))),
+            @ApiResponse(responseCode = "400", description = "조회 실패")
+    })
+    @GetMapping("/api/v1/post/search/{categoryName}/{word}")
+    public Response findPostSearchWithCategory(@PathVariable String word,
+                                               @PathVariable String categoryName,
+                                               @PageableDefault(size = 16, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable){
+        Page<?> post = postService.findFullTextSearchWithCategory(word,categoryName,pageable);
+        return Response.success("data", post);
+    }
+
 
 
 
