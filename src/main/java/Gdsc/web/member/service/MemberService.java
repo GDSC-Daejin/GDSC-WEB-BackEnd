@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +40,7 @@ public class MemberService {
             MemberInfoResponseServerDto[] memberInfo = restTemplate.getForObject(
                     AuthServerURL +"/internal/member/api/memberInfo",
                     MemberInfoResponseServerDto[].class);
-            return Arrays.stream(memberInfo).toList();
+            return Arrays.stream(memberInfo).collect(Collectors.toList());
         }catch (Exception e){
             log.error("에러발생 : {}", e.getMessage());
             return new ArrayList<>();
