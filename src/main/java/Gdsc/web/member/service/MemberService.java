@@ -9,6 +9,7 @@ import org.springframework.web.client.RestTemplate;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -35,10 +36,10 @@ public class MemberService {
     public List<MemberInfoResponseServerDto> getNicknameImages() {
         RestTemplate restTemplate = new RestTemplate();
         try {
-            List<MemberInfoResponseServerDto> memberInfo = restTemplate.getForObject(
+            MemberInfoResponseServerDto[] memberInfo = restTemplate.getForObject(
                     AuthServerURL +"/internal/member/api/memberInfo",
-                    List.class);
-            return memberInfo;
+                    MemberInfoResponseServerDto[].class);
+            return Arrays.stream(memberInfo).toList();
         }catch (Exception e){
             log.error("에러발생 : {}", e.getMessage());
             return new ArrayList<>();
