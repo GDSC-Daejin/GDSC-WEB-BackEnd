@@ -1,7 +1,6 @@
 package Gdsc.web.common;
 
 import Gdsc.web.category.entity.Category;
-import Gdsc.web.member.entity.Member;
 import Gdsc.web.post.entity.Post;
 import lombok.Data;
 
@@ -9,10 +8,10 @@ import java.time.LocalDateTime;
 
 @Data
 public class PostEntityFactory {
-    public static Post falseBlockFalseTmpStorePostEntity(Member member , Category category) {
+    public static Post falseBlockFalseTmpStorePostEntity(String userId , Category category) {
         Post post = new Post();
         post.setPostId(1L);
-        post.setMemberInfo(member.getMemberInfo());
+        post.setUserId(userId);
         post.setTitle("falseBlockFalseTmpStore test title");
         post.setContent("test content");
         post.setTmpStore(false);
@@ -23,9 +22,9 @@ public class PostEntityFactory {
         post.setView(0);
         return post;
     }
-    public static Post falseBlockTrueTmpStorePostEntity(Member member , Category category) {
+    public static Post falseBlockTrueTmpStorePostEntity(String userId, Category category) {
         Post post = new Post();
-        post.setMemberInfo(member.getMemberInfo());
+        post.setUserId(userId);
         post.setTitle("test title");
         post.setContent("test content");
         post.setTmpStore(true);
@@ -37,9 +36,9 @@ public class PostEntityFactory {
         return post;
     }
 
-    public static Post trueBlockFalseTmpStorePostEntity(Member member , Category category) {
+    public static Post trueBlockFalseTmpStorePostEntity(String userId , Category category) {
         Post post = new Post();
-        post.setMemberInfo(member.getMemberInfo());
+        post.setUserId(userId);
         post.setTitle("trueBlockFalse test title");
         post.setContent("test content");
         post.setTmpStore(false);

@@ -83,7 +83,7 @@ public class PostService {
         //json 형식 이미지나 , form-data 형식 이미지 둘중 하나만 들어왔을때!!
         if(requestDto.getThumbnail() != null ^ requestDto.getBase64Thumbnail() != null){
             if(!Objects.equals(requestDto.getBase64Thumbnail(), "")){
-                post.setImagePath(awsS3FileUploadService.upload(requestDto, "static"));
+                post.setImagePath(awsS3FileUploadService.upload(requestDto, ev.getActiveProfiles()[0]));
             }
         }
 
@@ -208,4 +208,10 @@ public class PostService {
         return new PageImpl<>(toPostResponseDto(posts), pageable, posts.size());
     }
 
+    public Page<?> findFullTextSearchWithCategory(String word, String categoryName, Pageable pageable) {
+        Category category = jpaCategoryRepository.findByCategoryName(categoryName).orElseThrow(
+                () -> new IllegalArgumentException("찾을 수 없는 카테고리 입니다."));
+        List<Post> posts = postRepository.findAllByTitleLikeOrContentLikeOrPostHashTagsLikeAndCategoryAndTmpStoreIsFalseAndBlockedIsFalse(word, category);
+        return new PageImpl<>(toPostResponseDto(posts), pageable, posts.size());
+    }
 }

@@ -13,11 +13,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
 @ContextConfiguration(classes = {TestDatasourceConfig.class})
 @RunWith(SpringRunner.class)
+@ActiveProfiles("test")
 public abstract class AbstractControllerTest {
     @Autowired
     protected MockMvc mvc;

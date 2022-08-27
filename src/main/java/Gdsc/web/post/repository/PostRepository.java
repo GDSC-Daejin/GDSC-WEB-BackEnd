@@ -29,4 +29,5 @@ public interface PostRepository extends JpaRepository<Post,Integer> , CustomizeP
 
     List<Post> findAllByUserIdAndTmpStoreIsFalseAndBlockedIsFalse(Class<Post> postClass, String userId, Pageable pageable);
     List<Post> findAllByUserIdAndBlockedIsFalseAndTmpStoreIsFalseAndCategory(String userId , Category category , Pageable pageable);
+
 }

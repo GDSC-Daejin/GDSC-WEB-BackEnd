@@ -31,10 +31,8 @@ public class ScrapService {
     public void scrap(String userId, Long postId){
         MemberScrapPost memberScrapPost = jpaScrapRepository.findByUserIdAndPost_PostId(userId, postId);
         if(memberScrapPost == null){
-            Optional<Post> post = Optional.ofNullable(postRepository.findByPostId(postId).orElseThrow(() -> new IllegalArgumentException("존재 하지 않는 포스트 입니다.")));
-            MemberScrapPost newMemberScrapPost = new MemberScrapPost();
-            newMemberScrapPost.setUserId(userId);
-            newMemberScrapPost.setPost(post.get());
+            Post post = postRepository.findByPostId(postId).orElseThrow(() -> new IllegalArgumentException("존재 하지 않는 포스트 입니다."));
+            MemberScrapPost newMemberScrapPost = MemberScrapPost.builder().userId(userId).post(post).build();
             jpaScrapRepository.save(newMemberScrapPost);
         } else{
             jpaScrapRepository.delete(memberScrapPost);
@@ -52,5 +50,11 @@ public class ScrapService {
     public List<Long> findMyScrapPostList(String userId){
        return jpaScrapRepository.findByUserId(userId)
                 .stream().map(it-> it.getPost().getPostId()).collect(Collectors.toList());
+    }
+    @Transactional(readOnly = true)
+    public Page<?> findMyScrapPostByCategory(String username, String category, Pageable pageable) {
+        List<Post> scrap = jpaScrapRepository.findByUserIdAndPost_Category_CategoryName(username, category)
+                .stream().map(MemberScrapPost::getPost).collect(Collectors.toList());
+        return new PageImpl<>(postService.toPostResponseDto(scrap), pageable, scrap.size());
     }
 }
