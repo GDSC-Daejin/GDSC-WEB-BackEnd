@@ -45,6 +45,7 @@ public class PostApiController {
     @PostMapping("/api/member/v2/post")
     public Response saveJsonPost(@RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal User principal) throws IOException {
 
+
         postService.save(postRequestDto , principal.getUsername());
         return Response.success("message", "SUCCESS");
     }

@@ -72,9 +72,7 @@ public class AwsS3FileUploadService {
         }
 
         // grant write permission on linux
-        convertFile.setReadable(true, true);
-        convertFile.setWritable(true, true);
-        convertFile.setExecutable(false, false);
+
         if (convertFile.createNewFile()) { // 바로 위에서 지정한 경로에 File이 생성됨 (경로가 잘못되었다면 생성 불가능)
             if(postRequestDto.getThumbnail() != null){ // form-data 형식으로 왔을 때
                 try (FileOutputStream fos = new FileOutputStream(convertFile)) { // FileOutputStream 데이터를 파일에 바이트 스트림으로 저장하기 위함
@@ -83,9 +81,14 @@ public class AwsS3FileUploadService {
             }
             else if(postRequestDto.getBase64Thumbnail() != null){ // json 으로 왔을 때
                 try (FileOutputStream fos = new FileOutputStream(convertFile)) { // FileOutputStream 데이터를 파일에 바이트 스트림으로 저장하기 위함
-                    Base64.Decoder decoder = Base64.getDecoder();
-                    byte[] decodedBytes = decoder.decode(postRequestDto.getBase64Thumbnail().getBytes());
-                    fos.write(decodedBytes);
+                    if(postRequestDto.getBase64Thumbnail().contains("data:image/jpeg;base64,")){
+                        fos.write(Base64.getDecoder().decode(postRequestDto.getBase64Thumbnail().replace("data:image/jpeg;base64,","")));
+                    } else if(postRequestDto.getBase64Thumbnail().contains("data:image/png;base64,")){
+                        fos.write(Base64.getDecoder().decode(postRequestDto.getBase64Thumbnail().replace("data:image/png;base64,","")));
+                    }else {
+                        throw new IllegalArgumentException("error: base64Thumbnail is not image");
+                    }
+
                 }
             }
 
