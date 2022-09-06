@@ -2,6 +2,8 @@ package Gdsc.web.post.service;
 
 import Gdsc.web.category.entity.Category;
 import Gdsc.web.common.service.AwsS3FileUploadService;
+import Gdsc.web.image.entity.PostInnerImage;
+import Gdsc.web.image.repository.PostInnerImageRepository;
 import Gdsc.web.member.dto.MemberInfoResponseServerDto;
 import Gdsc.web.member.service.MemberService;
 import Gdsc.web.post.dto.PostRequestDto;
@@ -31,6 +33,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final MemberService memberService;
     private final JpaCategoryRepository jpaCategoryRepository;
+    private final PostInnerImageRepository postInnerImageRepository;
 
     private final AwsS3FileUploadService awsS3FileUploadService;
 
@@ -126,6 +129,10 @@ public class PostService {
                 .orElseThrow(()-> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
         if(post.getImagePath() != null){
             awsS3FileUploadService.fileDelete(post.getImagePath());
+        }
+        List<PostInnerImage> postInnerImages = postInnerImageRepository.findAllByPostId(postId);
+        for(PostInnerImage postInnerImage : postInnerImages){
+            awsS3FileUploadService.fileDelete(postInnerImage.getImageUrl());
         }
         postRepository.delete(post);
     }
