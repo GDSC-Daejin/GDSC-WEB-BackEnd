@@ -26,7 +26,7 @@ public class ImageUploadService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + requestImageDto.getPostId()));
         PostRequestDto postRequestDto = PostRequestDto.builder()
                 .base64Thumbnail(requestImageDto.getImage())
-                .fileName(requestImageDto.getUserId())
+                .fileName(requestImageDto.getFileName())
                 .build();
         String dir = ev.getActiveProfiles()[0] + "/" + userId + "/post/" + post.getPostId();
         ImageDto responseImageDto;
@@ -34,7 +34,6 @@ public class ImageUploadService {
             String ImageUrl =  awsS3FileUploadService.upload(postRequestDto, dir);
              responseImageDto = ImageDto.builder()
                     .postId(post.getPostId())
-                    .userId(userId)
                     .image(ImageUrl)
                     .build();
         } catch (IOException e) {

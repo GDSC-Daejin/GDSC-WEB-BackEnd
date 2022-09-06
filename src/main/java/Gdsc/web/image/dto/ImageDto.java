@@ -11,13 +11,11 @@ import lombok.Setter;
 public class ImageDto {
     private Long postId;
     private String image;
-    private String userId;
-
+    private String fileName;
     public PostInnerImage toEntity() {
         return PostInnerImage.builder()
                 .postId(postId)
                 .imageUrl(image)
-                .userId(userId)
                 .build();
     }
 }
