@@ -136,7 +136,6 @@ public class PostService {
     public PostResponseDto findByPostIdAndBlockIsFalse(Long postId){
         Post post = postRepository.findByPostIdAndBlockedIsFalseAndTmpStoreIsFalse(postId,Post.class)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
-
         return PostResponseDto.builder()
                 .postId(post.getPostId())
                 .title(post.getTitle())
