@@ -38,6 +38,7 @@ public class AwsS3FileUploadService {
         return upload(uploadFile, dirName);
     }
 
+
     // S3로 파일 업로드하기
     private String upload(File uploadFile, String dirName) {
         String fileName = dirName + "/" + UUID.randomUUID() + uploadFile.getName();   // S3에 저장된 파일 이름
@@ -96,6 +97,7 @@ public class AwsS3FileUploadService {
         }
         return Optional.empty();
     }
+
 
 
     // delete s3에 올려진 사진

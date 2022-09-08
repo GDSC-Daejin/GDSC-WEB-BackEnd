@@ -2,6 +2,8 @@ package Gdsc.web.post.service;
 
 import Gdsc.web.category.entity.Category;
 import Gdsc.web.common.service.AwsS3FileUploadService;
+import Gdsc.web.image.entity.PostInnerImage;
+import Gdsc.web.image.repository.PostInnerImageRepository;
 import Gdsc.web.member.dto.MemberInfoResponseServerDto;
 import Gdsc.web.member.service.MemberService;
 import Gdsc.web.post.dto.PostRequestDto;
@@ -31,6 +33,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final MemberService memberService;
     private final JpaCategoryRepository jpaCategoryRepository;
+    private final PostInnerImageRepository postInnerImageRepository;
 
     private final AwsS3FileUploadService awsS3FileUploadService;
 
@@ -70,7 +73,7 @@ public class PostService {
                 .collect(Collectors.toList());
     }
     @Transactional
-    public void save(PostRequestDto requestDto , String userId) throws IOException {
+    public Long save(PostRequestDto requestDto , String userId) throws IOException {
         Post post = new Post();
         post.setPostHashTags(requestDto.getPostHashTags());
         Category category = jpaCategoryRepository.findByCategoryName(requestDto.getCategory().getCategoryName())
@@ -87,7 +90,7 @@ public class PostService {
             }
         }
 
-        postRepository.save(post);
+        return postRepository.save(post).getPostId();
     }
     //수정
     @Transactional
@@ -127,6 +130,10 @@ public class PostService {
         if(post.getImagePath() != null){
             awsS3FileUploadService.fileDelete(post.getImagePath());
         }
+        List<PostInnerImage> postInnerImages = postInnerImageRepository.findAllByPostId(postId);
+        for(PostInnerImage postInnerImage : postInnerImages){
+            awsS3FileUploadService.fileDelete(postInnerImage.getImageUrl());
+        }
         postRepository.delete(post);
     }
 
@@ -136,7 +143,6 @@ public class PostService {
     public PostResponseDto findByPostIdAndBlockIsFalse(Long postId){
         Post post = postRepository.findByPostIdAndBlockedIsFalseAndTmpStoreIsFalse(postId,Post.class)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + postId));
-
         return PostResponseDto.builder()
                 .postId(post.getPostId())
                 .title(post.getTitle())

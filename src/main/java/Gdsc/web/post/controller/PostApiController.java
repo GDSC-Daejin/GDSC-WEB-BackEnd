@@ -23,6 +23,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,8 +48,9 @@ public class PostApiController {
     public Response saveJsonPost(@RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal User principal) throws IOException {
 
 
-        postService.save(postRequestDto , principal.getUsername());
-        return Response.success("message", "SUCCESS");
+        Map<String,Long>  res = new HashMap<>();
+        res.put("postId", postService.save(postRequestDto , principal.getUsername()));
+        return Response.success("data", res);
     }
 
 
