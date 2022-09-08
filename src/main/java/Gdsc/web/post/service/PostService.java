@@ -73,7 +73,7 @@ public class PostService {
                 .collect(Collectors.toList());
     }
     @Transactional
-    public void save(PostRequestDto requestDto , String userId) throws IOException {
+    public Long save(PostRequestDto requestDto , String userId) throws IOException {
         Post post = new Post();
         post.setPostHashTags(requestDto.getPostHashTags());
         Category category = jpaCategoryRepository.findByCategoryName(requestDto.getCategory().getCategoryName())
@@ -90,7 +90,7 @@ public class PostService {
             }
         }
 
-        postRepository.save(post);
+        return postRepository.save(post).getPostId();
     }
     //수정
     @Transactional
