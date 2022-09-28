@@ -210,14 +210,14 @@ public class PostService {
     // fulltext Search 검색
     @Transactional
     public Page<?> findFullTextSearch(String terms,Pageable pageable) {
-        List<Post> posts = postRepository.findAllByTitleLikeOrContentLikeOrPostHashTagsLikeAndTmpStoreIsFalseAndBlockedIsFalse(terms);
+        List<Post> posts = postRepository.findAllByTitleLikeOrContentLikeOrPostHashTagsLikeAndTmpStoreIsFalseAndBlockedIsFalse(terms , pageable);
         return new PageImpl<>(toPostResponseDto(posts), pageable, posts.size());
     }
 
     public Page<?> findFullTextSearchWithCategory(String word, String categoryName, Pageable pageable) {
         Category category = jpaCategoryRepository.findByCategoryName(categoryName).orElseThrow(
                 () -> new IllegalArgumentException("찾을 수 없는 카테고리 입니다."));
-        List<Post> posts = postRepository.findAllByTitleLikeOrContentLikeOrPostHashTagsLikeAndCategoryAndTmpStoreIsFalseAndBlockedIsFalse(word, category);
+        List<Post> posts = postRepository.findAllByTitleLikeOrContentLikeOrPostHashTagsLikeAndCategoryAndTmpStoreIsFalseAndBlockedIsFalse(word, category, pageable);
         return new PageImpl<>(toPostResponseDto(posts), pageable, posts.size());
     }
 }
