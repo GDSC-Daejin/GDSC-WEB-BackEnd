@@ -41,12 +41,12 @@ public class PostRepositoryImpl implements CustomizePostRepository{
                 "AND p.category = :category " +
                 "AND p.blocked IS FALSE " +
                 "AND p.tmpStore IS FALSE ";
-        TypedQuery<Post> typedQuery = em.createQuery(jpql, Post.class)
+        List<Post> resultList = em.createQuery(jpql, Post.class)
                 .setParameter("word" , "%"+word+"%")
                 .setParameter("category" , category)
                 .setFirstResult(pageable.getPageNumber() * pageable.getPageSize())
-                .setMaxResults(pageable.getPageSize());
-        List resultList =typedQuery.getResultList();
+                .setMaxResults(pageable.getPageSize())
+                .getResultList();
         // Dto 변환 필요
         return resultList;
     }
