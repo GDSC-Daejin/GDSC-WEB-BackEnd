@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface CustomizePostRepository {
-    List<Post> findAllByTitleLikeOrContentLikeOrPostHashTagsLikeAndTmpStoreIsFalseAndBlockedIsFalse(String word);
+    List<Post> findAllByTitleLikeOrContentLikeOrPostHashTagsLikeAndTmpStoreIsFalseAndBlockedIsFalse(String word , Pageable pageable);
 
     List<Post> findAllByTitleLikeOrContentLikeOrPostHashTagsLikeAndCategoryAndTmpStoreIsFalseAndBlockedIsFalse(String word, Category category , Pageable pageable);
 }
