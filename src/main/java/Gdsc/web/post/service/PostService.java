@@ -217,7 +217,7 @@ public class PostService {
     public Page<?> findFullTextSearchWithCategory(String word, String categoryName, Pageable pageable) {
         Category category = jpaCategoryRepository.findByCategoryName(categoryName).orElseThrow(
                 () -> new IllegalArgumentException("찾을 수 없는 카테고리 입니다."));
-        List<Post> posts = postRepository.findAllByTitleLikeOrContentLikeOrPostHashTagsLikeAndCategoryAndTmpStoreIsFalseAndBlockedIsFalse(word, category);
+        List<Post> posts = postRepository.findAllByTitleLikeOrContentLikeOrPostHashTagsLikeAndCategoryAndTmpStoreIsFalseAndBlockedIsFalse(word, category, pageable);
         return new PageImpl<>(toPostResponseDto(posts), pageable, posts.size());
     }
 }

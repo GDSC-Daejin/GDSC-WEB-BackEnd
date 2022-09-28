@@ -12,5 +12,5 @@ import java.util.List;
 public interface CustomizePostRepository {
     List<Post> findAllByTitleLikeOrContentLikeOrPostHashTagsLikeAndTmpStoreIsFalseAndBlockedIsFalse(String word);
 
-    List<Post> findAllByTitleLikeOrContentLikeOrPostHashTagsLikeAndCategoryAndTmpStoreIsFalseAndBlockedIsFalse(String word, Category category);
+    List<Post> findAllByTitleLikeOrContentLikeOrPostHashTagsLikeAndCategoryAndTmpStoreIsFalseAndBlockedIsFalse(String word, Category category , Pageable pageable);
 }
