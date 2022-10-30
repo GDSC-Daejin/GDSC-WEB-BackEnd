@@ -118,7 +118,8 @@ public class PostApiController {
             newCookie.setMaxAge(60 * 60 * 24);
             response.addCookie(newCookie);
         }
-        return Response.success("data",postService.findByPostIdAndBlockIsFalse(postId));
+        Post post = postService.findByPostIdAndBlockIsFalse(postId);
+        return Response.success("data", postMapper.toPostResponseDto(post,memberService));
     }
 
     @Operation(summary = "게시물 조회", description = "게시물을 조회합니다.")
