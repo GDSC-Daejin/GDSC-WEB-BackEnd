@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +30,7 @@ public interface PostMapper {
                                         .findFirst()
                                         .orElse(null))
                                 .blocked(post.isBlocked())
-                                .postHashTags(post.getPostHashTags())
+                                .postHashTags(Arrays.stream(post.getPostHashTags().split(",")).collect(Collectors.toList()))
                                 .imagePath(post.getImagePath())
                                 .uploadDate(post.getUploadDate())
                                 .modifiedAt(post.getModifiedAt())
@@ -47,7 +48,7 @@ public interface PostMapper {
                 .userId(post.getUserId())
                 .memberInfo(memberInfoResponseServerDto)
                 .blocked(post.isBlocked())
-                .postHashTags(post.getPostHashTags())
+                .postHashTags(Arrays.stream(post.getPostHashTags().split(",")).collect(Collectors.toList()))
                 .imagePath(post.getImagePath())
                 .uploadDate(post.getUploadDate())
                 .modifiedAt(post.getModifiedAt())

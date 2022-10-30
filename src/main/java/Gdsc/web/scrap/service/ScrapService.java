@@ -42,9 +42,8 @@ public class ScrapService {
 
 
     @Transactional(readOnly = true)
-    public Page<PostResponseDto> findMyScrapPost(String userId, final Pageable pageable){
-        List<Post> scrap = jpaScrapRepository.findByUserId(userId).stream().map(MemberScrapPost::getPost).collect(Collectors.toList());
-        return new PageImpl<>(postService.toPostResponseDto(scrap), pageable, scrap.size());
+    public List<Post> findMyScrapPost(String userId, final Pageable pageable){
+        return jpaScrapRepository.findByUserId(userId).stream().map(MemberScrapPost::getPost).collect(Collectors.toList());
     }
     @Transactional(readOnly = true)
     public List<Long> findMyScrapPostList(String userId){
@@ -52,9 +51,8 @@ public class ScrapService {
                 .stream().map(it-> it.getPost().getPostId()).collect(Collectors.toList());
     }
     @Transactional(readOnly = true)
-    public Page<?> findMyScrapPostByCategory(String username, String category, Pageable pageable) {
-        List<Post> scrap = jpaScrapRepository.findByUserIdAndPost_Category_CategoryName(username, category)
+    public List<Post> findMyScrapPostByCategory(String username, String category, Pageable pageable) {
+        return jpaScrapRepository.findByUserIdAndPost_Category_CategoryName(username, category)
                 .stream().map(MemberScrapPost::getPost).collect(Collectors.toList());
-        return new PageImpl<>(postService.toPostResponseDto(scrap), pageable, scrap.size());
     }
 }

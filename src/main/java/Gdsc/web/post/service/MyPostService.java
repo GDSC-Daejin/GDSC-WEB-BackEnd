@@ -17,9 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import static Gdsc.web.post.service.PostService.getPostResponseDtos;
 
 @Slf4j
 @Service
@@ -29,9 +27,7 @@ public class MyPostService {
     private final JpaCategoryRepository jpaCategoryRepository;
     private final MemberService memberService;
     // 추후 리팩 필요할듯
-    public List<PostResponseDto> toPostResponseDto(List<Post> posts){
-        return getPostResponseDtos(posts, memberService);
-    }
+
 
     @Transactional
     public MemberInfoResponseServerDto findMemberInfo(String userId) {
