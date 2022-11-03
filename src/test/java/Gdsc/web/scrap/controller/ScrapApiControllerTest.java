@@ -46,6 +46,7 @@ public class ScrapApiControllerTest  extends AbstractControllerTest {
 
     @BeforeEach
     void setUp() {
+        // test
         mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 

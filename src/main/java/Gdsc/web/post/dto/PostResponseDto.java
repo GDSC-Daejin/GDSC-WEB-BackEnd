@@ -6,6 +6,7 @@ import Gdsc.web.member.dto.MemberInfoResponseServerDto;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,7 +21,7 @@ public class PostResponseDto {
     private boolean blocked;
     private String imagePath;
     private Category category;
-    private String postHashTags;
+    private List<String> postHashTags;
     private String userId;
     private MemberInfoResponseServerDto memberInfo;
     private LocalDateTime modifiedAt;

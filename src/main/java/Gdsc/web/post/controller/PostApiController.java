@@ -1,8 +1,11 @@
 package Gdsc.web.post.controller;
 
 import Gdsc.web.common.dto.Response;
+import Gdsc.web.member.service.MemberService;
 import Gdsc.web.post.dto.PostRequestDto;
 import Gdsc.web.post.dto.PostResponseDto;
+import Gdsc.web.post.entity.Post;
+import Gdsc.web.post.mapper.PostMapper;
 import Gdsc.web.post.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -23,6 +26,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,7 +40,8 @@ import javax.servlet.http.HttpServletResponse;
 @Tag(name = "게시물 api controller", description = "게시물 api")
 public class PostApiController {
     private final PostService postService;
-
+    private final PostMapper postMapper;
+    private final MemberService memberService;
 
 
     @Operation(summary = "게시물 작성", description = "게시물을 작성합니다.")
@@ -46,8 +53,9 @@ public class PostApiController {
     public Response saveJsonPost(@RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal User principal) throws IOException {
 
 
-        postService.save(postRequestDto , principal.getUsername());
-        return Response.success("message", "SUCCESS");
+        Map<String,Long>  res = new HashMap<>();
+        res.put("postId", postService.save(postRequestDto , principal.getUsername()));
+        return Response.success("data", res);
     }
 
 
@@ -110,7 +118,8 @@ public class PostApiController {
             newCookie.setMaxAge(60 * 60 * 24);
             response.addCookie(newCookie);
         }
-        return Response.success("data",postService.findByPostIdAndBlockIsFalse(postId));
+        Post post = postService.findByPostIdAndBlockIsFalse(postId);
+        return Response.success("data", postMapper.toPostResponseDto(post,memberService));
     }
 
     @Operation(summary = "게시물 조회", description = "게시물을 조회합니다.")
@@ -120,8 +129,9 @@ public class PostApiController {
     })
     @GetMapping("/api/v1/post/list")
     public Response findPostAll(@PageableDefault(size = 16 ,sort = "postId",direction = Sort.Direction.DESC ) Pageable pageable){
-        Page<?> post = postService.findPostAll(pageable);
-        return Response.success("data", post);
+        List<Post> post = postService.findPostAll(pageable);
+        Page<PostResponseDto> postResponseDto = postMapper.toPostResponseDtoPage(post,memberService,pageable);
+        return Response.success("data", postResponseDto);
     }
     @Operation(summary = "카테고리별 게시물 조회", description = "카테고리별 게시물을 조회합니다.")
     @ApiResponses(value = {
@@ -131,8 +141,9 @@ public class PostApiController {
     @GetMapping("/api/v1/post/list/{categoryName}")
     public Response findPostAllWithCategory(@PathVariable String categoryName, @PageableDefault
             (size = 16, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable){
-        Page<?> post = postService.findPostAllWithCategory(categoryName, pageable);
-        return Response.success("data", post);
+        List<Post> post = postService.findPostAllWithCategory(categoryName, pageable);
+        Page<PostResponseDto> postResponseDtoPage = postMapper.toPostResponseDtoPage(post,memberService, pageable);
+        return Response.success("data", postResponseDtoPage);
     }
     @Operation(summary ="게시물 검색" , description = "게시물을 검색합니다.")
     @ApiResponses(value = {
@@ -142,8 +153,9 @@ public class PostApiController {
     @GetMapping("/api/v1/post/search/{word}")
     public Response findPostSearch(@PathVariable String word, @PageableDefault
             (size = 16, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable){
-        Page<?> post = postService.findFullTextSearch(word,pageable);
-        return Response.success("data", post);
+        List<Post> post = postService.findFullTextSearch(word,pageable);
+        Page<PostResponseDto> postResponseDtoPage = postMapper.toPostResponseDtoPage(post,memberService, pageable);
+        return Response.success("data", postResponseDtoPage);
     }
     @Operation(summary ="게시물 검색" , description = "게시물을 검색합니다.")
     @ApiResponses(value = {
@@ -154,8 +166,9 @@ public class PostApiController {
     public Response findPostSearchWithCategory(@PathVariable String word,
                                                @PathVariable String categoryName,
                                                @PageableDefault(size = 16, sort = "postId", direction = Sort.Direction.DESC) Pageable pageable){
-        Page<?> post = postService.findFullTextSearchWithCategory(word,categoryName,pageable);
-        return Response.success("data", post);
+        List<Post> post = postService.findFullTextSearchWithCategory(word,categoryName,pageable);
+        Page<PostResponseDto> postResponseDtoPage = postMapper.toPostResponseDtoPage(post,memberService, pageable);
+        return Response.success("data", postResponseDtoPage);
     }
 
 

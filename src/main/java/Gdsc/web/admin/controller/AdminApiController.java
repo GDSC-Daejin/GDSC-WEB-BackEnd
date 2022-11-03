@@ -3,8 +3,10 @@ package Gdsc.web.admin.controller;
 import Gdsc.web.common.dto.Response;
 
 import Gdsc.web.admin.service.PostBlockService;
+import Gdsc.web.member.service.MemberService;
 import Gdsc.web.post.dto.PostResponseDto;
 import Gdsc.web.post.entity.Post;
+import Gdsc.web.post.mapper.PostMapper;
 import Gdsc.web.post.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -22,6 +24,8 @@ import org.springframework.data.web.PageableDefault;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
@@ -30,6 +34,8 @@ public class AdminApiController {
 
     private final PostService postService;
     private final PostBlockService postBlockService;
+    private final MemberService memberService;
+    private PostMapper postMapper;
     @Operation(summary = "블로그 관리자 포스트 블락", description = "블로그 관리자 포스트 막기")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "SUCCESS"),
@@ -57,7 +63,8 @@ public class AdminApiController {
     })
     @GetMapping("v1/block")
     public Response blockPost(@PageableDefault(size = 16 ,sort = "postId",direction = Sort.Direction.DESC) Pageable pageable){
-        Page<?> post = postService.findBockedPostAll(pageable);
-        return Response.success("data", post);
+        List<Post> post = postService.findBockedPostAll(pageable);
+        Page<PostResponseDto> postResponseDto = postMapper.toPostResponseDtoPage(post,memberService,pageable);
+        return Response.success("data", postResponseDto);
     }
 }
